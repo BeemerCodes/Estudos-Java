@@ -1,4 +1,4 @@
-## Java by Ifood  :coffe:
+## Java by Ifood  :coffee:
 
 > Repositorio para estudo de java, parceria com Ifood
 
