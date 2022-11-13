@@ -1,4 +1,4 @@
-## Introdução :coffe:
+## Introdução ☕
 
 em-vindo ao mundo Java. Aqui está uma diretriz para ajudá-lo!
 
