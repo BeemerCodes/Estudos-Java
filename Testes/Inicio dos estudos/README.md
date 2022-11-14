@@ -15,4 +15,4 @@ Enquanto isso, os arquivos de saída compilados serão gerados no`bin`.
 
 ## Gerenciamento de Dependência
 
-O `JAVA PROJECTS` permite gerenciar suas dependências. Mais detalhes podem ser encontrados [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+O `JAVA PROJECTS` permite gerenciar suas dependências. Mais detalhes podem ser encontrados [aqui](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
