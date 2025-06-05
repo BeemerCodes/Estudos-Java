@@ -1,6 +1,6 @@
 ## Introdução ☕
 
-em-vindo ao mundo Java. Aqui está uma diretriz para ajudá-lo!
+Bem-vindo ao mundo Java. Aqui está uma diretriz para ajudá-lo!
 
 ## Estruturas de arquivos
 
