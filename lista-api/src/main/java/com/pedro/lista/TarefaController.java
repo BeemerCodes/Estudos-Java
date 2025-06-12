@@ -10,6 +10,6 @@ public class TarefaController {
 
     @GetMapping
     public String listarTarefas() {
-        return "tarefas";
+        return "forward:/tarefas.html"; 
     }
 }
