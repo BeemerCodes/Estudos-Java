@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lista de Tarefas - API</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #f4f4f9;
+      }
+      h1 {
+        color: #333;
+        text-align: center;
+      }
+      .endpoint {
+        margin-bottom: 20px;
+        padding: 15px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+      .endpoint h3 {
+        margin-top: 0;
+        color: #007bff;
+      }
+      .result {
+        margin-top: 10px;
+        padding: 10px;
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        white-space: pre-wrap;
+      }
+      input,
+      button {
+        padding: 8px;
+        margin-right: 10px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+      }
+      button {
+        background-color: #007bff;
+        color: #fff;
+        cursor: pointer;
+        border: none;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Lista de Tarefas - API</h1>
+
+    <div class="endpoint">
+      <h3>Endpoint: /tarefas</h3>
+      <p>Escolha outro endpoint abaixo para testar.</p>
+    </div>
+
+    <div id="endpoints-container">
+      <!-- Endpoints futuros -->
+    </div>
+
+    <script>
+      function addEndpoint(method, path, description) {
+        const container = document.getElementById("endpoints-container");
+        const endpointDiv = document.createElement("div");
+        endpointDiv.className = "endpoint";
+        endpointDiv.innerHTML = `
+                <h3>${method} ${path}</h3>
+                <p>${description}</p>
+                <div class="result" id="result-${path.replace(
+                  /[^a-zA-Z0-9]/g,
+                  "-"
+                )}"></div>
+            `;
+        container.appendChild(endpointDiv);
+      }
+    </script>
+  </body>
+</html>
