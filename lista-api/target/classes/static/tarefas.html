@@ -60,7 +60,7 @@
     </div>
 
     <div id="endpoints-container">
-      <!-- Endpoints futuros -->
+      <!-- Endpoints estaticos, preguiça... -->
     </div>
 
     <script>
@@ -78,6 +78,13 @@
             `;
         container.appendChild(endpointDiv);
       }
+      window.onload = function () {
+        addEndpoint(
+          "GET",
+          "/tarefas/multiplicar-tres",
+          'Exemplo: <a href="https://estudos-java-production.up.railway.app/tarefas/multiplicar-tres?a=2&b=3&c=4" target="_blank">/tarefas/multiplicar-tres?a=2&b=3&c=4</a> Multiplica três números'
+        );
+      };
     </script>
   </body>
 </html>
