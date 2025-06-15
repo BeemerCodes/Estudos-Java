@@ -23,6 +23,7 @@ public class TarefaController {
 
     @GetMapping("/multiplicar-tres")
     @ResponseBody
+    
     public ResponseEntity<?> multiplicarTres(@RequestParam double a, @RequestParam double b, @RequestParam double c) {
         Map<String, Object> response = new HashMap<>();
         double result = a * b * c;
@@ -30,6 +31,23 @@ public class TarefaController {
         response.put("a", a);
         response.put("b", b);
         response.put("c", c);
+        response.put("resultado", result);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/dividir") 
+    @ResponseBody
+
+    public ResponseEntity<?> dividir(@RequestParam double a, @RequestParam double b) {
+        Map<String, Object> response = new HashMap<>();
+        if (b == 0) {
+            response.put("erro", "Divisão por zero não é permitida.");
+            return ResponseEntity.badRequest().body(response);
+        }
+        double result = a / b;
+        response.put("operação", "dividir");
+        response.put("a", a);
+        response.put("b", b);
         response.put("resultado", result);
         return ResponseEntity.ok(response);
     }
