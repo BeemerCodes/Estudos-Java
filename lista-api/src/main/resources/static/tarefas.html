@@ -102,8 +102,7 @@
           .catch((error) => {
             const resultDiv = document.getElementById(resultId);
             resultDiv.classList.add("mostrar");
-            resultDiv.textContent =
-              "Erro ao carregar os dados: " + error.message;
+            resultDiv.textContent = "Erro ao carregar: " + error.message;
           });
       }
 
@@ -111,28 +110,28 @@
         addEndpoint(
           "GET",
           "/tarefas/multiplicar-tres",
-          "Multiplica três números.",
+          "Multiplica três números. Exemplo de uso: ?a=2&b=3&c=4",
           "https://estudos-java-production.up.railway.app/tarefas/multiplicar-tres?a=2&b=3&c=4"
         );
 
         addEndpoint(
           "GET",
           "/tarefas/dividir",
-          "Divide dois números.",
+          "Divide dois números. Exemplo de uso: ?a=10&b=5",
           "https://estudos-java-production.up.railway.app/tarefas/dividir?a=10&b=5"
         );
 
         addEndpoint(
           "GET",
           "/tarefas/media-ponderada",
-          "Calcula a média ponderada com pesos 2 e 3.",
+          "Calcula a média ponderada com pesos 2 e 3. Exemplo de uso: ?a=4&b=6",
           "https://estudos-java-production.up.railway.app/tarefas/media-ponderada?a=4&b=6"
         );
 
         addEndpoint(
           "GET",
           "/tarefas/desconto-dez",
-          "Aplica 10% de desconto em um valor.",
+          "Aplica 10% de desconto em um valor. Exemplo de uso: ?a=2300",
           "https://estudos-java-production.up.railway.app/tarefas/desconto-dez?a=2300"
         );
       };
