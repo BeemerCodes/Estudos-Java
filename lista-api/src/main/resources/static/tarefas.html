@@ -49,6 +49,18 @@
       button:hover {
         background-color: #0056b3;
       }
+      .result {
+        display: none;
+        margin-top: 10px;
+        padding: 10px;
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        white-space: pre-wrap;
+      }
+      .result.mostrar {
+        display: block;
+      }
     </style>
   </head>
   <body>
@@ -64,31 +76,60 @@
     </div>
 
     <script>
-      function addEndpoint(method, path, description) {
+      function addEndpoint(method, path, description, exemploURL) {
         const container = document.getElementById("endpoints-container");
         const endpointDiv = document.createElement("div");
+        const resultId = `result-${path.replace(/[^a-zA-Z0-9]/g, "-")}`;
+
         endpointDiv.className = "endpoint";
         endpointDiv.innerHTML = `
-                <h3>${method} ${path}</h3>
-                <p>${description}</p>
-                <div class="result" id="result-${path.replace(
-                  /[^a-zA-Z0-9]/g,
-                  "-"
-                )}"></div>
-            `;
+        <h3>${method} ${path}</h3>
+        <p>${description}</p>
+        <div class="result" id="${resultId}">Carregando...</div>
+      `;
         container.appendChild(endpointDiv);
+
+        fetch(exemploURL)
+          .then((res) => res.json())
+          .then((data) => {
+            const resultDiv = document.getElementById(resultId);
+            resultDiv.classList.add("mostrar");
+            resultDiv.textContent = JSON.stringify(data, null, 2);
+          })
+          .catch((error) => {
+            const resultDiv = document.getElementById(resultId);
+            resultDiv.classList.add("mostrar");
+            resultDiv.textContent = "Erro ao carregar os dados: " + error;
+          });
       }
+
       window.onload = function () {
         addEndpoint(
           "GET",
           "/tarefas/multiplicar-tres",
-          'Exemplo: <a href="https://estudos-java-production.up.railway.app/tarefas/multiplicar-tres?a=2&b=3&c=4" target="_blank">/tarefas/multiplicar-tres?a=2&b=3&c=4</a> Multiplica três números'
+          "Multiplica três números",
+          'Exemplo: <a href="https://estudos-java-production.up.railway.app/tarefas/multiplicar-tres?a=2&b=3&c=4" target="_blank">/tarefas/multiplicar-tres?a=2&b=3&c=4</a> <br>Multiplica três números'
         );
 
         addEndpoint(
           "GET",
           "/tarefas/dividir",
-          'Exemplo: <a href="https://estudos-java-production.up.railway.app/tarefas/dividir?a=10&b=5" target="_blank">/tarefas/dividir?a=10&b=5</a> Divide dois números números'
+          "Divide o priemiro número pelo segundo",
+          'Exemplo: <a href="https://supreme-space-dollop-5r66pjgr59g2pvv9-8080.app.github.dev/tarefas/dividir?a=10&b=5" target="_blank">/tarefas/dividir?a=10&b=5</a> <br>Divide dois números números'
+        );
+
+        addEndpoint(
+          "GET",
+          "/tarefas/media-ponderada",
+          "Calcula média ponderada considerando peso 2 para A e peso 3 para B",
+          'Exemplo: <a href="https://supreme-space-dollop-5r66pjgr59g2pvv9-8080.app.github.dev/tarefas/media-ponderada?a=4&b=6" taget="_blank">/tarefas/media-ponderada?a=4&b=6</a> <br>Calcula a média ponderada de dois números'
+        );
+
+        addEndpoint(
+          "GET",
+          "/tarefas/desconto-dez",
+          "Da um desconto de 10% ao valor inserido",
+          'Exemplo: <a href="https://supreme-space-dollop-5r66pjgr59g2pvv9-8080.app.github.dev/tarefas/desconto-dez?a=2300" target="_blank">/tarefas/desconto-dez?a=2300</a> Aplica um desconto de 10%'
         );
       };
     </script>
