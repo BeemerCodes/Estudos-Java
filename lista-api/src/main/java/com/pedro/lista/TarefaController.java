@@ -78,5 +78,38 @@ public class TarefaController {
         response.put("valor com desconto", valorComDesconto);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/comissao")
+    @ResponseBody
+
+    public ResponseEntity<?> comissao(@RequestParam double a, @RequestParam double b){
+        Map<String, Object> response = new HashMap<>();
+        double comissao = b * 0.04;
+
+        response.put("operação", "comissão");
+        response.put("salário", a);
+        response.put("vendas", b);
+        response.put("comissão", comissao);
+        response.put("salário com comissão", a + comissao);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/peso")
+    @ResponseBody
+
+    public ResponseEntity<?> balanca(@RequestParam double a){
+        Map<String, Object> response = new HashMap<>();
+
+        double maisPeso = a * 0.15;
+        double menosPeso = a * 0.20;
+        
+        response.put("operação", "peso");
+        response.put("peso", a);
+        response.put("peso + 15%", a + maisPeso);
+        response.put("peso - 20%", a + menosPeso);
+        return ResponseEntity.ok(response);
+    }
+
 }
 

@@ -137,6 +137,20 @@
           "Aplica 10% de desconto em um valor. Exemplo de uso: ?a=2300",
           "https://estudos-java-production.up.railway.app/tarefas/desconto-dez?a=2300"
         );
+
+        addEndpoint(
+          "GET",
+          "/tarefas/comissao",
+          "retorna a comissão de 4% com base no salário. Exemplo de uso: ?a=2000&b=450",
+          "https://estudos-java-production.up.railway.app/tarefas/comissao?a=2000&b=450"
+        );
+
+        addEndpoint(
+          "GET",
+          "/tarefas/peso",
+          "Calcula e exibe o peso da pessoa caso ela ganhe 15% ou perca 20%, com base no valor informado. Exemplo de uso: ?a=65",
+          "https://estudos-java-production.up.railway.app/tarefas/peso?a=65"
+        );
       };
     </script>
   </body>
