@@ -28,10 +28,10 @@ public class TarefaController {
         Map<String, Object> response = new HashMap<>();
         double result = a * b * c;
         response.put("operação", "multiplicar-tres");
-        response.put("a", a);
-        response.put("b", b);
-        response.put("c", c);
-        response.put("resultado", result);
+        response.put("A", a);
+        response.put("B", b);
+        response.put("C", c);
+        response.put("Resultado", result);
         return ResponseEntity.ok(response);
     }
 
@@ -46,9 +46,9 @@ public class TarefaController {
         }
         double result = a / b;
         response.put("operação", "dividir");
-        response.put("a", a);
-        response.put("b", b);
-        response.put("resultado", result);
+        response.put("A", a);
+        response.put("B", b);
+        response.put("Resultado", result);
         return ResponseEntity.ok(response);
     }
 
@@ -59,9 +59,9 @@ public class TarefaController {
         Map<String, Object> response = new HashMap<>();
         double mediaPonderada = (a * 2 + b * 3) / 5;
         response.put("operação", "media-ponderada");
-        response.put("a", a);
-        response.put("b", b);
-        response.put("resultado", mediaPonderada);
+        response.put("A", a);
+        response.put("B", b);
+        response.put("Resultado", mediaPonderada);
         return ResponseEntity.ok(response);
     }
 
@@ -71,11 +71,10 @@ public class TarefaController {
     public ResponseEntity<?> descontoDez(@RequestParam double a){
         Map<String, Object> response = new HashMap<>();
         double desconto = a * 0.10;
-        double valorComDesconto = a - desconto;
 
         response.put("operação", "desconto-dez");
-        response.put("a", a);
-        response.put("valor com desconto", valorComDesconto);
+        response.put("Valor sem desconto", a);
+        response.put("Valor com desconto", a - desconto);
         return ResponseEntity.ok(response);
     }
 
@@ -87,10 +86,10 @@ public class TarefaController {
         double comissao = b * 0.04;
 
         response.put("operação", "comissão");
-        response.put("salário", a);
-        response.put("vendas", b);
-        response.put("comissão", comissao);
-        response.put("salário com comissão", a + comissao);
+        response.put("Salário", a);
+        response.put("Vendas", b);
+        response.put("Comissão", comissao);
+        response.put("Salário com comissão", a + comissao);
 
         return ResponseEntity.ok(response);
     }
@@ -105,11 +104,41 @@ public class TarefaController {
         double menosPeso = a * 0.20;
         
         response.put("operação", "peso");
-        response.put("peso", a);
-        response.put("peso + 15%", a + maisPeso);
-        response.put("peso - 20%", a + menosPeso);
+        response.put("Peso", a);
+        response.put("Peso + 15%", a + maisPeso);
+        response.put("Peso - 20%", a - menosPeso);
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/quilosparagramas")
+    @ResponseBody
+
+    public ResponseEntity<?> quilosParaGramas(@RequestParam double a){
+        Map<String, Object> response = new HashMap<>();
+
+        double gramas = a * 1000;
+
+        response.put("operação", "quilos para gramas");
+        response.put("Peso em quilos", a);
+        response.put("Peso em gramas", gramas);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/areatrapezio")
+    @ResponseBody
+
+    public ResponseEntity<?> trapezio(@RequestParam double a, @RequestParam double b, @RequestParam double c){
+        Map<String, Object> response = new HashMap<>();
+
+        double area = (a + b) * c / 2;
+
+        response.put("operação", "área do trapézio");
+        response.put("Base maior", a);
+        response.put("Base menor", b);
+        response.put("altura", c);
+        response.put("Área", area);
+        return ResponseEntity.ok(response);
+    }
 }
 
