@@ -1,6 +1,6 @@
 package com.pedro.lista;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
@@ -25,7 +25,7 @@ public class TarefaController {
     @ResponseBody
 
     public ResponseEntity<?> multiplicarTres(@RequestParam double a, @RequestParam double b, @RequestParam double c) {
-        Map<String, Object> response = new HashMap<>();
+        Map<String, Object> response = new LinkedHashMap<>();
         double result = a * b * c;
         response.put("operação", "multiplicar-tres");
         response.put("A", a);
@@ -39,7 +39,7 @@ public class TarefaController {
     @ResponseBody
 
     public ResponseEntity<?> dividir(@RequestParam double a, @RequestParam double b) {
-        Map<String, Object> response = new HashMap<>();
+        Map<String, Object> response = new LinkedHashMap<>();
         if (b == 0) {
             response.put("erro", "Divisão por zero não é permitida.");
             return ResponseEntity.badRequest().body(response);
@@ -56,7 +56,7 @@ public class TarefaController {
     @ResponseBody
 
     public ResponseEntity<?> calcularMediaPonderada(@RequestParam double a, @RequestParam double b) {
-        Map<String, Object> response = new HashMap<>();
+        Map<String, Object> response = new LinkedHashMap<>();
         double mediaPonderada = (a * 2 + b * 3) / 5;
         response.put("operação", "media-ponderada");
         response.put("A", a);
@@ -69,7 +69,7 @@ public class TarefaController {
     @ResponseBody
 
     public ResponseEntity<?> descontoDez(@RequestParam double a){
-        Map<String, Object> response = new HashMap<>();
+        Map<String, Object> response = new LinkedHashMap<>();
         double desconto = a * 0.10;
 
         response.put("operação", "desconto-dez");
@@ -82,7 +82,7 @@ public class TarefaController {
     @ResponseBody
 
     public ResponseEntity<?> comissao(@RequestParam double a, @RequestParam double b){
-        Map<String, Object> response = new HashMap<>();
+        Map<String, Object> response = new LinkedHashMap<>();
         double comissao = b * 0.04;
 
         response.put("operação", "comissão");
@@ -98,7 +98,7 @@ public class TarefaController {
     @ResponseBody
 
     public ResponseEntity<?> balanca(@RequestParam double a){
-        Map<String, Object> response = new HashMap<>();
+        Map<String, Object> response = new LinkedHashMap<>();
 
         double maisPeso = a * 0.15;
         double menosPeso = a * 0.20;
@@ -114,7 +114,7 @@ public class TarefaController {
     @ResponseBody
 
     public ResponseEntity<?> quilosParaGramas(@RequestParam double a){
-        Map<String, Object> response = new HashMap<>();
+        Map<String, Object> response = new LinkedHashMap<>();
 
         double gramas = a * 1000;
 
@@ -129,7 +129,7 @@ public class TarefaController {
     @ResponseBody
 
     public ResponseEntity<?> trapezio(@RequestParam double a, @RequestParam double b, @RequestParam double c){
-        Map<String, Object> response = new HashMap<>();
+        Map<String, Object> response = new LinkedHashMap<>();
 
         double area = (a + b) * c / 2;
 
