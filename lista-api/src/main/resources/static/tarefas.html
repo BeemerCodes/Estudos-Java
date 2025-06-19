@@ -5,116 +5,135 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lista de Tarefas - API</title>
     <style>
-      body {
-        font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif; /* Modern sans-serif stack */
+    body {
+        font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
         margin: 20px;
         background-color: #252526; /* Dark gray background */
         color: #d4d4d4; /* Light gray text */
-      }
-      h1 {
+    }
+
+    h1 {
         color: #9370DB; /* Medium Purple */
         text-align: center;
-        margin-bottom: 30px; /* Add some space below the title */
-      }
-      a {
-        color: #8ab4f8; /* A light blue often used for links in dark themes */
-      }
-      a:hover {
+        margin-bottom: 30px;
+    }
+
+    a {
+        color: #8ab4f8;
+    }
+    a:hover {
         color: #adcffc;
-      }
-      .endpoint {
-        background-color: #2d2d2d; /* Slightly lighter than body, matches tab-bar */
-        border: 1px solid #3a3a3a; /* Subtle border */
-        border-radius: 8px; /* Rounded corners */
-        padding: 20px; /* Increased padding */
-        margin-bottom: 25px; /* Increased space between cards */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Softer shadow for dark theme */
-        transition: box-shadow 0.3s ease-in-out; /* Transition for hover effect */
-      }
-      .endpoint:hover {
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Enhanced shadow on hover */
-      }
-      .endpoint h3 {
-        margin-top: 0;
-        color: #a97ae8; /* Light purple, adjust as needed */
-        font-size: 1.4em; /* Larger font size */
-        margin-bottom: 10px; /* Space below title */
-      }
-      .endpoint p {
-        color: #cccccc; /* Slightly lighter gray for paragraph text if needed, or inherit */
-        line-height: 1.6; /* Improved line spacing */
-        font-size: 0.95em;
-        margin-bottom: 15px; /* Space before result block or if no result block */
-      }
-      .result {
-        display: none; /* Keep this for initial state */
-        background-color: #202020; /* Darker charcoal background for contrast */
-        color: #c5c5c5; /* Slightly lighter gray for JSON text */
-        padding: 15px; /* Good padding */
-        margin-top: 15px; /* Space above the result block */
-        border-radius: 6px; /* Rounded corners, slightly less than parent card */
-        border: 1px solid #444; /* Subtle border */
-        white-space: pre-wrap; /* Keep for formatting */
-        word-break: break-all; /* Break long strings to prevent overflow */
-        font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; /* Monospace font for code/JSON */
-        font-size: 0.9em; /* Slightly smaller font for JSON */
-      }
-      .result.mostrar { /* Ensure the .mostrar class still works to display the block */
-        display: block;
-      }
-      input,
-      button {
-        padding: 8px;
-        margin-right: 10px;
-        border: 1px solid #ccc;
-        border-radius: 3px;
-      }
-      button {
-        background-color: #007bff;
-        color: #fff;
-        cursor: pointer;
-        border: none;
-      }
-      button:hover {
-        background-color: #0056b3;
-      }
-      /* Tabbed interface styles */
-      .tab-bar {
+    }
+
+    /* Tabbed interface styles */
+    .tab-bar {
         overflow: hidden;
-        border: 1px solid #333; /* Darker border */
-        background-color: #2d2d2d; /* Slightly lighter than body */
-        border-radius: 5px; /* Optional: rounded corners for the bar */
-        margin-bottom: 20px; /* Space before tab content */
-      }
-      .tab-bar button {
-        background-color: inherit; /* Inherit from tab-bar for default */
+        border: 1px solid #333;
+        background-color: #2d2d2d;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+
+    .tab-bar button {
+        background-color: inherit;
         float: left;
         border: none;
         outline: none;
         cursor: pointer;
-        padding: 14px 18px; /* Adjusted padding */
-        transition: background-color 0.3s, color 0.3s; /* Smooth transition */
-        color: #d4d4d4; /* Default light gray text */
-        border-bottom: 3px solid transparent; /* For active/hover indication */
-      }
-      .tab-bar button:hover {
-        background-color: #3e3e3e; /* Lighter gray on hover */
-        color: #ffffff; /* White text on hover */
-        border-bottom: 3px solid #555; /* Subtle underline on hover */
-      }
-      .tab-bar button.active {
-        background-color: #6a0dad; /* Purple background for active tab */
-        color: #ffffff; /* White text for active tab */
-        border-bottom: 3px solid #800080; /* Darker purple underline for active */
-      }
-      .tab-content {
+        padding: 14px 18px;
+        transition: background-color 0.3s, color 0.3s;
+        color: #d4d4d4;
+        border-bottom: 3px solid transparent;
+    }
+
+    .tab-bar button:hover {
+        background-color: #3e3e3e;
+        color: #ffffff;
+        border-bottom: 3px solid #555;
+    }
+
+    .tab-bar button.active {
+        background-color: #6a0dad; /* Purple */
+        color: #ffffff;
+        border-bottom: 3px solid #800080; /* Darker purple */
+    }
+
+    .tab-content {
         display: none;
-        padding: 20px 15px; /* More padding */
-        border: 1px solid #333; /* Match tab-bar border */
+        padding: 20px 15px;
+        border: 1px solid #333;
         border-top: none;
-        background-color: #252526; /* Match body background or slightly different if preferred */
-        border-radius: 0 0 5px 5px; /* Rounded bottom corners if tab-bar is rounded */
-      }
+        background-color: #252526;
+        border-radius: 0 0 5px 5px;
+    }
+
+    /* Endpoint card styling */
+    .endpoint {
+        background-color: #2d2d2d;
+        border: 1px solid #3a3a3a;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: box-shadow 0.3s ease-in-out;
+    }
+    .endpoint:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .endpoint h3 {
+        margin-top: 0;
+        color: #a97ae8; /* Light purple */
+        font-size: 1.4em;
+        margin-bottom: 10px;
+    }
+
+    .endpoint p {
+        color: #cccccc;
+        line-height: 1.6;
+        font-size: 0.95em;
+        margin-bottom: 15px;
+    }
+
+    /* Result block styling */
+    .result {
+        display: none;
+        background-color: #202020; /* Darker charcoal */
+        color: #c5c5c5;
+        padding: 15px;
+        margin-top: 15px;
+        border-radius: 6px;
+        border: 1px solid #444;
+        white-space: pre-wrap;
+        word-break: break-all;
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+        font-size: 0.9em;
+    }
+    .result.mostrar {
+        display: block;
+    }
+
+    /* Basic input/button styling (can be refined further if needed) */
+    input,
+    button { /* This will style the main tab buttons as well if not overridden by .tab-bar button */
+        padding: 8px 12px;
+        margin-right: 10px;
+        border: 1px solid #555; /* Darker border for inputs/buttons */
+        border-radius: 4px;
+        background-color: #3e3e3e; /* Dark background for inputs/buttons */
+        color: #d4d4d4; /* Light text */
+    }
+
+    button { /* Specific to non-tab buttons if any, or general button styling */
+        cursor: pointer;
+        background-color: #6a0dad; /* Purple for primary actions */
+        color: #ffffff;
+        border: none; /* Remove border for action buttons if preferred */
+    }
+    button:hover {
+        background-color: #800080; /* Darker purple on hover */
+    }
+
     </style>
   </head>
   <body>
