@@ -398,13 +398,14 @@ public class TarefaController {
         Map<String, Object> response = new LinkedHashMap<>();
 
         double cotacaoDolar = 5.49, cotacaoMarco = 0.3112, cotacaoEuro = 6.31, cotacaoLibra = 7.49;
+        double dolar = a / cotacaoDolar, marco = a / cotacaoMarco, euro = a / cotacaoEuro, libra = a / cotacaoLibra;
 
         response.put("operação", "câmbio");
         response.put("Valor em reais", a);
-        response.put("Valor em dólares", a / String.format("%.2f", cotacaoDolar));
-        response.put("Valor em marcos alemães", a / String.format("%.2f", cotacaoMarco));
-        response.put("Valor em euros", a / String.format("%.2f", cotacaoEuro));
-        response.put("Valor em libras esterlinas", a / String.format("%.2f", cotacaoLibra));
+        response.put("Valor em dólares", String.format("%.2f", dolar));
+        response.put("Valor em marcos alemães", String.format("%.2f", marco));
+        response.put("Valor em euros", String.format("%.2f", euro));
+        response.put("Valor em libras esterlinas", String.format("%.2f", libra));
 
         return ResponseEntity.ok(response);
     }
