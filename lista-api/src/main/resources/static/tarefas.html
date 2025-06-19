@@ -3,12 +3,6 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="shortcut icon"
-      href="icon.png
-    "
-      type="image/x-icon"
-    />
     <title>Lista de Tarefas - API</title>
     <style>
     body {
@@ -21,7 +15,6 @@
     h1 {
         color: #9370DB; /* Medium Purple */
         text-align: center;
-        feature/tabbed-task-interface
         margin-bottom: 30px;
     }
 
@@ -34,57 +27,6 @@
 
     /* Tabbed interface styles */
     .tab-bar {
-      }
-      .endpoint {
-        margin-bottom: 20px;
-        padding: 15px;
-        background-color: #fff;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-      }
-      .endpoint h3 {
-        margin-top: 0;
-        color: #007bff;
-      }
-      .result {
-        margin-top: 10px;
-        padding: 10px;
-        background-color: #f0f0f0;
-        border: 1px solid #ccc;
-        border-radius: 3px;
-        white-space: pre-wrap;
-      }
-      input,
-      button {
-        padding: 8px;
-        margin-right: 10px;
-        border: 1px solid #ccc;
-        border-radius: 3px;
-      }
-      button {
-        background-color: #007bff;
-        color: #fff;
-        cursor: pointer;
-        border: none;
-      }
-      button:hover {
-        background-color: #0056b3;
-      }
-      .result {
-        display: none;
-        background-color: #f0f0f0;
-        padding: 10px;
-        margin-top: 10px;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-        white-space: pre-wrap;
-      }
-      .result.mostrar {
-        display: block;
-      }
-
-      .tab-bar {
-        main
         overflow: hidden;
         border: 1px solid #333;
         background-color: #2d2d2d;
@@ -123,6 +65,7 @@
         border-top: none;
         background-color: #252526;
         border-radius: 0 0 5px 5px;
+        margin-top: 10px; /* Added to prevent overlap */
     }
 
     /* Endpoint card styling */
@@ -206,44 +149,32 @@
     </div>
 
     <div class="tab-bar">
-      <button class="tab-button" onclick="openTab(event, 'lista1')">
-        Lista 1
-      </button>
-      <button class="tab-button" onclick="openTab(event, 'lista2')">
-        Lista 2
-      </button>
-      <button class="tab-button" onclick="openTab(event, 'lista3')">
-        Lista 3
-      </button>
-      <button class="tab-button" onclick="openTab(event, 'lista4')">
-        Lista 4
-      </button>
-      <button class="tab-button" onclick="openTab(event, 'lista5')">
-        Lista 5
-      </button>
-      <button class="tab-button" onclick="openTab(event, 'lista6')">
-        Lista 6
-      </button>
+      <button class="tab-button" onclick="openTab(event, 'lista1')">Lista 1</button>
+      <button class="tab-button" onclick="openTab(event, 'lista2')">Lista 2</button>
+      <button class="tab-button" onclick="openTab(event, 'lista3')">Lista 3</button>
+      <button class="tab-button" onclick="openTab(event, 'lista4')">Lista 4</button>
+      <button class="tab-button" onclick="openTab(event, 'lista5')">Lista 5</button>
+      <button class="tab-button" onclick="openTab(event, 'lista6')">Lista 6</button>
     </div>
 
     <div id="tab-content-container">
       <div id="lista1-content" class="tab-content">
-        <!-- Content Lista 1 -->
+        <!-- Content for Lista 1 -->
       </div>
       <div id="lista2-content" class="tab-content">
-        <!-- Content Lista 2 -->
+        <!-- Content for Lista 2 -->
       </div>
       <div id="lista3-content" class="tab-content">
-        <!-- Content Lista 3 -->
+        <!-- Content for Lista 3 -->
       </div>
       <div id="lista4-content" class="tab-content">
-        <!-- Content Lista 4 -->
+        <!-- Content for Lista 4 -->
       </div>
       <div id="lista5-content" class="tab-content">
-        <!-- Content Lista 5 -->
+        <!-- Content for Lista 5 -->
       </div>
       <div id="lista6-content" class="tab-content">
-        <!-- Content Lista 6 -->
+        <!-- Content for Lista 6 -->
       </div>
     </div>
 
@@ -256,12 +187,9 @@
         }
         tabbuttons = document.getElementsByClassName("tab-button");
         for (i = 0; i < tabbuttons.length; i++) {
-          tabbuttons[i].className = tabbuttons[i].className.replace(
-            " active",
-            ""
-          );
+          tabbuttons[i].className = tabbuttons[i].className.replace(" active", "");
         }
-        document.getElementById(tabName + "-content").style.display = "block";
+        document.getElementById(tabName + '-content').style.display = "block";
         evt.currentTarget.className += " active";
       }
 
@@ -271,10 +199,7 @@
           console.error(`Container not found for tabId: ${tabId}-content`);
           return;
         }
-        const resultId = `result-${tabId}-${path.replace(
-          /[^a-zA-Z0-9]/g,
-          "-"
-        )}`;
+        const resultId = `result-${tabId}-${path.replace(/[^a-zA-Z0-9]/g, "-")}`;
 
         const endpointDiv = document.createElement("div");
         endpointDiv.className = "endpoint";
@@ -303,6 +228,7 @@
       }
 
       window.onload = function () {
+        // Make the first tab active by default
         const firstTabContent = document.getElementById("lista1-content");
         if (firstTabContent) {
           firstTabContent.style.display = "block";
@@ -312,6 +238,7 @@
           firstTabButton.className += " active";
         }
 
+        // All tasks assigned to Lista 1
         addEndpoint(
           "lista1",
           "GET",
@@ -420,8 +347,8 @@
           "lista1",
           "GET",
           "/tarefas/contas-atrasadas",
-          "Calcula e exibe o restante do salário após pagar contas atrasadas com multa de 2% ao mês. Exemplo de uso: ?a=2500&b=42.50&c=118",
-          "https://estudos-java-production.up.railway.app/tarefas/contas-atrasadas?a=2500&b=42.50&c=118"
+          "Calcula e exibe o restante do salário após pagar contas atrasadas com multa de 2% ao mês. Exemplo de uso: ?a=2500",
+          "https://estudos-java-production.up.railway.app/tarefas/contas-atrasadas?a=2500"
         );
 
         addEndpoint(
@@ -492,14 +419,6 @@
           "lista1",
           "GET",
           "/tarefas/horas-para-minutos",
-          "Calcula e exibe a conversão de horas para minutos e minutos para segundo com base no valor informado. Exemplo de uso(A = horas, B = minutos): ?a=5&b=30",
-          "https://estudos-java-production.up.railway.app/tarefas/horas-para-minutos?a=5&b=30"
-        );
-
-        addEndpoint(
-          "lista2",
-          "GET",
-          "/tarefas/teste",
           "Calcula e exibe a conversão de horas para minutos e minutos para segundo com base no valor informado. Exemplo de uso(A = horas, B = minutos): ?a=5&b=30",
           "https://estudos-java-production.up.railway.app/tarefas/horas-para-minutos?a=5&b=30"
         );
