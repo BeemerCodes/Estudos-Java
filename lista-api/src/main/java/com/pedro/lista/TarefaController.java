@@ -21,7 +21,7 @@ public class TarefaController {
     }
 
 
-    @GetMapping("/multiplicar-tres")
+    @GetMapping("/multiplicartres")
     @ResponseBody
 
     public ResponseEntity<?> multiplicarTres(@RequestParam double a, @RequestParam double b, @RequestParam double c) {
@@ -52,7 +52,7 @@ public class TarefaController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/media-ponderada")
+    @GetMapping("/mediaponderada")
     @ResponseBody
 
     public ResponseEntity<?> calcularMediaPonderada(@RequestParam double a, @RequestParam double b) {
@@ -65,7 +65,7 @@ public class TarefaController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/desconto-dez")
+    @GetMapping("/descontodez")
     @ResponseBody
 
     public ResponseEntity<?> descontoDez(@RequestParam double a){
@@ -235,7 +235,7 @@ public class TarefaController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/contas-atrasadas")
+    @GetMapping("/contasatrasadas")
     @ResponseBody
 
     public ResponseEntity<?> contasAtrasadas(@RequestParam double a, @RequestParam double b, @RequestParam double c){
@@ -311,7 +311,7 @@ public class TarefaController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/medida-escada")
+    @GetMapping("/medidaescada")
     @ResponseBody
 
     public ResponseEntity<?> medidaEscada(@RequestParam double a, @RequestParam double b){
@@ -328,7 +328,7 @@ public class TarefaController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/quanto-vou-ganhar")
+    @GetMapping("/quantovouganhar")
     @ResponseBody
 
     public ResponseEntity<?> quantoVouGanhar(@RequestParam double a, @RequestParam double b, @RequestParam double c){
@@ -409,7 +409,7 @@ public class TarefaController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/horas-para-minutos")
+    @GetMapping("/horasparaminutos")
     @ResponseBody
 
     public ResponseEntity<?> horasParaMinutos(@RequestParam double a, @RequestParam double b){
@@ -426,15 +426,52 @@ public class TarefaController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/")
+    @GetMapping("/menornumero")
     @ResponseBody
 
-    public ResponseEntity<?> tarefa16(@RequestParam double a){
+    public ResponseEntity<?> menornumero(@RequestParam double a, @RequestParam double b){
         Map<String, Object> response = new LinkedHashMap<>();
 
+            response.put("operação", "Menor número");
+            response.put("Número A", a);
+            response.put("Número B", b);
+
+                if( a < b) {
+                    response.put("Resultado", "O menor número é A: " + a);
+                } else if (b < a) {
+                    response.put("Resultado", "O menor número é B: " + b);
+                } else {
+                    response.put("Resultado", "Os números são iguais: " + a);
+        }
 
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/maiornumero")
+    @ResponseBody
+
+    public ResponseEntity<?> maiornumero(@RequestParam double a, @RequestParam double b, @RequestParam double c){
+        Map<String, Object> response = new LinkedHashMap<>();
+
+        response.put("operação", "Maior número");
+        response.put("Número A", a);
+        response.put("Número B", b);
+        response.put("Número C", c);
+
+        if (a > b && a > c) {
+            response.put("O maior número é", a);
+        } else if (b > a && b > c) {
+            response.put("O maior número é", b);
+        } else if (c > a && c > b) {
+            response.put("O maior número é", c);
+        } else {
+            response.put("erro", "Os números são iguais.");
+        }
+
+        return ResponseEntity.ok(response);
+    }
+
+
     
 }
 
