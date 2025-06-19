@@ -11,14 +11,29 @@
     />
     <title>Lista de Tarefas - API</title>
     <style>
-      body {
-        font-family: Arial, sans-serif;
+    body {
+        font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
         margin: 20px;
-        background-color: #f4f4f9;
-      }
-      h1 {
-        color: #333;
+        background-color: #252526; /* Dark gray background */
+        color: #d4d4d4; /* Light gray text */
+    }
+
+    h1 {
+        color: #9370DB; /* Medium Purple */
         text-align: center;
+        feature/tabbed-task-interface
+        margin-bottom: 30px;
+    }
+
+    a {
+        color: #8ab4f8;
+    }
+    a:hover {
+        color: #adcffc;
+    }
+
+    /* Tabbed interface styles */
+    .tab-bar {
       }
       .endpoint {
         margin-bottom: 20px;
@@ -69,31 +84,114 @@
       }
 
       .tab-bar {
+        main
         overflow: hidden;
-        border: 1px solid #ccc;
-        background-color: #f1f1f1;
-      }
-      .tab-bar button {
+        border: 1px solid #333;
+        background-color: #2d2d2d;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+
+    .tab-bar button {
         background-color: inherit;
         float: left;
         border: none;
         outline: none;
         cursor: pointer;
-        padding: 14px 16px;
-        transition: 0.3s;
-      }
-      .tab-bar button:hover {
-        background-color: #ddd;
-      }
-      .tab-bar button.active {
-        background-color: #ccc;
-      }
-      .tab-content {
+        padding: 14px 18px;
+        transition: background-color 0.3s, color 0.3s;
+        color: #d4d4d4;
+        border-bottom: 3px solid transparent;
+    }
+
+    .tab-bar button:hover {
+        background-color: #3e3e3e;
+        color: #ffffff;
+        border-bottom: 3px solid #555;
+    }
+
+    .tab-bar button.active {
+        background-color: #6a0dad; /* Purple */
+        color: #ffffff;
+        border-bottom: 3px solid #800080; /* Darker purple */
+    }
+
+    .tab-content {
         display: none;
-        padding: 6px 12px;
-        border: 1px solid #ccc;
+        padding: 20px 15px;
+        border: 1px solid #333;
         border-top: none;
-      }
+        background-color: #252526;
+        border-radius: 0 0 5px 5px;
+    }
+
+    /* Endpoint card styling */
+    .endpoint {
+        background-color: #2d2d2d;
+        border: 1px solid #3a3a3a;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: box-shadow 0.3s ease-in-out;
+    }
+    .endpoint:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .endpoint h3 {
+        margin-top: 0;
+        color: #a97ae8; /* Light purple */
+        font-size: 1.4em;
+        margin-bottom: 10px;
+    }
+
+    .endpoint p {
+        color: #cccccc;
+        line-height: 1.6;
+        font-size: 0.95em;
+        margin-bottom: 15px;
+    }
+
+    /* Result block styling */
+    .result {
+        display: none;
+        background-color: #202020; /* Darker charcoal */
+        color: #c5c5c5;
+        padding: 15px;
+        margin-top: 15px;
+        border-radius: 6px;
+        border: 1px solid #444;
+        white-space: pre-wrap;
+        word-break: break-all;
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+        font-size: 0.9em;
+    }
+    .result.mostrar {
+        display: block;
+    }
+
+    /* Basic input/button styling (can be refined further if needed) */
+    input,
+    button { /* This will style the main tab buttons as well if not overridden by .tab-bar button */
+        padding: 8px 12px;
+        margin-right: 10px;
+        border: 1px solid #555; /* Darker border for inputs/buttons */
+        border-radius: 4px;
+        background-color: #3e3e3e; /* Dark background for inputs/buttons */
+        color: #d4d4d4; /* Light text */
+    }
+
+    button { /* Specific to non-tab buttons if any, or general button styling */
+        cursor: pointer;
+        background-color: #6a0dad; /* Purple for primary actions */
+        color: #ffffff;
+        border: none; /* Remove border for action buttons if preferred */
+    }
+    button:hover {
+        background-color: #800080; /* Darker purple on hover */
+    }
+
     </style>
   </head>
   <body>
