@@ -167,22 +167,22 @@
 
     <div id="tab-content-container">
       <div id="lista1-content" class="tab-content">
-        <!-- Content for Lista 1 -->
+        <!--r Lista 1 -->
       </div>
       <div id="lista2-content" class="tab-content">
-        <!-- Content for Lista 2 -->
+        <!--r Lista 2 -->
       </div>
       <div id="lista3-content" class="tab-content">
-        <!-- Content for Lista 3 -->
+        <!-- Lista 3 -->
       </div>
       <div id="lista4-content" class="tab-content">
-        <!-- Content for Lista 4 -->
+        <!-- Lista 4 -->
       </div>
       <div id="lista5-content" class="tab-content">
-        <!-- Content for Lista 5 -->
+        <!-- Lista 5 -->
       </div>
       <div id="lista6-content" class="tab-content">
-        <!-- Content for Lista 6 -->
+        <!-- Lista 6 -->
       </div>
     </div>
 
@@ -242,7 +242,6 @@
       }
 
       window.onload = function () {
-        // Make the first tab active by default
         const firstTabContent = document.getElementById("lista1-content");
         if (firstTabContent) {
           firstTabContent.style.display = "block";
@@ -252,7 +251,6 @@
           firstTabButton.className += " active";
         }
 
-        // All tasks assigned to Lista 1
         addEndpoint(
           "lista1",
           "GET",
