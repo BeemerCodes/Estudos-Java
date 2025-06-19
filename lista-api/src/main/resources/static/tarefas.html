@@ -106,6 +106,8 @@
       <button class="tab-button" onclick="openTab(event, 'lista2')">Lista 2</button>
       <button class="tab-button" onclick="openTab(event, 'lista3')">Lista 3</button>
       <button class="tab-button" onclick="openTab(event, 'lista4')">Lista 4</button>
+      <button class="tab-button" onclick="openTab(event, 'lista5')">Lista 5</button>
+      <button class="tab-button" onclick="openTab(event, 'lista6')">Lista 6</button>
     </div>
 
     <div id="tab-content-container">
@@ -120,6 +122,12 @@
       </div>
       <div id="lista4-content" class="tab-content">
         <!-- Content for Lista 4 -->
+      </div>
+      <div id="lista5-content" class="tab-content">
+        <!-- Content for Lista 5 -->
+      </div>
+      <div id="lista6-content" class="tab-content">
+        <!-- Content for Lista 6 -->
       </div>
     </div>
 
@@ -183,7 +191,7 @@
           firstTabButton.className += " active";
         }
 
-        // Tab 1: Lista 1 (First 6 tasks)
+        // All tasks assigned to Lista 1
         addEndpoint(
           "lista1",
           "GET",
@@ -232,9 +240,8 @@
           "https://estudos-java-production.up.railway.app/tarefas/peso?a=65"
         );
 
-        // Tab 2: Lista 2 (Next 6 tasks)
         addEndpoint(
-          "lista2",
+          "lista1",
           "GET",
           "/tarefas/quilosparagramas",
           "Calcula e exibe o peso da pessoa em gramas. Exemplo de uso: ?a=65",
@@ -242,7 +249,7 @@
         );
 
         addEndpoint(
-          "lista2",
+          "lista1",
           "GET",
           "/tarefas/areatrapezio",
           "Calcula e exibe a área do trapézio com base nos valores informados. Exemplo de uso( A =  Base maior, B = Base menor, C = Altura): ?a=65&b=70&c=80",
@@ -250,7 +257,7 @@
         );
 
         addEndpoint(
-          "lista2",
+          "lista1",
           "GET",
           "/tarefas/areaquadrado",
           "Calcula e exibe a área do quadrado com base no valor do lado informado. Exemplo de uso: ?a=5&b=7",
@@ -258,7 +265,7 @@
         );
 
         addEndpoint(
-          "lista2",
+          "lista1",
           "GET",
           "/tarefas/arearelosango",
           "Calcula e exibe a área do losango com base nos valores das diagonais informados. Exemplo de uso( A = diagonal maior, B = diagonal menor): ?a=24&b=17",
@@ -266,7 +273,7 @@
         );
 
         addEndpoint(
-          "lista2",
+          "lista1",
           "GET",
           "/tarefas/quantidadesalarios",
           "Calcula e exibe a quantidade de salários mínimos que uma pessoa ganha com base no valor do salário mínimo e no valor do salário da pessoa. Exemplo de uso: ?a=4800",
@@ -274,16 +281,15 @@
         );
 
         addEndpoint(
-          "lista2",
+          "lista1",
           "GET",
           "/tarefas/tabuada",
           "Calcula e exibe a tabuada de um número informado. Exemplo de uso: ?a=7",
           "https://estudos-java-production.up.railway.app/tarefas/tabuada?a=7"
         );
 
-        // Tab 3: Lista 3 (Next 6 tasks)
         addEndpoint(
-          "lista3",
+          "lista1",
           "GET",
           "/tarefas/idade",
           "Calcula e exibe a idade em anos, meses, dias, horas, minutos e segundo com base no ano de nascimento informado. Exemplo de uso: ?a=2000",
@@ -291,7 +297,7 @@
         );
 
         addEndpoint(
-          "lista3",
+          "lista1",
           "GET",
           "/tarefas/contas-atrasadas",
           "Calcula e exibe o restante do salário após pagar contas atrasadas com multa de 2% ao mês. Exemplo de uso: ?a=2500",
@@ -299,7 +305,7 @@
         );
 
         addEndpoint(
-          "lista3",
+          "lista1",
           "GET",
           "/tarefas/circunferencia",
           "Calcula e exibe a comprimento, área e volume de um círculo com base no valor do raio informado. Exemplo de uso: ?a=5",
@@ -307,7 +313,7 @@
         );
 
         addEndpoint(
-          "lista3",
+          "lista1",
           "GET",
           "/tarefas/celsiusparafahrenheit",
           "Converte e exibe a temperatura de Celsius para Fahrenheit com base no valor informado. Exemplo de uso: ?a=30",
@@ -315,7 +321,7 @@
         );
 
         addEndpoint(
-          "lista3",
+          "lista1",
           "GET",
           "/tarefas/iluminacao",
           "Exibe a quantidade de lâmpadas necessárias(18w) para iluminar um ambiente com base na área informada. Exemplo de uso(A = largura, B = comprimento): ?a=50&b=34",
@@ -323,16 +329,15 @@
         );
 
         addEndpoint(
-          "lista3",
+          "lista1",
           "GET",
           "/tarefas/medida-escada",
           "Calcula e exibe o comprimento da escada necessária para alcançar uma altura com base na altura e no ângulo de inclinação informados. Exemplo de uso( A = angulo, B = altura): ?a=30&b=5",
           "https://estudos-java-production.up.railway.app/tarefas/medida-escada?a=30&b=5"
         );
 
-        // Tab 4: Lista 4 (Remaining 5 tasks)
         addEndpoint(
-          "lista4",
+          "lista1",
           "GET",
           "/tarefas/quanto-vou-ganhar",
           "Calcula e exibe o valor total que uma pessoa vai ganhar com base no valor mensal que ela recebe, horas trabalhadas e horas extras. Exemplo de uso: ?a=1518&b=12&c=5",
@@ -340,7 +345,7 @@
         );
 
         addEndpoint(
-          "lista4",
+          "lista1",
           "GET",
           "/tarefas/poligono",
           "Calcula e exibe a quantidade de diagonais de um polígono com base no número de lados informado. Exemplo de uso: ?a=5",
@@ -348,7 +353,7 @@
         );
 
         addEndpoint(
-          "lista4",
+          "lista1",
           "GET",
           "/tarefas/angulo",
           "Calcula e exibe o terceiro ângulo de um triângulo Exemplo de uso: ?a=60&b=30",
@@ -356,7 +361,7 @@
         );
 
         addEndpoint(
-          "lista4",
+          "lista1",
           "GET",
           "/tarefas/cambio",
           "Calcula e exibe o valor em reais convertido para dólar, marco alemão, euro e libra com base na cotação do dia (19/06/25). Exemplo de uso: ?a=8900",
@@ -364,7 +369,7 @@
         );
 
         addEndpoint(
-          "lista4",
+          "lista1",
           "GET",
           "/tarefas/horas-para-minutos",
           "Calcula e exibe a conversão de horas para minutos e minutos para segundo com base no valor informado. Exemplo de uso(A = horas, B = minutos): ?a=5&b=30",
