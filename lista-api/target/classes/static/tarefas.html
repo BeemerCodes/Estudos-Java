@@ -3,6 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="shortcut icon"
+      href="icon.png
+    "
+      type="image/x-icon"
+    />
     <title>Lista de Tarefas - API</title>
     <style>
       body {
@@ -61,6 +67,33 @@
       .result.mostrar {
         display: block;
       }
+
+      .tab-bar {
+        overflow: hidden;
+        border: 1px solid #ccc;
+        background-color: #f1f1f1;
+      }
+      .tab-bar button {
+        background-color: inherit;
+        float: left;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding: 14px 16px;
+        transition: 0.3s;
+      }
+      .tab-bar button:hover {
+        background-color: #ddd;
+      }
+      .tab-bar button.active {
+        background-color: #ccc;
+      }
+      .tab-content {
+        display: none;
+        padding: 6px 12px;
+        border: 1px solid #ccc;
+        border-top: none;
+      }
     </style>
   </head>
   <body>
@@ -74,14 +107,76 @@
       </p>
     </div>
 
-    <div id="endpoints-container">
-      <!-- Endpoints estaticos, preguiça... -->
+    <div class="tab-bar">
+      <button class="tab-button" onclick="openTab(event, 'lista1')">
+        Lista 1
+      </button>
+      <button class="tab-button" onclick="openTab(event, 'lista2')">
+        Lista 2
+      </button>
+      <button class="tab-button" onclick="openTab(event, 'lista3')">
+        Lista 3
+      </button>
+      <button class="tab-button" onclick="openTab(event, 'lista4')">
+        Lista 4
+      </button>
+      <button class="tab-button" onclick="openTab(event, 'lista5')">
+        Lista 5
+      </button>
+      <button class="tab-button" onclick="openTab(event, 'lista6')">
+        Lista 6
+      </button>
+    </div>
+
+    <div id="tab-content-container">
+      <div id="lista1-content" class="tab-content">
+        <!-- Content Lista 1 -->
+      </div>
+      <div id="lista2-content" class="tab-content">
+        <!-- Content Lista 2 -->
+      </div>
+      <div id="lista3-content" class="tab-content">
+        <!-- Content Lista 3 -->
+      </div>
+      <div id="lista4-content" class="tab-content">
+        <!-- Content Lista 4 -->
+      </div>
+      <div id="lista5-content" class="tab-content">
+        <!-- Content Lista 5 -->
+      </div>
+      <div id="lista6-content" class="tab-content">
+        <!-- Content Lista 6 -->
+      </div>
     </div>
 
     <script>
-      function addEndpoint(method, path, description, exemploURL) {
-        const container = document.getElementById("endpoints-container");
-        const resultId = `result-${path.replace(/[^a-zA-Z0-9]/g, "-")}`;
+      function openTab(evt, tabName) {
+        var i, tabcontent, tabbuttons;
+        tabcontent = document.getElementsByClassName("tab-content");
+        for (i = 0; i < tabcontent.length; i++) {
+          tabcontent[i].style.display = "none";
+        }
+        tabbuttons = document.getElementsByClassName("tab-button");
+        for (i = 0; i < tabbuttons.length; i++) {
+          tabbuttons[i].className = tabbuttons[i].className.replace(
+            " active",
+            ""
+          );
+        }
+        document.getElementById(tabName + "-content").style.display = "block";
+        evt.currentTarget.className += " active";
+      }
+
+      function addEndpoint(tabId, method, path, description, exemploURL) {
+        const container = document.getElementById(tabId + "-content");
+        if (!container) {
+          console.error(`Container not found for tabId: ${tabId}-content`);
+          return;
+        }
+        const resultId = `result-${tabId}-${path.replace(
+          /[^a-zA-Z0-9]/g,
+          "-"
+        )}`;
 
         const endpointDiv = document.createElement("div");
         endpointDiv.className = "endpoint";
@@ -110,7 +205,17 @@
       }
 
       window.onload = function () {
+        const firstTabContent = document.getElementById("lista1-content");
+        if (firstTabContent) {
+          firstTabContent.style.display = "block";
+        }
+        const firstTabButton = document.querySelector(".tab-bar button");
+        if (firstTabButton) {
+          firstTabButton.className += " active";
+        }
+
         addEndpoint(
+          "lista1",
           "GET",
           "/tarefas/multiplicar-tres",
           "Multiplica três números. Exemplo de uso: ?a=2&b=3&c=4",
@@ -118,6 +223,7 @@
         );
 
         addEndpoint(
+          "lista1",
           "GET",
           "/tarefas/dividir",
           "Divide dois números. Exemplo de uso: ?a=10&b=5",
@@ -125,6 +231,7 @@
         );
 
         addEndpoint(
+          "lista1",
           "GET",
           "/tarefas/media-ponderada",
           "Calcula a média ponderada com pesos 2 e 3. Exemplo de uso: ?a=4&b=6",
@@ -132,6 +239,7 @@
         );
 
         addEndpoint(
+          "lista1",
           "GET",
           "/tarefas/desconto-dez",
           "Aplica 10% de desconto em um valor. Exemplo de uso: ?a=2300",
@@ -139,6 +247,7 @@
         );
 
         addEndpoint(
+          "lista1",
           "GET",
           "/tarefas/comissao",
           "retorna a comissão de 4% com base no salário. Exemplo de uso: ?a=2000&b=450",
@@ -146,6 +255,7 @@
         );
 
         addEndpoint(
+          "lista1",
           "GET",
           "/tarefas/peso",
           "Calcula e exibe o peso da pessoa caso ela ganhe 15% ou perca 20%, com base no valor informado. Exemplo de uso: ?a=65",
@@ -153,6 +263,7 @@
         );
 
         addEndpoint(
+          "lista1",
           "GET",
           "/tarefas/quilosparagramas",
           "Calcula e exibe o peso da pessoa em gramas. Exemplo de uso: ?a=65",
@@ -160,6 +271,7 @@
         );
 
         addEndpoint(
+          "lista1",
           "GET",
           "/tarefas/areatrapezio",
           "Calcula e exibe a área do trapézio com base nos valores informados. Exemplo de uso( A =  Base maior, B = Base menor, C = Altura): ?a=65&b=70&c=80",
@@ -167,6 +279,7 @@
         );
 
         addEndpoint(
+          "lista1",
           "GET",
           "/tarefas/areaquadrado",
           "Calcula e exibe a área do quadrado com base no valor do lado informado. Exemplo de uso: ?a=5&b=7",
@@ -174,6 +287,7 @@
         );
 
         addEndpoint(
+          "lista1",
           "GET",
           "/tarefas/arearelosango",
           "Calcula e exibe a área do losango com base nos valores das diagonais informados. Exemplo de uso( A = diagonal maior, B = diagonal menor): ?a=24&b=17",
@@ -181,6 +295,7 @@
         );
 
         addEndpoint(
+          "lista1",
           "GET",
           "/tarefas/quantidadesalarios",
           "Calcula e exibe a quantidade de salários mínimos que uma pessoa ganha com base no valor do salário mínimo e no valor do salário da pessoa. Exemplo de uso: ?a=4800",
@@ -188,6 +303,7 @@
         );
 
         addEndpoint(
+          "lista1",
           "GET",
           "/tarefas/tabuada",
           "Calcula e exibe a tabuada de um número informado. Exemplo de uso: ?a=7",
@@ -195,6 +311,7 @@
         );
 
         addEndpoint(
+          "lista1",
           "GET",
           "/tarefas/idade",
           "Calcula e exibe a idade em anos, meses, dias, horas, minutos e segundo com base no ano de nascimento informado. Exemplo de uso: ?a=2000",
@@ -202,13 +319,15 @@
         );
 
         addEndpoint(
+          "lista1",
           "GET",
           "/tarefas/contas-atrasadas",
-          "Calcula e exibe o restante do salário após pagar contas atrasadas com multa de 2% ao mês. Exemplo de uso: ?a=2500",
-          "https://estudos-java-production.up.railway.app/tarefas/contas-atrasadas?a=2500"
+          "Calcula e exibe o restante do salário após pagar contas atrasadas com multa de 2% ao mês. Exemplo de uso: ?a=2500&b=42.50&c=118",
+          "https://estudos-java-production.up.railway.app/tarefas/contas-atrasadas?a=2500&b=42.50&c=118"
         );
 
         addEndpoint(
+          "lista1",
           "GET",
           "/tarefas/circunferencia",
           "Calcula e exibe a comprimento, área e volume de um círculo com base no valor do raio informado. Exemplo de uso: ?a=5",
@@ -216,6 +335,7 @@
         );
 
         addEndpoint(
+          "lista1",
           "GET",
           "/tarefas/celsiusparafahrenheit",
           "Converte e exibe a temperatura de Celsius para Fahrenheit com base no valor informado. Exemplo de uso: ?a=30",
@@ -223,6 +343,7 @@
         );
 
         addEndpoint(
+          "lista1",
           "GET",
           "/tarefas/iluminacao",
           "Exibe a quantidade de lâmpadas necessárias(18w) para iluminar um ambiente com base na área informada. Exemplo de uso(A = largura, B = comprimento): ?a=50&b=34",
@@ -230,6 +351,7 @@
         );
 
         addEndpoint(
+          "lista1",
           "GET",
           "/tarefas/medida-escada",
           "Calcula e exibe o comprimento da escada necessária para alcançar uma altura com base na altura e no ângulo de inclinação informados. Exemplo de uso( A = angulo, B = altura): ?a=30&b=5",
@@ -237,6 +359,7 @@
         );
 
         addEndpoint(
+          "lista1",
           "GET",
           "/tarefas/quanto-vou-ganhar",
           "Calcula e exibe o valor total que uma pessoa vai ganhar com base no valor mensal que ela recebe, horas trabalhadas e horas extras. Exemplo de uso: ?a=1518&b=12&c=5",
@@ -244,6 +367,7 @@
         );
 
         addEndpoint(
+          "lista1",
           "GET",
           "/tarefas/poligono",
           "Calcula e exibe a quantidade de diagonais de um polígono com base no número de lados informado. Exemplo de uso: ?a=5",
@@ -251,6 +375,7 @@
         );
 
         addEndpoint(
+          "lista1",
           "GET",
           "/tarefas/angulo",
           "Calcula e exibe o terceiro ângulo de um triângulo Exemplo de uso: ?a=60&b=30",
@@ -258,6 +383,7 @@
         );
 
         addEndpoint(
+          "lista1",
           "GET",
           "/tarefas/cambio",
           "Calcula e exibe o valor em reais convertido para dólar, marco alemão, euro e libra com base na cotação do dia (19/06/25). Exemplo de uso: ?a=8900",
@@ -265,8 +391,17 @@
         );
 
         addEndpoint(
+          "lista1",
           "GET",
           "/tarefas/horas-para-minutos",
+          "Calcula e exibe a conversão de horas para minutos e minutos para segundo com base no valor informado. Exemplo de uso(A = horas, B = minutos): ?a=5&b=30",
+          "https://estudos-java-production.up.railway.app/tarefas/horas-para-minutos?a=5&b=30"
+        );
+
+        addEndpoint(
+          "lista2",
+          "GET",
+          "/tarefas/teste",
           "Calcula e exibe a conversão de horas para minutos e minutos para segundo com base no valor informado. Exemplo de uso(A = horas, B = minutos): ?a=5&b=30",
           "https://estudos-java-production.up.railway.app/tarefas/horas-para-minutos?a=5&b=30"
         );
