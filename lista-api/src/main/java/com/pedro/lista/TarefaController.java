@@ -190,7 +190,7 @@ public class TarefaController {
         response.put("operação", "Quantidade de salários");
         response.put("Salário", a);
         response.put("Salário mínimo", salarioMinimo);
-        response.put("Quantidade de salários recebidos", quantidadeSalarios);
+        response.put("Quantidade de salários recebidos", String.format("%.2f", quantidadeSalarios));
 
         return ResponseEntity.ok(response);
     }
@@ -268,9 +268,9 @@ public class TarefaController {
 
         response.put("operação", "circunferência");
         response.put("Raio", a);
-        response.put("Comprimento", comprimento);
-        response.put("Área", area);
-        response.put("Volume", volume);
+        response.put("Comprimento", String.format("%.2f", comprimento));
+        response.put("Área", String.format("%.2f", area));
+        response.put("Volume", String.format("%.2f", volume));
 
         return ResponseEntity.ok(response);
 
@@ -323,7 +323,7 @@ public class TarefaController {
         response.put("operação", "medida da escada");
         response.put("Grau de inclinação", a);
         response.put("Distância da base", b);
-        response.put("Medida da escada", medidaEscada);
+        response.put("Medida da escada", String.format("%.2f", medidaEscada));
 
         return ResponseEntity.ok(response);
     }
@@ -401,10 +401,10 @@ public class TarefaController {
 
         response.put("operação", "câmbio");
         response.put("Valor em reais", a);
-        response.put("Valor em dólares", a / cotacaoDolar);
-        response.put("Valor em marcos alemães", a / cotacaoMarco);
-        response.put("Valor em euros", a / cotacaoEuro);
-        response.put("Valor em libras esterlinas", a / cotacaoLibra);
+        response.put("Valor em dólares", a / String.format("%.2f", cotacaoDolar));
+        response.put("Valor em marcos alemães", a / String.format("%.2f", cotacaoMarco));
+        response.put("Valor em euros", a / String.format("%.2f", cotacaoEuro));
+        response.put("Valor em libras esterlinas", a / String.format("%.2f", cotacaoLibra));
 
         return ResponseEntity.ok(response);
     }
