@@ -141,7 +141,7 @@ public class TarefaController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/areadoquadrado")
+    @GetMapping("/areaquadrado")
     @ResponseBody
 
     public ResponseEntity<?> areaQuadrado(@RequestParam double a, @RequestParam double b){
@@ -425,15 +425,6 @@ public class TarefaController {
 
         return ResponseEntity.ok(response);
     }
-
-    @GetMapping("/")
-    @ResponseBody
-
-    public ResponseEntity<?> tarefa16(@RequestParam double a){
-        Map<String, Object> response = new LinkedHashMap<>();
-
-
-        return ResponseEntity.ok(response);
-    }
+    
 }
 
