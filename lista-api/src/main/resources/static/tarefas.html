@@ -6,32 +6,61 @@
     <title>Lista de Tarefas - API</title>
     <style>
       body {
-        font-family: Arial, sans-serif;
+        font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif; /* Modern sans-serif stack */
         margin: 20px;
-        background-color: #f4f4f9;
+        background-color: #252526; /* Dark gray background */
+        color: #d4d4d4; /* Light gray text */
       }
       h1 {
-        color: #333;
+        color: #9370DB; /* Medium Purple */
         text-align: center;
+        margin-bottom: 30px; /* Add some space below the title */
+      }
+      a {
+        color: #8ab4f8; /* A light blue often used for links in dark themes */
+      }
+      a:hover {
+        color: #adcffc;
       }
       .endpoint {
-        margin-bottom: 20px;
-        padding: 15px;
-        background-color: #fff;
-        border: 1px solid #ddd;
-        border-radius: 5px;
+        background-color: #2d2d2d; /* Slightly lighter than body, matches tab-bar */
+        border: 1px solid #3a3a3a; /* Subtle border */
+        border-radius: 8px; /* Rounded corners */
+        padding: 20px; /* Increased padding */
+        margin-bottom: 25px; /* Increased space between cards */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Softer shadow for dark theme */
+        transition: box-shadow 0.3s ease-in-out; /* Transition for hover effect */
+      }
+      .endpoint:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Enhanced shadow on hover */
       }
       .endpoint h3 {
         margin-top: 0;
-        color: #007bff;
+        color: #a97ae8; /* Light purple, adjust as needed */
+        font-size: 1.4em; /* Larger font size */
+        margin-bottom: 10px; /* Space below title */
+      }
+      .endpoint p {
+        color: #cccccc; /* Slightly lighter gray for paragraph text if needed, or inherit */
+        line-height: 1.6; /* Improved line spacing */
+        font-size: 0.95em;
+        margin-bottom: 15px; /* Space before result block or if no result block */
       }
       .result {
-        margin-top: 10px;
-        padding: 10px;
-        background-color: #f0f0f0;
-        border: 1px solid #ccc;
-        border-radius: 3px;
-        white-space: pre-wrap;
+        display: none; /* Keep this for initial state */
+        background-color: #202020; /* Darker charcoal background for contrast */
+        color: #c5c5c5; /* Slightly lighter gray for JSON text */
+        padding: 15px; /* Good padding */
+        margin-top: 15px; /* Space above the result block */
+        border-radius: 6px; /* Rounded corners, slightly less than parent card */
+        border: 1px solid #444; /* Subtle border */
+        white-space: pre-wrap; /* Keep for formatting */
+        word-break: break-all; /* Break long strings to prevent overflow */
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; /* Monospace font for code/JSON */
+        font-size: 0.9em; /* Slightly smaller font for JSON */
+      }
+      .result.mostrar { /* Ensure the .mostrar class still works to display the block */
+        display: block;
       }
       input,
       button {
@@ -49,44 +78,42 @@
       button:hover {
         background-color: #0056b3;
       }
-      .result {
-        display: none;
-        background-color: #f0f0f0;
-        padding: 10px;
-        margin-top: 10px;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-        white-space: pre-wrap;
-      }
-      .result.mostrar {
-        display: block;
-      }
       /* Tabbed interface styles */
       .tab-bar {
         overflow: hidden;
-        border: 1px solid #ccc;
-        background-color: #f1f1f1;
+        border: 1px solid #333; /* Darker border */
+        background-color: #2d2d2d; /* Slightly lighter than body */
+        border-radius: 5px; /* Optional: rounded corners for the bar */
+        margin-bottom: 20px; /* Space before tab content */
       }
       .tab-bar button {
-        background-color: inherit;
+        background-color: inherit; /* Inherit from tab-bar for default */
         float: left;
         border: none;
         outline: none;
         cursor: pointer;
-        padding: 14px 16px;
-        transition: 0.3s;
+        padding: 14px 18px; /* Adjusted padding */
+        transition: background-color 0.3s, color 0.3s; /* Smooth transition */
+        color: #d4d4d4; /* Default light gray text */
+        border-bottom: 3px solid transparent; /* For active/hover indication */
       }
       .tab-bar button:hover {
-        background-color: #ddd;
+        background-color: #3e3e3e; /* Lighter gray on hover */
+        color: #ffffff; /* White text on hover */
+        border-bottom: 3px solid #555; /* Subtle underline on hover */
       }
       .tab-bar button.active {
-        background-color: #ccc;
+        background-color: #6a0dad; /* Purple background for active tab */
+        color: #ffffff; /* White text for active tab */
+        border-bottom: 3px solid #800080; /* Darker purple underline for active */
       }
       .tab-content {
         display: none;
-        padding: 6px 12px;
-        border: 1px solid #ccc;
+        padding: 20px 15px; /* More padding */
+        border: 1px solid #333; /* Match tab-bar border */
         border-top: none;
+        background-color: #252526; /* Match body background or slightly different if preferred */
+        border-radius: 0 0 5px 5px; /* Rounded bottom corners if tab-bar is rounded */
       }
     </style>
   </head>
