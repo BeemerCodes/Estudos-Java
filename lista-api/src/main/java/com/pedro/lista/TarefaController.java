@@ -472,7 +472,47 @@ public class TarefaController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/calculadorasimples")
+    @ResponseBody
 
+    public ResponseEntity<?> tarefa16(@RequestParam double a, @RequestParam double b, @RequestParam String c) {
+        Map<String, Object> response = new LinkedHashMap<>();
+
+        double resultado = 0;
+        switch (c.toLowerCase()) {
+            case "soma":
+                resultado = a + b;
+                response.put("operação", "soma");
+                break;
+            case "subtracao":
+                resultado = a - b;
+                response.put("operação", "subtração");
+                break;
+            case "multiplicacao":
+                resultado = a * b;
+                response.put("operação", "multiplicação");
+                break;
+            case "divisao":
+                if (b == 0) {
+                    response.put("erro", "Divisão por zero não é permitida.");
+                    return ResponseEntity.badRequest().body(response);
+                }
+                resultado = a / b;
+                response.put("operação", "divisão");
+                break;
+            default:
+                response.put("erro", "Operação inválida. Operações permitidas: soma, subtracao, multiplicacao ou divisao.");
+                return ResponseEntity.badRequest().body(response);
+        }
+
+        response.put("operação", "Calculadora simples");
+        response.put("A", a);
+        response.put("B", b);
+        response.put("Tipo de calculo", c);
+        response.put("Resultado", resultado);
+
+        return ResponseEntity.ok(response);
+    }
     
 }
 
