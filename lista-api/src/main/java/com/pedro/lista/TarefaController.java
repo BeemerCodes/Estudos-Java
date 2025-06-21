@@ -473,43 +473,51 @@ public class TarefaController {
     }
 
     @GetMapping("/calculadorasimples")
+@ResponseBody
+public ResponseEntity<?> calculadorasimples(@RequestParam double a, @RequestParam double b, @RequestParam int opcao) {
+    Map<String, Object> response = new LinkedHashMap<>();
+    double resultado = 0;
+
+    switch (opcao) {
+        case 1:
+            resultado = (a + b) / 2;
+            response.put("operação", "Média entre os números");
+            break;
+        case 2:
+            resultado = Math.abs(a - b);
+            response.put("operação", "Diferença do maior pelo menor");
+            break;
+        case 3:
+            resultado = a * b;
+            response.put("operação", "Produto entre os números");
+            break;
+        case 4:
+            if (b == 0) {
+                response.put("erro", "Divisão por zero não é permitida.");
+                return ResponseEntity.badRequest().body(response);
+            }
+            resultado = a / b;
+            response.put("operação", "Divisão do primeiro pelo segundo");
+            break;
+        default:
+            response.put("erro", "Opção inválida. Escolha entre 1 (média), 2 (diferença), 3 (produto) ou 4 (divisão).");
+            return ResponseEntity.badRequest().body(response);
+    }
+
+    response.put("A", a);
+    response.put("B", b);
+    response.put("Opção", opcao);
+    response.put("Resultado", resultado);
+
+    return ResponseEntity.ok(response);
+}
+
+    @GetMapping("/")
     @ResponseBody
 
-    public ResponseEntity<?> tarefa16(@RequestParam double a, @RequestParam double b, @RequestParam String c) {
+    public ResponseEntity<?> tarefa16(@RequestParam double a){
         Map<String, Object> response = new LinkedHashMap<>();
 
-        double resultado = 0;
-        switch (c.toLowerCase()) {
-            case "soma":
-                resultado = a + b;
-                response.put("operação", "soma");
-                break;
-            case "subtracao":
-                resultado = a - b;
-                response.put("operação", "subtração");
-                break;
-            case "multiplicacao":
-                resultado = a * b;
-                response.put("operação", "multiplicação");
-                break;
-            case "divisao":
-                if (b == 0) {
-                    response.put("erro", "Divisão por zero não é permitida.");
-                    return ResponseEntity.badRequest().body(response);
-                }
-                resultado = a / b;
-                response.put("operação", "divisão");
-                break;
-            default:
-                response.put("erro", "Operação inválida. Operações permitidas: soma, subtracao, multiplicacao ou divisao.");
-                return ResponseEntity.badRequest().body(response);
-        }
-
-        response.put("operação", "Calculadora simples");
-        response.put("A", a);
-        response.put("B", b);
-        response.put("Tipo de calculo", c);
-        response.put("Resultado", resultado);
 
         return ResponseEntity.ok(response);
     }
