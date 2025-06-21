@@ -512,15 +512,117 @@ public ResponseEntity<?> calculadorasimples(@RequestParam double a, @RequestPara
     return ResponseEntity.ok(response);
 }
 
-    @GetMapping("/")
+    @GetMapping("/aumentode30")
     @ResponseBody
 
     public ResponseEntity<?> tarefa16(@RequestParam double a){
         Map<String, Object> response = new LinkedHashMap<>();
 
 
+        response.put("operação", "Aumento de salário");
+        response.put("Salário original", a);
+
+        if (a <= 0) {
+            response.put("erro", "O salário deve ser maior que zero.");
+            return ResponseEntity.badRequest().body(response);
+        }
+        
+        if (a <= 500) {
+
+            double aumento = a * 0.30;
+
+            response.put("Salário com aumento", a + aumento);
+            response.put("Aumento de", aumento);
+        } else {
+            response.put("erro", "O aumento é limitado a quem ganha até R$:500.");
+        }
         return ResponseEntity.ok(response);
     }
     
+    @GetMapping("/aumentodesalario")
+    @ResponseBody
+    public ResponseEntity<?> aumentoDeSalario(@RequestParam double a) {
+        Map<String, Object> response = new LinkedHashMap<>();
+
+        if (a <= 0) {
+            response.put("erro", "O salário deve ser maior que zero.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        double aumento = 0;
+        if (a <= 300) {
+            aumento = a * 0.35;
+        } else if (a > 300) {
+            aumento = a * 0.15; 
+        } 
+
+        response.put("operação", "Aumento de salário");
+        response.put("Salário original", a);
+        response.put("Salário com aumento", a + aumento);
+        response.put("Aumento de", aumento);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/creditoespecial")
+    @ResponseBody
+    public ResponseEntity<?> creditoEspecial(@RequestParam double a) {
+        Map<String, Object> response = new LinkedHashMap<>();
+
+        double creditoEspecial = 0;
+
+        if (a <= 0) {
+            response.put("erro", "O valor deve ser maior que zero.");
+            return ResponseEntity.badRequest().body(response);
+        }
+        if (a > 400) {
+            creditoEspecial = a * 0.30;
+        } else if (a >= 300 && a < 400) {
+            creditoEspecial = a * 0.25;
+        } else if (a >= 200 && a <= 300) {
+            creditoEspecial = a * 0.20;
+        } else {
+            creditoEspecial = a * 0.10;
+        }
+
+        response.put("operação", "Crédito Especial");
+        response.put("Saldo médio", a);
+        response.put("Crédito especial concedido", creditoEspecial);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/custoaoconsumidor")
+    @ResponseBody
+    public ResponseEntity<?> custoAoConsumidor(@RequestParam double a) {
+        Map<String, Object> response = new LinkedHashMap<>();
+
+        if (a <= 0) {
+            response.put("erro", "O valor deve ser maior que zero.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        double distribuidor = 0;
+        double impostos = 0;
+
+        if (a <= 12000) {
+            distribuidor = a * 0.05;
+        } else if (a <= 25000) {
+            distribuidor = a * 0.10;
+            impostos = a * 0.15;
+        } else {
+            distribuidor = a * 0.15;
+            impostos = a * 0.20;
+        }
+
+        response.put("operação", "Custo ao consumidor");
+        response.put("Custo de fábrica", a);
+        response.put("Distribuidor", distribuidor);
+        response.put("Impostos", impostos);
+        response.put("Custo ao consumidor", a + distribuidor + impostos);
+
+        return ResponseEntity.ok(response);
+    }
+
 }
 
