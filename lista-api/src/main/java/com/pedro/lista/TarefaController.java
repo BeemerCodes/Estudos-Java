@@ -624,5 +624,140 @@ public ResponseEntity<?> calculadorasimples(@RequestParam double a, @RequestPara
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/aumentodesalario2")
+    @ResponseBody
+    public ResponseEntity<?> aumentoDeSalario2(@RequestParam double a) {
+        Map<String, Object> response = new LinkedHashMap<>();
+
+        if (a <= 0) {
+            response.put("erro", "O valor deve ser maior que zero.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        double aumento = 0;
+
+        if (a <= 300) {
+            aumento = a * 0.15;
+        } else if (a <= 600) {
+            aumento = a * 0.10;
+        } else if (a <= 900) {
+            aumento = a * 0.05;
+        }else {
+            aumento = 0;
+        }
+
+        response.put("operação", "Aumento de salário");
+        response.put("Salário original", a);
+        response.put("Aumento", aumento);
+        response.put("Salário com aumento", a + aumento);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/gratificacao")
+    @ResponseBody
+    public ResponseEntity<?> gratificacao(@RequestParam double a) {
+        Map<String, Object> response = new LinkedHashMap<>();
+
+        if (a <= 0) {
+            response.put("erro", "O valor deve ser maior que zero.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        double desconto = a * 0.07;
+        double gratificacao = 0;
+        
+        if (a <= 350) {
+            gratificacao = 100.0;
+        } else if (a <= 600) {
+            gratificacao = 75.0;
+        } else if (a <= 900) {
+            gratificacao = 50.0;
+        } else {
+            gratificacao = 35.0;
+        }
+
+        response.put("operação", "Gratificação");
+        response.put("Salário", a);
+        response.put("Desconto de 7%", desconto);
+        response.put("Gratificação", gratificacao);
+        response.put("Salário final", a - desconto + gratificacao);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/tipodeproduto")
+    @ResponseBody
+    public ResponseEntity<?> ativ(@RequestParam double a) {
+        Map<String, Object> response = new LinkedHashMap<>();
+
+        double aumento = 0;
+        String tipoProduto = "";
+
+        if (a <= 0) {
+            tipoProduto = "Não existe almoço grátis.";
+        } else if (a <= 50) {
+            aumento = a * 0.05;
+        } else if (a <= 100) {
+            aumento = a * 0.10;
+        } else {
+            aumento = a * 0.15;
+        }
+
+        double precoFinal = a + aumento;
+
+        if (precoFinal < 80) {
+            tipoProduto = "Barato";
+        } else if (precoFinal <= 120) {
+            tipoProduto = "Normal";
+        } else if (precoFinal <= 200) {
+            tipoProduto = "Caro";
+        } else {
+            tipoProduto = "Muito caro";
+        }
+
+        response.put("operação", "Tipo de produto");
+        response.put("Preço do produto", a);
+        response.put("Aumento", aumento);
+        response.put("Tipo de produto", tipoProduto);
+        response.put("Preço final", precoFinal);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/aumentosalario3")
+    @ResponseBody
+    public ResponseEntity<?> aumentosalario3(@RequestParam double a) {
+        Map<String, Object> response = new LinkedHashMap<>();
+
+        if (a <= 0) {
+            response.put("erro", "O valor deve ser maior que zero.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        double aumento = 0;
+
+        if (a <= 300) {
+            aumento = a * 0.50;
+        } else if (a <= 500) {
+            aumento = a * 0.40;
+        } else if (a <= 700) {
+            aumento = a * 0.30;
+        } else if (a <= 800) {
+            aumento = a * 0.20;
+        } else if (a <= 1000) {
+            aumento = a * 0.10;
+        }else {
+            aumento = a * 0.05;
+        }
+
+        response.put("operação", "Aumento de salário");
+        response.put("Salário original", a);
+        response.put("Aumento", aumento);
+        response.put("Salário com aumento", a + aumento);
+
+        return ResponseEntity.ok(response);
+    }
+
 }
 
