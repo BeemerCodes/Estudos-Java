@@ -679,7 +679,7 @@ public ResponseEntity<?> calculadorasimples(@RequestParam double a, @RequestPara
 
         response.put("operação", "Gratificação");
         response.put("Salário", a);
-        response.put("Desconto de 7%", desconto);
+        response.put("Desconto de 7%", String.format("%.2f", desconto));
         response.put("Gratificação", gratificacao);
         response.put("Salário final", a - desconto + gratificacao);
 
@@ -718,7 +718,7 @@ public ResponseEntity<?> calculadorasimples(@RequestParam double a, @RequestPara
 
         response.put("operação", "Tipo de produto");
         response.put("Preço do produto", a);
-        response.put("Aumento", aumento);
+        response.put("Aumento", String.format("%.2f", aumento));
         response.put("Tipo de produto", tipoProduto);
         response.put("Preço final", precoFinal);
 
@@ -755,6 +755,37 @@ public ResponseEntity<?> calculadorasimples(@RequestParam double a, @RequestPara
         response.put("Salário original", a);
         response.put("Aumento", aumento);
         response.put("Salário com aumento", a + aumento);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/investimento")
+    @ResponseBody
+    public ResponseEntity<?> investimento(@RequestParam double a, @RequestParam double b, @RequestParam double c) {
+        Map<String, Object> response = new LinkedHashMap<>();
+
+        if (a != 1 && a != 2) {
+            response.put("erro", "Os valores devem ser válidos: 1 para Poupança ou 2 para Fundos de Renda Fixa.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        double rendimento = 0;
+
+        if (a == 1) {
+            rendimento = (b * 0.03) * c;
+        } else if (a == 2) {
+            rendimento = (b * 0.04) * c;
+        }
+
+        double total = b + rendimento;
+
+        response.put("operação", "Investimento");
+        response.put("Tipo de investimento", a == 1 ? "Poupança" : "Fundos de Renda Fixa");
+        response.put("Taxa de rendimento (%)", a == 1 ? "3%" : "4%");
+        response.put("Valor investido", b);
+        response.put("Período (meses)", c);
+        response.put("Rendimento", rendimento);
+        response.put("Total após rendimento", total);
 
         return ResponseEntity.ok(response);
     }
