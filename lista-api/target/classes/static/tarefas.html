@@ -530,6 +530,14 @@
           "Calcula o rendimento total de um investimento com base no valor inicial, tempo em meses e tipo escolhido (1 para Poupança, 2 para Fundos de Renda Fixa). ?a=1&b=420000&c=12",
           "https://estudos-java-production.up.railway.app/tarefas/investimento?a=1&b=420000&c=12"
         );
+
+        addEndpoint(
+          "lista2",
+          "GET",
+          "/tarefas/descontoproduto",
+          "Calcula e exibe o valor do desconto de 10% em um produto com valor até R$ 100 e 15% acima de R$ 100. Exemplo de uso: ?a=150&b=32855",
+          "https://estudos-java-production.up.railway.app/tarefas/descontoproduto?a=150&b=32855"
+        );
       };
     </script>
   </body>

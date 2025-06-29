@@ -17,7 +17,24 @@ public class TarefaController {
 
     @GetMapping
     public String listarTarefas() {
-        return "forward:/tarefas.html"; 
+        return "forward:/tarefas.html";
+    }
+
+    private ResponseEntity<Map<String, Object>> respostaErro(String mensagem) {
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("erro", mensagem);
+        return ResponseEntity.badRequest().body(response);
+    }
+
+    private ResponseEntity<Map<String, Object>> respostaSucesso(String operacao, Object... campos) {
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("operação", operacao);
+        
+        for (int i = 0; i < campos.length; i += 2) {
+            response.put((String) campos[i], campos[i + 1]);
+        }
+    
+        return ResponseEntity.ok(response);
     }
 
 
@@ -25,14 +42,13 @@ public class TarefaController {
     @ResponseBody
 
     public ResponseEntity<?> multiplicarTres(@RequestParam double a, @RequestParam double b, @RequestParam double c) {
-        Map<String, Object> response = new LinkedHashMap<>();
         double result = a * b * c;
-        response.put("operação", "multiplicar-tres");
-        response.put("A", a);
-        response.put("B", b);
-        response.put("C", c);
-        response.put("Resultado", result);
-        return ResponseEntity.ok(response);
+       
+        return respostaSucesso("multiplicar-tres",
+        "A", a,
+        "B", b,
+        "C", c,
+        "Resultado", result);
     }
 
     @GetMapping("/dividir") 
@@ -790,5 +806,48 @@ public ResponseEntity<?> calculadorasimples(@RequestParam double a, @RequestPara
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/descontoproduto")
+    @ResponseBody
+    public ResponseEntity<?> descontoProduto(@RequestParam double a, @RequestParam double b) {
+        Map<String, Object> response = new LinkedHashMap<>();
+
+        double desconto = 0, porcentagem = 0;
+        
+        if ( a > 30 && a <= 100){
+            desconto = a * 0.10;
+            porcentagem = 10;
+        } else if(a > 100){
+            desconto = a * 0.15;
+            porcentagem = 15;
+        }
+
+        response.put("operação", "Desconto Produto");
+        response.put("Valor do produto", a);
+        response.put("Código d)o produto", b);
+        response.put("Valor do desconto", desconto);
+        response.put("Desconto de", porcentagem + "%");
+        response.put("Total com desconto", a - desconto);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/passwd")
+    @ResponseBody
+    public ResponseEntity<?> validPasswd(@RequestParam double a) {
+        Map<String, Object> response = new LinkedHashMap<>();
+        
+        int passwd = 4531;
+        String acesso = "Negado!";
+
+        if (a == passwd){
+            acesso = "Permitido!";
+        }
+
+        response.put("operação", "Restrição de acesso");
+        response.put("Acesso", acesso);
+        
+
+        return ResponseEntity.ok(response);
+    }
 }
 
