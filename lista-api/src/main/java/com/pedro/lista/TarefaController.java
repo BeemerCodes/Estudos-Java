@@ -64,7 +64,7 @@ public class TarefaController {
             return respostaErro("O valor deve ser maior que zero.");
         }
         double desconto = a * 0.10;
-        return respostaSucesso("Desconto de 10%", "Valor sem desconto", a, "Valor com desconto", a - desconto);
+        return respostaSucesso("Desconto de 10%", "Valor sem desconto", "R$" + String.format("%.2f", a), "Valor com desconto", "R$" + String.format("%.2f", a - desconto));
     }
 
     @GetMapping("/comissao")
@@ -74,7 +74,7 @@ public class TarefaController {
             return respostaErro("O salário deve ser maior que zero.");
         }
         double comissao = b * 0.04;
-        return respostaSucesso("Comissão", "Salário", a, "Vendas", b, "Comissão", comissao == 0 ? "Sem comissão" : comissao, "Salário com comissão", a + comissao);
+        return respostaSucesso("Comissão", "Salário", "R$" + String.format("%.2f", a), "Vendas", "R$" + String.format("%.2f", b), "Comissão", comissao == 0 ? "Sem comissão" : "R$" + String.format("%.2f", comissao), "Salário com comissão", "R$" + String.format("%.2f", a + comissao));
     }
 
     @GetMapping("/peso")
@@ -83,19 +83,19 @@ public class TarefaController {
         if (a <= 0){
             return respostaErro("O peso deve ser maior que zero.");
         }
-        double maisPeso = a * 0.15;
-        double menosPeso = a * 0.20;
-        return respostaSucesso("Peso", "Peso", a, "Peso + 15%", a + maisPeso, "Peso - 20%", a - menosPeso);
+        double maisPeso = a * 1.15;
+        double menosPeso = a * 0.80;
+        return respostaSucesso("Peso", "Peso", String.format("%.2f", a) + "Kg", "Peso + 15%", String.format("%.2f", maisPeso) + "Kg", "Peso - 20%", String.format("%.2f", menosPeso) + "Kg");
     }
 
     @GetMapping("/quilosparagramas")
     @ResponseBody
     public ResponseEntity<?> quilosParaGramas(@RequestParam double a){
-        if (a <= 0){
-            return respostaErro("O peso deve ser maior que zero.");
+        if (a < 0){
+            return respostaErro("O peso não pode ser negativo.");
         }
         double gramas = a * 1000;
-        return respostaSucesso("Quilos para gramas", "Peso em quilos", a, "Peso em gramas", gramas);
+        return respostaSucesso("Quilos para gramas", "Peso em quilos", String.format("%.2f", a) + "Kg", "Peso em gramas", String.format("%.2f", gramas) + "g");
     }
 
     @GetMapping("/areatrapezio")
@@ -134,9 +134,9 @@ public class TarefaController {
         if(a <= 0){
             return respostaErro("O salário deve ser maior que zero.");
         }
-        double salarioMinimo = 1.518;
+        double salarioMinimo = 1412.00;
         double quantidadeSalarios = a / salarioMinimo;
-        return respostaSucesso("Quantidade de salários", "Salário", a, "Salário mínimo", salarioMinimo, "Quantidade de salários recebidos", String.format("%.2f", quantidadeSalarios));
+        return respostaSucesso("Quantidade de salários", "Salário", "R$" + String.format("%.2f", a), "Salário mínimo", "R$" + String.format("%.2f", salarioMinimo), "Quantidade de salários recebidos", String.format("%.2f", quantidadeSalarios));
     }
 
     @GetMapping("/tabuada")
@@ -147,7 +147,7 @@ public class TarefaController {
         }
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("operação", "tabuada");
-        response.put("Número", a);  
+        response.put("Número", a); 
         response.put("Resultados", "veja abaixo");
         for(int i = 1; i <= 12; i++){
             response.put(a + " x " + i, a * i);
@@ -157,29 +157,29 @@ public class TarefaController {
 
     @GetMapping("/idade")
     @ResponseBody
-    public ResponseEntity<?> idade(@RequestParam double a){
-        if (a <= 0) {
-            return respostaErro("O ano de nascimento deve ser maior que zero.");
+    public ResponseEntity<?> idade(@RequestParam int a){
+        if (a <= 0 || a > 2025) {
+            return respostaErro("O ano de nascimento deve ser válido.");
         }
-        double idade = 2025 - a;
-        double meses = idade * 12;
-        double dias = idade * 365;
-        double horas = dias * 24;
-        double minutos = horas * 60;
-        double segundos = minutos * 60;
-        return respostaSucesso("Idade", "Idade em anos", a, "Idade em meses", meses, "Idade em dias", dias, "Idade em horas", horas, "Idade em minutos", minutos, "Idade em segundos", segundos);
+        int idade = 2025 - a;
+        long meses = idade * 12;
+        long dias = idade * 365;
+        long horas = dias * 24;
+        long minutos = horas * 60;
+        long segundos = minutos * 60;
+        return respostaSucesso("Idade", "Idade em anos", idade, "Idade em meses", meses, "Idade em dias", dias, "Idade em horas", horas, "Idade em minutos", minutos, "Idade em segundos", segundos);
     }
 
     @GetMapping("/contasatrasadas")
     @ResponseBody
     public ResponseEntity<?> contasAtrasadas(@RequestParam double a, @RequestParam double b, @RequestParam double c){
-        if (a <= 0){
-            return respostaErro("O salário deve ser maior que zero.");
+        if (a <= 0 || b < 0 || c < 0){
+            return respostaErro("O salário deve ser positivo e as contas não podem ser negativas.");
         }
         double contaA = b * 1.02;
         double contaB = c * 1.02;
         double salario = a - contaA - contaB;
-        return respostaSucesso("Contas atrasadas", "Salário", a, "Conta 1 (+2%)", contaA, "Conta 2(+2%)", contaB, "Restante do salário", salario);
+        return respostaSucesso("Contas atrasadas", "Salário", "R$" + String.format("%.2f", a), "Conta 1 (+2%)", "R$" + String.format("%.2f", contaA), "Conta 2(+2%)", "R$" + String.format("%.2f", contaB), "Restante do salário", "R$" + String.format("%.2f", salario));
     }
 
     @GetMapping("/circunferencia")
@@ -190,18 +190,16 @@ public class TarefaController {
         }
         double pi = 3.14159, comprimento, area, volume;
         comprimento = 2 * pi * a;
-        area = pi * (a * a); //formula para área de círculo, não de esfera <-
-        volume = (4/3) * pi * (a * a * a);
+        area = pi * (a * a);
+        volume = (4.0/3.0) * pi * (a * a * a);
         return respostaSucesso("Circunferência", "Raio", a, "Comprimento", String.format("%.2f", comprimento), "Área", String.format("%.2f", area), "Volume", String.format("%.2f", volume));
-        // A formula para o volume de uma esfera: V = (4/3) * PI * R^3
-        // Utilizei V = (3/4) * PI * R^3 como solicitado.
     }
 
     @GetMapping("/celsiusparafahrenheit")
     @ResponseBody
     public ResponseEntity<?> celsiusParaFahrenheit(@RequestParam double a){
-        double fahrenheit = (180 * (a + 32)) / 100; // Pelo que vi o certo é (a * 9.0/5.0) + 32, fiz como solicitado na atividade.
-        return respostaSucesso("Celsius para Fahrenheit", "Celsius", a, "Fahrenheit", fahrenheit);
+        double fahrenheit = (a * 9.0/5.0) + 32;
+        return respostaSucesso("Celsius para Fahrenheit", "Celsius", a + "°C", "Fahrenheit", String.format("%.1f", fahrenheit) + "°F");
     }
 
     @GetMapping("/iluminacao")
@@ -212,7 +210,7 @@ public class TarefaController {
         }
         double area = a * b;
         double potenciaIluminacao = area * 18.0;
-        return respostaSucesso("iluminação", "Largura", a, "Comprimento", b, "Área", area, "Potência de iluminação necessária (em watts)", potenciaIluminacao);
+        return respostaSucesso("iluminação", "Largura", a, "Comprimento", b, "Área", String.format("%.2f", area) + "m²", "Potência de iluminação necessária", String.format("%.0f", potenciaIluminacao) + "W");
     }
 
     @GetMapping("/medidaescada")
@@ -223,20 +221,20 @@ public class TarefaController {
         }
         double grauEmRadiano = Math.toRadians(a);
         double medidaEscada = b / Math.cos(grauEmRadiano);  
-        return respostaSucesso("Medida da escada", "Grau de inclinação", a, "Distância da base", b, "Medida da escada", String.format("%.2f", medidaEscada));
+        return respostaSucesso("Medida da escada", "Grau de inclinação", a, "Altura a alcançar", b, "Medida da escada", String.format("%.2f", medidaEscada));
     }
 
     @GetMapping("/quantovouganhar")
     @ResponseBody
     public ResponseEntity<?> quantoVouGanhar(@RequestParam double a, @RequestParam double b, @RequestParam double c){
-        if (a <= 0 && b <= 0){
-            return respostaErro("O salário não pode ser negativo e as horas normais devem ser positivas.");
+        if (a <= 0 || b < 0 || c < 0){
+            return respostaErro("O salário deve ser positivo e as horas não podem ser negativas.");
         }
-        double horaTrabalhada = a / 8.0; 
-        double horaExtra = a / 4.0; 
+        double horaTrabalhada = a / 160.0; 
+        double horaExtra = horaTrabalhada * 1.5; 
         double valorBruto = horaTrabalhada * b;
         double valorExtra = horaExtra * c;
-        return respostaSucesso("Quanto vou ganhar", "Horas normais trabalhadas", b, "Horas extras trabalhadas", c, "Valor por hora normal", horaTrabalhada, "Valor por hora extra", horaExtra, "Valor bruto", valorBruto + valorExtra);
+        return respostaSucesso("Quanto vou ganhar", "Salário base", "R$" + String.format("%.2f", a), "Horas normais trabalhadas", b, "Horas extras trabalhadas", c, "Valor por hora normal", "R$" + String.format("%.2f", horaTrabalhada), "Valor por hora extra", "R$" + String.format("%.2f", horaExtra), "Valor bruto", "R$" + String.format("%.2f", valorBruto + valorExtra));
     }
 
     @GetMapping("/poligono")
@@ -245,7 +243,7 @@ public class TarefaController {
         if (a < 3) {
             return respostaErro("Polígonos devem ter ao menos 3 lados.");
         }
-        double diagonais = (a * (a - 3)) / 2;
+        double diagonais = (a * (a - 3.0)) / 2.0;
         return respostaSucesso("Polígono", "Número de lados", a, "Diagonais", diagonais);
     }
 
@@ -253,7 +251,7 @@ public class TarefaController {
     @ResponseBody
     public ResponseEntity<?> angulo(@RequestParam int a, @RequestParam int b){
         int angulo = 180 - (a + b);
-        if (angulo <= 0) {
+        if (angulo <= 0 || a <= 0 || b <= 0) {
             return respostaErro("Os angulos fornecidos são inválidos.");
         }
         return respostaSucesso("ângulo", "Ângulo A", a, "Ângulo B", b, "Ângulo C", angulo);
@@ -265,18 +263,19 @@ public class TarefaController {
         if (a <= 0){
             return respostaErro("O valor deve ser maior que zero.");
         }
-        double cotacaoDolar = 5.49, cotacaoMarco = 0.3112, cotacaoEuro = 6.31, cotacaoLibra = 7.49;
-        double dolar = a / cotacaoDolar, marco = a / cotacaoMarco, euro = a / cotacaoEuro, libra = a / cotacaoLibra;
-        return respostaSucesso("Câmbio", "Valor em reais", a, "Valor em dólares", String.format("%.2f", dolar), "Valor em marcos alemães", String.format("%.2f", marco), "Valor em euros", String.format("%.2f", euro), "Valor em libras esterlinas", String.format("%.2f", libra));
+        double cotacaoDolar = 5.45, cotacaoEuro = 5.85, cotacaoLibra = 6.90;
+        double dolar = a / cotacaoDolar, euro = a / cotacaoEuro, libra = a / cotacaoLibra;
+        return respostaSucesso("Câmbio", "Valor em reais", "R$" + String.format("%.2f", a), "Valor em dólares", "$" + String.format("%.2f", dolar), "Valor em euros", "€" + String.format("%.2f", euro), "Valor em libras esterlinas", "£" + String.format("%.2f", libra));
     }
 
     @GetMapping("/horasparaminutos")
     @ResponseBody
     public ResponseEntity<?> horasParaMinutos(@RequestParam double a, @RequestParam double b){
-        if (a <= 0){
-            return respostaErro("A hora deve ser positiva.");
+        if (a < 0 || b < 0){
+            return respostaErro("Horas e minutos não podem ser negativos.");
         }
-        double totalMinutos = (a * 60) + b, totalSegundos = totalMinutos * 60;
+        double totalMinutos = (a * 60) + b;
+        double totalSegundos = totalMinutos * 60;
         return respostaSucesso("Horas para minutos", "Horas", a, "Minutos", b, "Total em minutos", totalMinutos, "Total em segundos", totalSegundos);
     }
 
@@ -289,7 +288,10 @@ public class TarefaController {
     @GetMapping("/maiornumero")
     @ResponseBody
     public ResponseEntity<?> maiornumero(@RequestParam double a, @RequestParam double b, @RequestParam double c){
-        return respostaSucesso("Maior número", "Número A", a, "Número B", b, "Número C", c, "O maior número é", a > b ? (a > c ? a : c) : (b > c ? b : c));
+        if (a == b && b == c) {
+            return respostaSucesso("Números", "A", a, "B", b, "C", c, "Resultado", "Os números são iguais.");
+        }
+        return respostaSucesso("Maior número", "Número A", a, "Número B", b, "Número C", c, "O maior número é", Math.max(a, Math.max(b, c)));
     }
 
     @GetMapping("/calculadorasimples")
@@ -323,57 +325,54 @@ public class TarefaController {
                 return respostaErro("Opção inválida. Escolha entre 1, 2, 3 ou 4.");
             }
         }
-}
+    }
 
-@GetMapping("/aumentode30")
-@ResponseBody
-public ResponseEntity<?> aumentode30(@RequestParam double a) { 
-    if (a <= 0) {
-        return respostaErro("O salário deve ser um valor positivo.");
+    @GetMapping("/aumentode30")
+    @ResponseBody
+    public ResponseEntity<?> aumentode30(@RequestParam double a) { 
+        if (a <= 0) {
+            return respostaErro("O salário deve ser um valor positivo.");
+        }
+        if (a <= 500) {
+            double aumento = a * 0.30;
+            return respostaSucesso("Aumento de Salário", "Salário original", "R$" + String.format("%.2f", a), "Aumento concedido", "R$" + String.format("%.2f", aumento), "Salário com aumento", "R$" + String.format("%.2f", a + aumento));
+        } else {
+            return respostaErro("O aumento de 30% é limitado a quem ganha até R$ 500,00.");
+        }
     }
-    if (a <= 500) {
-        double aumento = a * 0.30;
-        return respostaSucesso("Aumento de Salário", "Salário original", a, "Aumento concedido", String.format("%.2f", aumento), "Salário com aumento", String.format("%.2f", a + aumento));
-    } else {
-        return respostaErro("O aumento de 30% é limitado a quem ganha até R$ 500,00.");
-    }
-}
-    
+
     @GetMapping("/aumentodesalario")
     @ResponseBody
     public ResponseEntity<?> aumentoDeSalario(@RequestParam double a) {
         if (a <= 0) {
             return respostaErro("O salário deve ser maior que zero.");
         }
-
-        double aumento = 0;
-
+        double aumento;
         if (a <= 300) {
             aumento = a * 0.35;
-        } else if (a > 300) {
+        } else {
             aumento = a * 0.15; 
         }
-        return respostaSucesso("Aumento de salário", "Salário original", a, "Salário com aumento", a + aumento, "Aumento de", aumento);
+        return respostaSucesso("Aumento de salário", "Salário original", "R$" + String.format("%.2f", a), "Aumento de", "R$" + String.format("%.2f", aumento), "Salário com aumento", "R$" + String.format("%.2f", a + aumento));
     }
 
     @GetMapping("/creditoespecial")
     @ResponseBody
     public ResponseEntity<?> creditoEspecial(@RequestParam double a) {
-        double creditoEspecial = 0;
-
+        double creditoEspecial;
         if (a <= 0) {
             return respostaErro("O saldo médio deve ser maior que zero.");
         }
         if (a > 400) {
             creditoEspecial = a * 0.30;
-        } else if (a >= 300 && a < 400) {
+        } else if (a > 300) {
             creditoEspecial = a * 0.25;
-        } else if (a >= 200 && a <= 300) {
+        } else if (a > 200) {
             creditoEspecial = a * 0.20;
         } else {
             creditoEspecial = a * 0.10;
         }
-        return respostaSucesso("Crédito Especial", "Saldo médio", a, "Crédito especial concedido", creditoEspecial);
+        return respostaSucesso("Crédito Especial", "Saldo médio", "R$" + String.format("%.2f", a), "Crédito especial concedido", "R$" + String.format("%.2f", creditoEspecial));
     }
 
     @GetMapping("/custoaoconsumidor")
@@ -382,12 +381,11 @@ public ResponseEntity<?> aumentode30(@RequestParam double a) {
         if (a <= 0) {
             return respostaErro("O custo de fábrica deve ser maior que zero.");
         }
-
-        double distribuidor = 0;
-        double impostos = 0;
-
+        double distribuidor;
+        double impostos;
         if (a <= 12000) {
             distribuidor = a * 0.05;
+            impostos = 0;
         } else if (a <= 25000) {
             distribuidor = a * 0.10;
             impostos = a * 0.15;
@@ -395,7 +393,7 @@ public ResponseEntity<?> aumentode30(@RequestParam double a) {
             distribuidor = a * 0.15;
             impostos = a * 0.20;
         }
-        return respostaSucesso("Custo ao consumidor", "Custo de fábrica", a, "Distribuidor", distribuidor, "Impostos", impostos, "Custo ao consumidor", a + distribuidor + impostos);
+        return respostaSucesso("Custo ao consumidor", "Custo de fábrica", "R$" + String.format("%.2f", a), "Distribuidor", "R$" + String.format("%.2f", distribuidor), "Impostos", "R$" + String.format("%.2f", impostos), "Custo ao consumidor", "R$" + String.format("%.2f", a + distribuidor + impostos));
     }
 
     @GetMapping("/aumentodesalario2")
@@ -404,9 +402,7 @@ public ResponseEntity<?> aumentode30(@RequestParam double a) {
         if (a <= 0) {
             return respostaErro("O salário deve ser maior que zero.");
         }
-
-        double aumento = 0;
-
+        double aumento;
         if (a <= 300) {
             aumento = a * 0.15;
         } else if (a <= 600) {
@@ -416,7 +412,7 @@ public ResponseEntity<?> aumentode30(@RequestParam double a) {
         }else {
             aumento = 0;
         }
-        return respostaSucesso("Aumento de salário", "Salário original", a, "Aumento", aumento, "Salário com aumento", a + aumento);
+        return respostaSucesso("Aumento de salário", "Salário original", "R$" + String.format("%.2f", a), "Aumento", "R$" + String.format("%.2f", aumento), "Salário com aumento", "R$" + String.format("%.2f", a + aumento));
     }
 
     @GetMapping("/gratificacao")
@@ -425,10 +421,8 @@ public ResponseEntity<?> aumentode30(@RequestParam double a) {
         if (a <= 0) {
             return respostaErro("O salário deve ser maior que zero.");
         }
-
         double desconto = a * 0.07;
-        double gratificacao = 0;
-        
+        double gratificacao;
         if (a <= 350) {
             gratificacao = 100.0;
         } else if (a <= 600) {
@@ -438,17 +432,16 @@ public ResponseEntity<?> aumentode30(@RequestParam double a) {
         } else {
             gratificacao = 35.0;
         }
-        return respostaSucesso("Gratificação", "Salário", a, "Desconto de 7%", String.format("%.2f", desconto), "Gratificação", gratificacao, "Salário final", a - desconto + gratificacao);
+        return respostaSucesso("Gratificação", "Salário", "R$" + String.format("%.2f", a), "Desconto de 7%", "R$" + String.format("%.2f", desconto), "Gratificação", "R$" + String.format("%.2f", gratificacao), "Salário final", "R$" + String.format("%.2f", a - desconto + gratificacao));
     }
 
     @GetMapping("/tipodeproduto")
     @ResponseBody
     public ResponseEntity<?> ativ(@RequestParam double a) {
-        double aumento = 0;
-        String tipoProduto = "";
-
+        double aumento;
+        String tipoProduto;
         if (a <= 0) {
-            tipoProduto = "Não existe almoço grátis.";
+            return respostaErro("O preço do produto deve ser positivo.");
         } else if (a <= 50) {
             aumento = a * 0.05;
         } else if (a <= 100) {
@@ -468,7 +461,7 @@ public ResponseEntity<?> aumentode30(@RequestParam double a) {
         } else {
             tipoProduto = "Muito caro";
         }
-        return respostaSucesso("Tipo de produto", "Preço do produto", a, "Aumento", String.format("%.2f", aumento), "Tipo de produto", tipoProduto, "Preço final", precoFinal);
+        return respostaSucesso("Tipo de produto", "Preço do produto", "R$" + String.format("%.2f", a), "Aumento", "R$" + String.format("%.2f", aumento), "Tipo de produto", tipoProduto, "Preço final", "R$" + String.format("%.2f", precoFinal));
     }
 
     @GetMapping("/aumentosalario3")
@@ -477,9 +470,7 @@ public ResponseEntity<?> aumentode30(@RequestParam double a) {
         if (a <= 0) {
             return respostaErro("O salário deve ser maior que zero.");
         }
-
-        double aumento = 0;
-
+        double aumento;
         if (a <= 300) {
             aumento = a * 0.50;
         } else if (a <= 500) {
@@ -493,37 +484,35 @@ public ResponseEntity<?> aumentode30(@RequestParam double a) {
         }else {
             aumento = a * 0.05;
         }
-        return respostaSucesso("Aumento de salário", "Salário original", a, "Aumento", aumento, "Salário com aumento", a + aumento);
+        return respostaSucesso("Aumento de salário", "Salário original", "R$" + String.format("%.2f", a), "Aumento", "R$" + String.format("%.2f", aumento), "Salário com aumento", "R$" + String.format("%.2f", a + aumento));
     }
 
     @GetMapping("/investimento")
     @ResponseBody
-    public ResponseEntity<?> investimento(@RequestParam double a, @RequestParam double b, @RequestParam double c) {
-        if (a != 1 && a != 2) {
-            return respostaErro("Os valores devem ser válidos: 1 para Poupança ou 2 para Fundos de Renda Fixa.");
+    public ResponseEntity<?> investimento(@RequestParam int tipo, @RequestParam double valor, @RequestParam int meses) {
+        if (tipo != 1 && tipo != 2) {
+            return respostaErro("O tipo de investimento deve ser 1 (Poupança) ou 2 (Renda Fixa).");
         }
-
-        double rendimento = 0;
-
-        if (a == 1) {
-            rendimento = (b * 0.03) * c;
-        } else if (a == 2) {
-            rendimento = (b * 0.04) * c;
+        if (valor <= 0 || meses <= 0) {
+            return respostaErro("Valor e meses devem ser positivos.");
         }
-
-        double total = b + rendimento;
-        return respostaSucesso("Investimento","Tipo de investimento", a == 1 ? "Poupança" : "Fundos de Renda Fixa", "Taxa de rendimento (%)", a == 1 ? "3%" : "4%", "Valor investido", b, "Período (meses)", c, "Rendimento", rendimento, "Total após rendimento", total);
+        double rendimento;
+        if (tipo == 1) {
+            rendimento = (valor * 0.03) * meses;
+        } else {
+            rendimento = (valor * 0.04) * meses;
+        }
+        double total = valor + rendimento;
+        return respostaSucesso("Investimento","Tipo de investimento", tipo == 1 ? "Poupança" : "Fundos de Renda Fixa", "Taxa de rendimento (%)", tipo == 1 ? "3%" : "4%", "Valor investido", "R$" + String.format("%.2f", valor), "Período (meses)", meses, "Rendimento", "R$" + String.format("%.2f", rendimento), "Total após rendimento", "R$" + String.format("%.2f", total));
     }
 
     @GetMapping("/descontoproduto")
     @ResponseBody
     public ResponseEntity<?> descontoProduto(@RequestParam double a, @RequestParam double b) {
         if (a <= 0) {
-            return respostaErro("O valor deve ser maior que zero.");
+            return respostaErro("O valor do produto deve ser maior que zero.");
         }
-
         double desconto = 0, porcentagem = 0;
-        
         if ( a > 30 && a <= 100){
             desconto = a * 0.10;
             porcentagem = 10;
@@ -531,15 +520,14 @@ public ResponseEntity<?> aumentode30(@RequestParam double a) {
             desconto = a * 0.15;
             porcentagem = 15;
         }
-        return respostaSucesso("Desconto Produto", "Valor do produto", a, "Código d)o produto", b, "Valor do desconto", desconto, "Desconto de", porcentagem + "%", "Total com desconto", a - desconto);
+        return respostaSucesso("Desconto Produto", "Valor do produto", "R$" + String.format("%.2f", a), "Código do produto", b, "Valor do desconto", "R$" + String.format("%.2f", desconto), "Desconto de", porcentagem + "%", "Total com desconto", "R$" + String.format("%.2f", a - desconto));
     }
 
     @GetMapping("/passwd")
     @ResponseBody
-    public ResponseEntity<?> validPasswd(@RequestParam double a) {
-        int passwd = 4531;
-        String acesso = ((int)a == passwd) ? "Permitido!" : "Negado!";
+    public ResponseEntity<?> validPasswd(@RequestParam String a) {
+        String passwd = "4531";
+        String acesso = a.equals(passwd) ? "Permitido!" : "Negado!";
         return respostaSucesso("Restrição de acesso","Acesso", acesso);
     }
 }
-
