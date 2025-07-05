@@ -2,23 +2,18 @@ package com.pedro.lista;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.cache.annotation.Cacheable;
-import com.pedro.lista.CalculadoraRequest;
-import com.pedro.lista.InvestimentoRequest;
-import com.pedro.lista.PasswdRequest;
-import com.pedro.lista.RequestDoisValores;
-import com.pedro.lista.RequestTresValores;
-import com.pedro.lista.RequestUmValor;
 
 @Controller
 @RequestMapping("/api/tarefas")
@@ -27,7 +22,7 @@ public class TarefaController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    private final String senhaHasheada = "$2a$10$3g.ENI99l3g0A5u22GsoUe19h2z2p.d.OqYwubGIMkTQhNiJq9k0G";
+    private final String senhaHasheada = "$2a$10$cf.Xue2hKJmbjV.Xlvr8JO.c5DUfNRkVvZGUn5ZAGe5zDnak5c2dC";
 
     private ResponseEntity<Map<String, Object>> respostaErro(String mensagem) {
         Map<String, Object> response = new LinkedHashMap<>();
