@@ -11,20 +11,17 @@
         background-color: #252526;
         color: #d4d4d4;
       }
-
       h1 {
         color: #9370db;
         text-align: center;
         margin-bottom: 30px;
       }
-
       a {
         color: #8ab4f8;
       }
       a:hover {
         color: #adcffc;
       }
-
       .tab-bar {
         overflow: hidden;
         border: 1px solid #333;
@@ -32,7 +29,6 @@
         border-radius: 5px;
         margin-bottom: 20px;
       }
-
       .tab-bar button {
         background-color: inherit;
         float: left;
@@ -44,19 +40,16 @@
         color: #d4d4d4;
         border-bottom: 3px solid transparent;
       }
-
       .tab-bar button:hover {
         background-color: #3e3e3e;
         color: #ffffff;
         border-bottom: 3px solid #555;
       }
-
       .tab-bar button.active {
         background-color: #6a0dad;
         color: #ffffff;
         border-bottom: 3px solid #800080;
       }
-
       .tab-content {
         display: none;
         padding: 20px 15px;
@@ -66,7 +59,6 @@
         border-radius: 0 0 5px 5px;
         margin-top: 10px;
       }
-
       .endpoint {
         background-color: #2d2d2d;
         border: 1px solid #3a3a3a;
@@ -79,21 +71,18 @@
       .endpoint:hover {
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
       }
-
       .endpoint h3 {
         margin-top: 0;
         color: #a97ae8;
         font-size: 1.4em;
         margin-bottom: 10px;
       }
-
       .endpoint p {
         color: #cccccc;
         line-height: 1.6;
         font-size: 0.95em;
         margin-bottom: 15px;
       }
-
       .result {
         display: none;
         background-color: #202020;
@@ -111,7 +100,6 @@
       .result.mostrar {
         display: block;
       }
-
       input,
       button {
         padding: 8px 12px;
@@ -121,7 +109,6 @@
         background-color: #3e3e3e;
         color: #d4d4d4;
       }
-
       button {
         cursor: pointer;
         background-color: #6a0dad;
@@ -135,7 +122,6 @@
   </head>
   <body>
     <h1>Lista de Tarefas - API</h1>
-
     <div class="endpoint">
       <h3>Endpoint: /tarefas</h3>
       <p>
@@ -143,7 +129,6 @@
         exemplos exibidos são resultados reais retornados pela API.
       </p>
     </div>
-
     <div class="tab-bar">
       <button class="tab-button" onclick="openTab(event, 'lista1')">
         Lista 1
@@ -164,31 +149,19 @@
         Lista 6
       </button>
     </div>
-
     <div id="tab-content-container">
-      <div id="lista1-content" class="tab-content">
-        <!--r Lista 1 -->
-      </div>
-      <div id="lista2-content" class="tab-content">
-        <!--r Lista 2 -->
-      </div>
-      <div id="lista3-content" class="tab-content">
-        <!-- Lista 3 -->
-      </div>
-      <div id="lista4-content" class="tab-content">
-        <!-- Lista 4 -->
-      </div>
-      <div id="lista5-content" class="tab-content">
-        <!-- Lista 5 -->
-      </div>
-      <div id="lista6-content" class="tab-content">
-        <!-- Lista 6 -->
-      </div>
+      <div id="lista1-content" class="tab-content"></div>
+      <div id="lista2-content" class="tab-content"></div>
+      <div id="lista3-content" class="tab-content"></div>
+      <div id="lista4-content" class="tab-content"></div>
+      <div id="lista5-content" class="tab-content"></div>
+      <div id="lista6-content" class="tab-content"></div>
     </div>
-
     <script>
+      const Base_URL = "https://estudos-java-production.up.railway.app/api";
+
       function openTab(evt, tabName) {
-        var i, tabcontent, tabbuttons;
+        let i, tabcontent, tabbuttons;
         tabcontent = document.getElementsByClassName("tab-content");
         for (i = 0; i < tabcontent.length; i++) {
           tabcontent[i].style.display = "none";
@@ -204,29 +177,28 @@
         evt.currentTarget.className += " active";
       }
 
-      function addEndpoint(tabId, method, path, description, exemploURL) {
+      function addGetEndpoint(tabId, path, description, exemploURL) {
         const container = document.getElementById(tabId + "-content");
-        if (!container) {
-          console.error(`Container not found for tabId: ${tabId}-content`);
-          return;
-        }
-        const resultId = `result-${tabId}-${path.replace(
+        if (!container) return;
+        const resultId = `result-get-${tabId}-${path.replace(
           /[^a-zA-Z0-9]/g,
           "-"
         )}`;
-
         const endpointDiv = document.createElement("div");
         endpointDiv.className = "endpoint";
         endpointDiv.innerHTML = `
-    <h3>${method} ${path}</h3>
-    <p>${description}</p>
-    <div class="result" id="${resultId}">Carregando...</div>
-  `;
+          <h3>GET ${path}</h3>
+          <p>${description}</p>
+          <div class="result" id="${resultId}">Carregando...</div>
+        `;
         container.appendChild(endpointDiv);
 
         fetch(exemploURL)
           .then((res) => {
-            if (!res.ok) throw new Error(`Status ${res.status}`);
+            if (!res.ok)
+              return res.json().then((err) => {
+                throw new Error(err.erro || `Status ${res.status}`);
+              });
             return res.json();
           })
           .then((data) => {
@@ -241,6 +213,75 @@
           });
       }
 
+      function addPostEndpoint(tabId, path, description, fields) {
+        const container = document.getElementById(tabId + "-content");
+        if (!container) return;
+        const resultId = `result-post-${tabId}-${path.replace(
+          /[^a-zA-Z0-9]/g,
+          "-"
+        )}`;
+        const formId = `form-post-${tabId}-${path.replace(
+          /[^a-zA-Z0-9]/g,
+          "-"
+        )}`;
+        let inputHtml = "";
+        fields.forEach((field) => {
+          const fieldName = Object.keys(field)[0];
+          const fieldType = field[fieldName];
+          inputHtml += `<label for="${fieldName}-${formId}">${
+            fieldName.charAt(0).toUpperCase() + fieldName.slice(1)
+          }:</label> <input type="${fieldType}" id="${fieldName}-${formId}" placeholder="${fieldName}" /> <br/><br/>`;
+        });
+        const endpointDiv = document.createElement("div");
+        endpointDiv.className = "endpoint";
+        endpointDiv.innerHTML = `
+            <h3>POST ${path}</h3>
+            <p>${description}</p>
+            <div id="${formId}">
+                ${inputHtml}
+                <button onclick="submitPost('${path}', '${formId}', ${JSON.stringify(
+          fields
+        )}, '${resultId}')">Enviar</button>
+            </div>
+            <div class="result" id="${resultId}"></div>
+        `;
+        container.appendChild(endpointDiv);
+      }
+
+      async function submitPost(path, formId, fields, resultId) {
+        const resultDiv = document.getElementById(resultId);
+        resultDiv.classList.add("mostrar");
+        resultDiv.textContent = "Carregando...";
+        const bodyData = {};
+        fields.forEach((field) => {
+          const fieldName = Object.keys(field)[0];
+          const fieldType = field[fieldName];
+          const inputElement = document.getElementById(
+            `${fieldName}-${formId}`
+          );
+          let value = inputElement.value;
+          if (fieldType === "number") {
+            value = parseFloat(value) || 0;
+          }
+          bodyData[fieldName] = value;
+        });
+
+        try {
+          const response = await fetch(Base_URL + path, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(bodyData),
+          });
+          const data = await response.json();
+          if (!response.ok) {
+            throw new Error(data.erro || `Status ${response.status}`);
+          }
+          resultDiv.textContent = JSON.stringify(data, null, 2);
+        } catch (error) {
+          resultDiv.textContent = "Erro ao carregar: " + error.message;
+        }
+      }
+
       window.onload = function () {
         const firstTabContent = document.getElementById("lista1-content");
         if (firstTabContent) {
@@ -251,300 +292,228 @@
           firstTabButton.className += " active";
         }
 
-        addEndpoint(
+        addGetEndpoint(
           "lista1",
-          "GET",
           "/tarefas/multiplicartres",
           "Multiplica três números. Exemplo de uso: ?a=2&b=3&c=4",
-          "https://estudos-java-production.up.railway.app/tarefas/multiplicartres?a=2&b=3&c=4"
+          `${Base_URL}/tarefas/multiplicartres?a=2&b=3&c=4`
         );
-
-        addEndpoint(
+        addGetEndpoint(
           "lista1",
-          "GET",
           "/tarefas/dividir",
           "Divide dois números. Exemplo de uso: ?a=10&b=5",
-          "https://estudos-java-production.up.railway.app/tarefas/dividir?a=10&b=5"
+          `${Base_URL}/tarefas/dividir?a=10&b=5`
         );
-
-        addEndpoint(
+        addGetEndpoint(
           "lista1",
-          "GET",
           "/tarefas/mediaponderada",
           "Calcula a média ponderada com pesos 2 e 3. Exemplo de uso: ?a=4&b=6",
-          "https://estudos-java-production.up.railway.app/tarefas/mediaponderada?a=4&b=6"
+          `${Base_URL}/tarefas/mediaponderada?a=4&b=6`
         );
-
-        addEndpoint(
+        addGetEndpoint(
           "lista1",
-          "GET",
           "/tarefas/descontodez",
           "Aplica 10% de desconto em um valor. Exemplo de uso: ?a=2300",
-          "https://estudos-java-production.up.railway.app/tarefas/descontodez?a=2300"
+          `${Base_URL}/tarefas/descontodez?a=2300`
         );
-
-        addEndpoint(
+        addGetEndpoint(
           "lista1",
-          "GET",
           "/tarefas/comissao",
           "retorna a comissão de 4% com base no salário. Exemplo de uso: ?a=2000&b=450",
-          "https://estudos-java-production.up.railway.app/tarefas/comissao?a=2000&b=450"
+          `${Base_URL}/tarefas/comissao?a=2000&b=450`
         );
-
-        addEndpoint(
+        addGetEndpoint(
           "lista1",
-          "GET",
           "/tarefas/peso",
           "Calcula e exibe o peso da pessoa caso ela ganhe 15% ou perca 20%, com base no valor informado. Exemplo de uso: ?a=65",
-          "https://estudos-java-production.up.railway.app/tarefas/peso?a=65"
+          `${Base_URL}/tarefas/peso?a=65`
         );
-
-        addEndpoint(
+        addGetEndpoint(
           "lista1",
-          "GET",
           "/tarefas/quilosparagramas",
           "Calcula e exibe o peso da pessoa em gramas. Exemplo de uso: ?a=65",
-          "https://estudos-java-production.up.railway.app/tarefas/quilosparagramas?a=65"
+          `${Base_URL}/tarefas/quilosparagramas?a=65`
         );
-
-        addEndpoint(
+        addGetEndpoint(
           "lista1",
-          "GET",
           "/tarefas/areatrapezio",
-          "Calcula e exibe a área do trapézio com base nos valores informados. Exemplo de uso( A =  Base maior, B = Base menor, C = Altura): ?a=65&b=70&c=80",
-          "https://estudos-java-production.up.railway.app/tarefas/areatrapezio?a=65&b=70&c=80"
+          "Calcula e exibe a área do trapézio com base nos valores informados. Exemplo de uso( A = Base maior, B = Base menor, C = Altura): ?a=65&b=70&c=80",
+          `${Base_URL}/tarefas/areatrapezio?a=65&b=70&c=80`
         );
-
-        addEndpoint(
+        addGetEndpoint(
           "lista1",
-          "GET",
           "/tarefas/areaquadrado",
           "Calcula e exibe a área do quadrado com base no valor do lado informado. Exemplo de uso: ?a=5&b=7",
-          "https://estudos-java-production.up.railway.app/tarefas/areaquadrado?a=5&b=7"
+          `${Base_URL}/tarefas/areaquadrado?a=5&b=7`
         );
-
-        addEndpoint(
+        addGetEndpoint(
           "lista1",
-          "GET",
-          "/tarefas/arearelosango",
+          "/tarefas/arealosango",
           "Calcula e exibe a área do losango com base nos valores das diagonais informados. Exemplo de uso( A = diagonal maior, B = diagonal menor): ?a=24&b=17",
-          "https://estudos-java-production.up.railway.app/tarefas/arealosango?a=24&b=17"
+          `${Base_URL}/tarefas/arealosango?a=24&b=17`
         );
-
-        addEndpoint(
+        addGetEndpoint(
           "lista1",
-          "GET",
           "/tarefas/quantidadesalarios",
           "Calcula e exibe a quantidade de salários mínimos que uma pessoa ganha com base no valor do salário mínimo e no valor do salário da pessoa. Exemplo de uso: ?a=4800",
-          "https://estudos-java-production.up.railway.app/tarefas/quantidadesalarios?a=4800"
+          `${Base_URL}/tarefas/quantidadesalarios?a=4800`
         );
-
-        addEndpoint(
+        addGetEndpoint(
           "lista1",
-          "GET",
           "/tarefas/tabuada",
           "Calcula e exibe a tabuada de um número informado. Exemplo de uso: ?a=7",
-          "https://estudos-java-production.up.railway.app/tarefas/tabuada?a=7"
+          `${Base_URL}/tarefas/tabuada?a=7`
         );
-
-        addEndpoint(
+        addGetEndpoint(
           "lista1",
-          "GET",
           "/tarefas/idade",
           "Calcula e exibe a idade em anos, meses, dias, horas, minutos e segundo com base no ano de nascimento informado. Exemplo de uso: ?a=2000",
-          "https://estudos-java-production.up.railway.app/tarefas/idade?a=2000"
+          `${Base_URL}/tarefas/idade?a=2000`
         );
-
-        addEndpoint(
+        addGetEndpoint(
           "lista1",
-          "GET",
           "/tarefas/contasatrasadas",
           "Calcula e exibe o restante do salário após pagar contas atrasadas com multa de 2% ao mês. Exemplo de uso: ?a=2500&b=500&c=300",
-          "https://estudos-java-production.up.railway.app/tarefas/contasatrasadas?a=2500&b=500&c=300"
+          `${Base_URL}/tarefas/contasatrasadas?a=2500&b=500&c=300`
         );
-
-        addEndpoint(
+        addGetEndpoint(
           "lista1",
-          "GET",
           "/tarefas/circunferencia",
           "Calcula e exibe a comprimento, área e volume de um círculo com base no valor do raio informado. Exemplo de uso: ?a=5",
-          "https://estudos-java-production.up.railway.app/tarefas/circunferencia?a=5"
+          `${Base_URL}/tarefas/circunferencia?a=5`
         );
-
-        addEndpoint(
+        addGetEndpoint(
           "lista1",
-          "GET",
           "/tarefas/celsiusparafahrenheit",
           "Converte e exibe a temperatura de Celsius para Fahrenheit com base no valor informado. Exemplo de uso: ?a=30",
-          "https://estudos-java-production.up.railway.app/tarefas/celsiusparafahrenheit?a=30"
+          `${Base_URL}/tarefas/celsiusparafahrenheit?a=30`
         );
-
-        addEndpoint(
+        addGetEndpoint(
           "lista1",
-          "GET",
           "/tarefas/iluminacao",
           "Exibe a quantidade de lâmpadas necessárias(18w) para iluminar um ambiente com base na área informada. Exemplo de uso(A = largura, B = comprimento): ?a=50&b=34",
-          "https://estudos-java-production.up.railway.app/tarefas/iluminacao?a=50&b=34"
+          `${Base_URL}/tarefas/iluminacao?a=50&b=34`
         );
-
-        addEndpoint(
+        addGetEndpoint(
           "lista1",
-          "GET",
           "/tarefas/medidaescada",
           "Calcula e exibe o comprimento da escada necessária para alcançar uma altura com base na altura e no ângulo de inclinação informados. Exemplo de uso( A = angulo, B = altura): ?a=30&b=5",
-          "https://estudos-java-production.up.railway.app/tarefas/medidaescada?a=30&b=5"
+          `${Base_URL}/tarefas/medidaescada?a=30&b=5`
         );
-
-        addEndpoint(
+        addGetEndpoint(
           "lista1",
-          "GET",
           "/tarefas/quantovouganhar",
           "Calcula e exibe o valor total que uma pessoa vai ganhar com base no valor mensal que ela recebe, horas trabalhadas e horas extras. Exemplo de uso: ?a=1518&b=12&c=5",
-          "https://estudos-java-production.up.railway.app/tarefas/quantovouganhar?a=1518&b=12&c=5"
+          `${Base_URL}/tarefas/quantovouganhar?a=1518&b=12&c=5`
         );
-
-        addEndpoint(
+        addGetEndpoint(
           "lista1",
-          "GET",
           "/tarefas/poligono",
           "Calcula e exibe a quantidade de diagonais de um polígono com base no número de lados informado. Exemplo de uso: ?a=5",
-          "https://estudos-java-production.up.railway.app/tarefas/poligono?a=5"
+          `${Base_URL}/tarefas/poligono?a=5`
         );
-
-        addEndpoint(
+        addGetEndpoint(
           "lista1",
-          "GET",
           "/tarefas/angulo",
           "Calcula e exibe o terceiro ângulo de um triângulo Exemplo de uso: ?a=60&b=30",
-          "https://estudos-java-production.up.railway.app/tarefas/angulo?a=60&b=30"
+          `${Base_URL}/tarefas/angulo?a=60&b=30`
         );
-
-        addEndpoint(
+        addGetEndpoint(
           "lista1",
-          "GET",
           "/tarefas/cambio",
           "Calcula e exibe o valor em reais convertido para dólar, marco alemão, euro e libra com base na cotação do dia (19/06/25). Exemplo de uso: ?a=8900",
-          "https://estudos-java-production.up.railway.app/tarefas/cambio?a=8900"
+          `${Base_URL}/tarefas/cambio?a=8900`
         );
-
-        addEndpoint(
+        addGetEndpoint(
           "lista1",
-          "GET",
           "/tarefas/horasparaminutos",
           "Calcula e exibe a conversão de horas para minutos e minutos para segundo com base no valor informado. Exemplo de uso(A = horas, B = minutos): ?a=5&b=30",
-          "https://estudos-java-production.up.railway.app/tarefas/horasparaminutos?a=5&b=30"
+          `${Base_URL}/tarefas/horasparaminutos?a=5&b=30`
         );
 
-        addEndpoint(
+        addPostEndpoint(
           "lista2",
-          "GET",
           "/tarefas/menornumero",
-          "Encontra e exibe o menor número entre dois números informados. Exemplo de uso: ?a=10&b=5&",
-          "https://estudos-java-production.up.railway.app/tarefas/menornumero?a=10&b=5"
+          "Encontra e exibe o menor número entre dois números informados.",
+          [{ a: "number" }, { b: "number" }]
         );
-
-        addEndpoint(
+        addPostEndpoint(
           "lista2",
-          "GET",
           "/tarefas/maiornumero",
-          "Encontra e exibe o maior número entre três números informados. Exemplo de uso: ?a=10&b=5&c=15",
-          "https://estudos-java-production.up.railway.app/tarefas/maiornumero?a=10&b=5&c=15"
+          "Encontra e exibe o maior número entre três números informados.",
+          [{ a: "number" }, { b: "number" }, { c: "number" }]
         );
-
-        addEndpoint(
+        addPostEndpoint(
           "lista2",
-          "GET",
           "/tarefas/calculadorasimples",
-          "Calcula e exibe a média, diferença, produto e divisão de dois números informados. Exemplo de uso: ?a=10&b=5opcao=1",
-          "https://estudos-java-production.up.railway.app/tarefas/calculadorasimples?a=10&b=5&opcao=1"
+          "Calcula e exibe a média, diferença, produto e divisão de dois números informados.",
+          [{ a: "number" }, { b: "number" }, { opcao: "number" }]
         );
-
-        addEndpoint(
+        addPostEndpoint(
           "lista2",
-          "GET",
           "/tarefas/aumentode30",
-          "Calcula e exibe o aumento de 30% no salário caso a pessoa ganhe até R$500. Exemplo de uso: ?a=467",
-          "https://estudos-java-production.up.railway.app/tarefas/aumentode30?a=467"
+          "Calcula e exibe o aumento de 30% no salário caso a pessoa ganhe até R$500.",
+          [{ a: "number" }]
         );
-
-        addEndpoint(
+        addPostEndpoint(
           "lista2",
-          "GET",
           "/tarefas/aumentodesalario",
-          "Calcula e exibe o aumento de 35% no salário caso a pessoa ganhe até R$300 e 15% caso ganhe acima de R$ 300. Exemplo de uso: ?a=800",
-          "https://estudos-java-production.up.railway.app/tarefas/aumentodesalario?a=800"
+          "Calcula e exibe o aumento de 35% no salário caso a pessoa ganhe até R$300 e 15% caso ganhe acima de R$ 300.",
+          [{ a: "number" }]
         );
-
-        addEndpoint(
+        addPostEndpoint(
           "lista2",
-          "GET",
           "/tarefas/creditoespecial",
-          "Calcula e exibe o valor do crédito especial com base no saldo médio informado. Exemplo de uso: ?a=2000",
-          "https://estudos-java-production.up.railway.app/tarefas/creditoespecial?a=2000"
+          "Calcula e exibe o valor do crédito especial com base no saldo médio informado.",
+          [{ a: "number" }]
         );
-
-        addEndpoint(
+        addPostEndpoint(
           "lista2",
-          "GET",
           "/tarefas/custoaoconsumidor",
-          "Calcula o custo ao consumidor com base no preço de fábrica de um veículo, aplicando percentuais de distribuidor e impostos. Exemplo de uso: ?a=30000",
-          "https://estudos-java-production.up.railway.app/tarefas/custoaoconsumidor?a=30000"
+          "Calcula o custo ao consumidor com base no preço de fábrica de um veículo, aplicando percentuais de distribuidor e impostos.",
+          [{ a: "number" }]
         );
-
-        addEndpoint(
+        addPostEndpoint(
           "lista2",
-          "GET",
           "/tarefas/aumentodesalario2",
-          "Calcula e exibe o reajuste salarial: 15% até R$300, 10% até R$600, 5% até R$900 e 0% acima de R$900. Exemplo de uso: ?a=490",
-          "https://estudos-java-production.up.railway.app/tarefas/aumentodesalario2?a=490"
+          "Calcula e exibe o reajuste salarial: 15% até R$300, 10% até R$600, 5% até R$900 e 0% acima de R$900.",
+          [{ a: "number" }]
         );
-
-        addEndpoint(
+        addPostEndpoint(
           "lista2",
-          "GET",
           "/tarefas/gratificacao",
-          "Calcula e exibe a gratificação sobre o salário para funcionários com base em seu salário. Exemplo de uso: ?a=1500",
-          "https://estudos-java-production.up.railway.app/tarefas/gratificacao?a=1500"
+          "Calcula e exibe a gratificação sobre o salário para funcionários com base em seu salário.",
+          [{ a: "number" }]
         );
-
-        addEndpoint(
+        addPostEndpoint(
           "lista2",
-          "GET",
           "/tarefas/tipodeproduto",
-          "Exibe o tipo de produto com base no valor dele. Exemplo de uso: ?a=142",
-          "https://estudos-java-production.up.railway.app/tarefas/tipodeproduto?a=142"
+          "Exibe o tipo de produto com base no valor dele.",
+          [{ a: "number" }]
         );
-
-        addEndpoint(
+        addPostEndpoint(
           "lista2",
-          "GET",
           "/tarefas/aumentosalario3",
-          "Calcula e exibe o reajuste salarial: 50% até R$300, 40% até R$500, 30% até R$700, 20% até R$800, 10% até R$1000 e 5% acima de R$1000. Exemplo de uso: ?a=823",
-          "https://estudos-java-production.up.railway.app/tarefas/aumentosalario3?a=823"
+          "Calcula e exibe o reajuste salarial: 50% até R$300, 40% até R$500, 30% até R$700, 20% até R$800, 10% até R$1000 e 5% acima de R$1000.",
+          [{ a: "number" }]
         );
-
-        addEndpoint(
+        addPostEndpoint(
           "lista2",
-          "GET",
           "/tarefas/investimento",
-          "Calcula o rendimento total de um investimento com base no valor inicial, tempo em meses e tipo escolhido (1 para Poupança, 2 para Fundos de Renda Fixa). ?a=1&b=420000&c=12",
-          "https://estudos-java-production.up.railway.app/tarefas/investimento?a=1&b=420000&c=12"
+          "Calcula o rendimento total de um investimento com base no valor inicial, tempo em meses e tipo escolhido (1 para Poupança, 2 para Fundos de Renda Fixa).",
+          [{ tipo: "number" }, { valor: "number" }, { meses: "number" }]
         );
-
-        addEndpoint(
+        addPostEndpoint(
           "lista2",
-          "GET",
           "/tarefas/descontoproduto",
-          "Calcula e exibe o valor do desconto de 10% em um produto com valor até R$ 100 e 15% acima de R$ 100. Exemplo de uso: ?a=150&b=32855",
-          "https://estudos-java-production.up.railway.app/tarefas/descontoproduto?a=150&b=32855"
+          "Calcula e exibe o valor do desconto de 10% em um produto com valor até R$ 100 e 15% acima de R$ 100.",
+          [{ a: "number" }, { b: "number" }]
         );
-
-        addEndpoint(
+        addPostEndpoint(
           "lista2",
-          "GET",
           "/tarefas/passwd",
-          "Permite acessar caso o usuário tenha a senha correta. Exemplo de uso: ?a=123456",
-          "https://estudos-java-production.up.railway.app/tarefas/passwd?a=123456"
+          "Permite acessar caso o usuário tenha a senha correta.",
+          [{ a: "text" }]
         );
       };
     </script>

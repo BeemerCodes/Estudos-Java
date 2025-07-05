@@ -8,15 +8,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Controller
-@RequestMapping("/tarefas")
+@RequestMapping("/api/tarefas")
 public class TarefaController {
 
-    @GetMapping
-    public String listarTarefas() {
-        return "forward:/tarefas.html";
-    }
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    private final String senhaHasheada = "$2a$10$3g.ENI99l3g0A5u22GsoUe19h2z2p.d.OqYwubGIMkTQhNiJq9k0G";
 
     private ResponseEntity<Map<String, Object>> respostaErro(String mensagem) {
         Map<String, Object> response = new LinkedHashMap<>();
@@ -35,6 +37,7 @@ public class TarefaController {
 
     @GetMapping("/multiplicartres")
     @ResponseBody
+    @Cacheable("multiplicartres")
     public ResponseEntity<?> multiplicarTres(@RequestParam double a, @RequestParam double b, @RequestParam double c) {
         double result = a * b * c;
         return respostaSucesso("multiplicar-tres", "A", a, "B", b, "C", c, "Resultado", result);
@@ -42,6 +45,7 @@ public class TarefaController {
 
     @GetMapping("/dividir") 
     @ResponseBody
+    @Cacheable("dividir")
     public ResponseEntity<?> dividir(@RequestParam double a, @RequestParam double b) {
         if (b == 0 ) {
             return respostaErro("O valor não pode ser dividido por zero.");
@@ -52,6 +56,7 @@ public class TarefaController {
 
     @GetMapping("/mediaponderada")
     @ResponseBody
+    @Cacheable("mediaponderada")
     public ResponseEntity<?> calcularMediaPonderada(@RequestParam double a, @RequestParam double b) {
         double mediaPonderada = (a * 2 + b * 3) / 5;
         return respostaSucesso("Média Ponderada", "A", a, "B", b, "Resultado", mediaPonderada);
@@ -59,6 +64,7 @@ public class TarefaController {
 
     @GetMapping("/descontodez")
     @ResponseBody
+    @Cacheable("descontodez")
     public ResponseEntity<?> descontoDez(@RequestParam double a){
         if (a <= 0 ){
             return respostaErro("O valor deve ser maior que zero.");
@@ -69,6 +75,7 @@ public class TarefaController {
 
     @GetMapping("/comissao")
     @ResponseBody
+    @Cacheable("comissao")
     public ResponseEntity<?> comissao(@RequestParam double a, @RequestParam double b){
         if (a <= 0){
             return respostaErro("O salário deve ser maior que zero.");
@@ -79,6 +86,7 @@ public class TarefaController {
 
     @GetMapping("/peso")
     @ResponseBody
+    @Cacheable("peso")
     public ResponseEntity<?> balanca(@RequestParam double a){
         if (a <= 0){
             return respostaErro("O peso deve ser maior que zero.");
@@ -90,6 +98,7 @@ public class TarefaController {
 
     @GetMapping("/quilosparagramas")
     @ResponseBody
+    @Cacheable("quilosparagramas")
     public ResponseEntity<?> quilosParaGramas(@RequestParam double a){
         if (a < 0){
             return respostaErro("O peso não pode ser negativo.");
@@ -100,6 +109,7 @@ public class TarefaController {
 
     @GetMapping("/areatrapezio")
     @ResponseBody
+    @Cacheable("areatrapezio")
     public ResponseEntity<?> trapezio(@RequestParam double a, @RequestParam double b, @RequestParam double c){
         if (a <= 0 || b <= 0 || c <= 0){
             return respostaErro("Os valores devem ser maior que zero.");
@@ -110,6 +120,7 @@ public class TarefaController {
 
     @GetMapping("/areaquadrado")
     @ResponseBody
+    @Cacheable("areaquadrado")
     public ResponseEntity<?> areaQuadrado(@RequestParam double a, @RequestParam double b){
         if (a <= 0 || b <= 0){
             return respostaErro("Os valores devem ser maior que zero.");
@@ -120,6 +131,7 @@ public class TarefaController {
 
     @GetMapping("/arealosango")
     @ResponseBody
+    @Cacheable("arealosango")
     public ResponseEntity<?> arealosango(@RequestParam double a, @RequestParam double b){
         if (a <= 0 || b <= 0){
             return respostaErro("As diagonais devem ser positivas.");
@@ -130,6 +142,7 @@ public class TarefaController {
 
     @GetMapping("/quantidadesalarios")
     @ResponseBody
+    @Cacheable("quantidadesalarios")
     public ResponseEntity<?> quantidadeSalarios(@RequestParam double a){
         if(a <= 0){
             return respostaErro("O salário deve ser maior que zero.");
@@ -141,6 +154,7 @@ public class TarefaController {
 
     @GetMapping("/tabuada")
     @ResponseBody
+    @Cacheable("tabuada")
     public ResponseEntity<?> tabuada(@RequestParam int a){
         if (a <= 0){
             return respostaErro("Tabuada de zero??");
@@ -157,6 +171,7 @@ public class TarefaController {
 
     @GetMapping("/idade")
     @ResponseBody
+    @Cacheable("idade")
     public ResponseEntity<?> idade(@RequestParam int a){
         if (a <= 0 || a > 2025) {
             return respostaErro("O ano de nascimento deve ser válido.");
@@ -172,6 +187,7 @@ public class TarefaController {
 
     @GetMapping("/contasatrasadas")
     @ResponseBody
+    @Cacheable("contasatrasadas")
     public ResponseEntity<?> contasAtrasadas(@RequestParam double a, @RequestParam double b, @RequestParam double c){
         if (a <= 0 || b < 0 || c < 0){
             return respostaErro("O salário deve ser positivo e as contas não podem ser negativas.");
@@ -184,6 +200,7 @@ public class TarefaController {
 
     @GetMapping("/circunferencia")
     @ResponseBody
+    @Cacheable("circunferencia")
     public ResponseEntity<?> circunferencia(@RequestParam double a){
         if (a <= 0) {
             return respostaErro("O raio deve ser positivo.");
@@ -197,6 +214,7 @@ public class TarefaController {
 
     @GetMapping("/celsiusparafahrenheit")
     @ResponseBody
+    @Cacheable("celsiusparafahrenheit")
     public ResponseEntity<?> celsiusParaFahrenheit(@RequestParam double a){
         double fahrenheit = (a * 9.0/5.0) + 32;
         return respostaSucesso("Celsius para Fahrenheit", "Celsius", a + "°C", "Fahrenheit", String.format("%.1f", fahrenheit) + "°F");
@@ -204,6 +222,7 @@ public class TarefaController {
 
     @GetMapping("/iluminacao")
     @ResponseBody
+    @Cacheable("iluminacao")
     public ResponseEntity<?> iluminacao(@RequestParam double a, @RequestParam double b){
         if (a <= 0 || b <= 0){
             return respostaErro("Largura e comprimento devem ser positivos.");
@@ -215,6 +234,7 @@ public class TarefaController {
 
     @GetMapping("/medidaescada")
     @ResponseBody
+    @Cacheable("medidaescada")
     public ResponseEntity<?> medidaEscada(@RequestParam double a, @RequestParam double b){
         if (b <= 0 || a <= 0 || a >= 90){
             return respostaErro("Altura deve ser positiva e o ângulo deve estar entre 0 e 90 graus.");
@@ -226,6 +246,7 @@ public class TarefaController {
 
     @GetMapping("/quantovouganhar")
     @ResponseBody
+    @Cacheable("quantovouganhar")
     public ResponseEntity<?> quantoVouGanhar(@RequestParam double a, @RequestParam double b, @RequestParam double c){
         if (a <= 0 || b < 0 || c < 0){
             return respostaErro("O salário deve ser positivo e as horas não podem ser negativas.");
@@ -239,6 +260,7 @@ public class TarefaController {
 
     @GetMapping("/poligono")
     @ResponseBody
+    @Cacheable("poligono")
     public ResponseEntity<?> polignono(@RequestParam int a){
         if (a < 3) {
             return respostaErro("Polígonos devem ter ao menos 3 lados.");
@@ -249,6 +271,7 @@ public class TarefaController {
 
     @GetMapping("/angulo")
     @ResponseBody
+    @Cacheable("angulo")
     public ResponseEntity<?> angulo(@RequestParam int a, @RequestParam int b){
         int angulo = 180 - (a + b);
         if (angulo <= 0 || a <= 0 || b <= 0) {
@@ -259,6 +282,7 @@ public class TarefaController {
 
     @GetMapping("/cambio")
     @ResponseBody
+    @Cacheable("cambio")
     public ResponseEntity<?> cambio(@RequestParam double a){
         if (a <= 0){
             return respostaErro("O valor deve ser maior que zero.");
@@ -270,6 +294,7 @@ public class TarefaController {
 
     @GetMapping("/horasparaminutos")
     @ResponseBody
+    @Cacheable("horasparaminutos")
     public ResponseEntity<?> horasParaMinutos(@RequestParam double a, @RequestParam double b){
         if (a < 0 || b < 0){
             return respostaErro("Horas e minutos não podem ser negativos.");
@@ -279,47 +304,50 @@ public class TarefaController {
         return respostaSucesso("Horas para minutos", "Horas", a, "Minutos", b, "Total em minutos", totalMinutos, "Total em segundos", totalSegundos);
     }
 
-    @GetMapping("/menornumero")
+    @PostMapping("/menornumero")
     @ResponseBody
-    public ResponseEntity<?> menornumero(@RequestParam double a, @RequestParam double b){
-        return respostaSucesso("Menor número", "Número A", a, "Número B", b, "Resultado", a <= b ? a : b);
+    @Cacheable("menornumero")
+    public ResponseEntity<?> menornumero(@RequestBody RequestDoisValores req) {
+        return respostaSucesso("Menor número", "Número A", req.getA(), "Número B", req.getB(), "Resultado", req.getA() <= req.getB() ? req.getA() : req.getB());
     }
 
-    @GetMapping("/maiornumero")
+    @PostMapping("/maiornumero")
     @ResponseBody
-    public ResponseEntity<?> maiornumero(@RequestParam double a, @RequestParam double b, @RequestParam double c){
-        if (a == b && b == c) {
-            return respostaSucesso("Números", "A", a, "B", b, "C", c, "Resultado", "Os números são iguais.");
+    @Cacheable("maiornumero")
+    public ResponseEntity<?> maiornumero(@RequestBody RequestTresValores req) {
+        if (req.getA() == req.getB() && req.getB() == req.getC()) {
+            return respostaSucesso("Números", "A", req.getA(), "B", req.getB(), "C", req.getC(), "Resultado", "Os números são iguais.");
         }
-        return respostaSucesso("Maior número", "Número A", a, "Número B", b, "Número C", c, "O maior número é", Math.max(a, Math.max(b, c)));
+        return respostaSucesso("Maior número", "Número A", req.getA(), "Número B", req.getB(), "Número C", req.getC(), "O maior número é", Math.max(req.getA(), Math.max(req.getB(), req.getC())));
     }
 
-    @GetMapping("/calculadorasimples")
+    @PostMapping("/calculadorasimples")
     @ResponseBody
-    public ResponseEntity<?> calculadorasimples(@RequestParam double a, @RequestParam double b, @RequestParam int opcao) {
-        switch (opcao) {
+    @Cacheable("calculadorasimples")
+    public ResponseEntity<?> calculadorasimples(@RequestBody CalculadoraRequest req) {
+        switch (req.getOpcao()) {
             case 1 -> {
-                double resultado = (a + b) / 2;
+                double resultado = (req.getA() + req.getB()) / 2;
                 String operacao = "Média entre os números";
-                return respostaSucesso(operacao, "Opção", opcao, "A", a, "B", b, "Resultado", resultado);
+                return respostaSucesso(operacao, "Opção", req.getOpcao(), "A", req.getA(), "B", req.getB(), "Resultado", resultado);
             }
             case 2 -> {
-                double resultado = Math.abs(a - b);
+                double resultado = Math.abs(req.getA() - req.getB());
                 String operacao = "Diferença do maior pelo menor";
-                return respostaSucesso(operacao, "Opção", opcao, "A", a, "B", b, "Resultado", resultado);
+                return respostaSucesso(operacao, "Opção", req.getOpcao(), "A", req.getA(), "B", req.getB(), "Resultado", resultado);
             }
             case 3 -> {
-                double resultado = a * b;
+                double resultado = req.getA() * req.getB();
                 String operacao = "Produto entre os números";
-                return respostaSucesso(operacao, "Opção", opcao, "A", a, "B", b, "Resultado", resultado);
+                return respostaSucesso(operacao, "Opção", req.getOpcao(), "A", req.getA(), "B", req.getB(), "Resultado", resultado);
             }
             case 4 -> {
-                if (b == 0) {
+                if (req.getB() == 0) {
                     return respostaErro("A divisão por 0 não é permitida.");
                 }
-                double resultado = a / b;
+                double resultado = req.getA() / req.getB();
                 String operacao = "Divisão do primeiro pelo segundo";
-                return respostaSucesso(operacao, "Opção", opcao, "A", a, "B", b, "Resultado", resultado);
+                return respostaSucesso(operacao, "Opção", req.getOpcao(), "A", req.getA(), "B", req.getB(), "Resultado", resultado);
             }
             default -> {
                 return respostaErro("Opção inválida. Escolha entre 1, 2, 3 ou 4.");
@@ -327,131 +355,138 @@ public class TarefaController {
         }
     }
 
-    @GetMapping("/aumentode30")
+    @PostMapping("/aumentode30")
     @ResponseBody
-    public ResponseEntity<?> aumentode30(@RequestParam double a) { 
-        if (a <= 0) {
+    @Cacheable("aumentode30")
+    public ResponseEntity<?> aumentode30(@RequestBody RequestUmValor req) {
+        if (req.getA() <= 0) {
             return respostaErro("O salário deve ser um valor positivo.");
         }
-        if (a <= 500) {
-            double aumento = a * 0.30;
-            return respostaSucesso("Aumento de Salário", "Salário original", "R$" + String.format("%.2f", a), "Aumento concedido", "R$" + String.format("%.2f", aumento), "Salário com aumento", "R$" + String.format("%.2f", a + aumento));
+        if (req.getA() <= 500) {
+            double aumento = req.getA() * 0.30;
+            return respostaSucesso("Aumento de Salário", "Salário original", "R$" + String.format("%.2f", req.getA()), "Aumento concedido", "R$" + String.format("%.2f", aumento), "Salário com aumento", "R$" + String.format("%.2f", req.getA() + aumento));
         } else {
             return respostaErro("O aumento de 30% é limitado a quem ganha até R$ 500,00.");
         }
     }
 
-    @GetMapping("/aumentodesalario")
+    @PostMapping("/aumentodesalario")
     @ResponseBody
-    public ResponseEntity<?> aumentoDeSalario(@RequestParam double a) {
-        if (a <= 0) {
+    @Cacheable("aumentodesalario")
+    public ResponseEntity<?> aumentoDeSalario(@RequestBody RequestUmValor req) {
+        if (req.getA() <= 0) {
             return respostaErro("O salário deve ser maior que zero.");
         }
         double aumento;
-        if (a <= 300) {
-            aumento = a * 0.35;
+        if (req.getA() <= 300) {
+            aumento = req.getA() * 0.35;
         } else {
-            aumento = a * 0.15; 
+            aumento = req.getA() * 0.15;
         }
-        return respostaSucesso("Aumento de salário", "Salário original", "R$" + String.format("%.2f", a), "Aumento de", "R$" + String.format("%.2f", aumento), "Salário com aumento", "R$" + String.format("%.2f", a + aumento));
+        return respostaSucesso("Aumento de salário", "Salário original", "R$" + String.format("%.2f", req.getA()), "Aumento de", "R$" + String.format("%.2f", aumento), "Salário com aumento", "R$" + String.format("%.2f", req.getA() + aumento));
     }
 
-    @GetMapping("/creditoespecial")
+    @PostMapping("/creditoespecial")
     @ResponseBody
-    public ResponseEntity<?> creditoEspecial(@RequestParam double a) {
+    @Cacheable("creditoespecial")
+    public ResponseEntity<?> creditoEspecial(@RequestBody RequestUmValor req) {
         double creditoEspecial;
-        if (a <= 0) {
+        if (req.getA() <= 0) {
             return respostaErro("O saldo médio deve ser maior que zero.");
         }
-        if (a > 400) {
-            creditoEspecial = a * 0.30;
-        } else if (a > 300) {
-            creditoEspecial = a * 0.25;
-        } else if (a > 200) {
-            creditoEspecial = a * 0.20;
+        if (req.getA() > 400) {
+            creditoEspecial = req.getA() * 0.30;
+        } else if (req.getA() > 300) {
+            creditoEspecial = req.getA() * 0.25;
+        } else if (req.getA() > 200) {
+            creditoEspecial = req.getA() * 0.20;
         } else {
-            creditoEspecial = a * 0.10;
+            creditoEspecial = req.getA() * 0.10;
         }
-        return respostaSucesso("Crédito Especial", "Saldo médio", "R$" + String.format("%.2f", a), "Crédito especial concedido", "R$" + String.format("%.2f", creditoEspecial));
+        return respostaSucesso("Crédito Especial", "Saldo médio", "R$" + String.format("%.2f", req.getA()), "Crédito especial concedido", "R$" + String.format("%.2f", creditoEspecial));
     }
 
-    @GetMapping("/custoaoconsumidor")
+    @PostMapping("/custoaoconsumidor")
     @ResponseBody
-    public ResponseEntity<?> custoAoConsumidor(@RequestParam double a) {
-        if (a <= 0) {
+    @Cacheable("custoaoconsumidor")
+    public ResponseEntity<?> custoAoConsumidor(@RequestBody RequestUmValor req) {
+        if (req.getA() <= 0) {
             return respostaErro("O custo de fábrica deve ser maior que zero.");
         }
         double distribuidor;
         double impostos;
-        if (a <= 12000) {
-            distribuidor = a * 0.05;
+        if (req.getA() <= 12000) {
+            distribuidor = req.getA() * 0.05;
             impostos = 0;
-        } else if (a <= 25000) {
-            distribuidor = a * 0.10;
-            impostos = a * 0.15;
+        } else if (req.getA() <= 25000) {
+            distribuidor = req.getA() * 0.10;
+            impostos = req.getA() * 0.15;
         } else {
-            distribuidor = a * 0.15;
-            impostos = a * 0.20;
+            distribuidor = req.getA() * 0.15;
+            impostos = req.getA() * 0.20;
         }
-        return respostaSucesso("Custo ao consumidor", "Custo de fábrica", "R$" + String.format("%.2f", a), "Distribuidor", "R$" + String.format("%.2f", distribuidor), "Impostos", "R$" + String.format("%.2f", impostos), "Custo ao consumidor", "R$" + String.format("%.2f", a + distribuidor + impostos));
+        return respostaSucesso("Custo ao consumidor", "Custo de fábrica", "R$" + String.format("%.2f", req.getA()), "Distribuidor", "R$" + String.format("%.2f", distribuidor), "Impostos", "R$" + String.format("%.2f", impostos), "Custo ao consumidor", "R$" + String.format("%.2f", req.getA() + distribuidor + impostos));
     }
 
-    @GetMapping("/aumentodesalario2")
+    @PostMapping("/aumentodesalario2")
     @ResponseBody
-    public ResponseEntity<?> aumentoDeSalario2(@RequestParam double a) {
-        if (a <= 0) {
+    @Cacheable("aumentodesalario2")
+    public ResponseEntity<?> aumentoDeSalario2(@RequestBody RequestUmValor req) {
+        if (req.getA() <= 0) {
             return respostaErro("O salário deve ser maior que zero.");
         }
         double aumento;
-        if (a <= 300) {
-            aumento = a * 0.15;
-        } else if (a <= 600) {
-            aumento = a * 0.10;
-        } else if (a <= 900) {
-            aumento = a * 0.05;
-        }else {
+        if (req.getA() <= 300) {
+            aumento = req.getA() * 0.15;
+        } else if (req.getA() <= 600) {
+            aumento = req.getA() * 0.10;
+        } else if (req.getA() <= 900) {
+            aumento = req.getA() * 0.05;
+        } else {
             aumento = 0;
         }
-        return respostaSucesso("Aumento de salário", "Salário original", "R$" + String.format("%.2f", a), "Aumento", "R$" + String.format("%.2f", aumento), "Salário com aumento", "R$" + String.format("%.2f", a + aumento));
+        return respostaSucesso("Aumento de salário", "Salário original", "R$" + String.format("%.2f", req.getA()), "Aumento", "R$" + String.format("%.2f", aumento), "Salário com aumento", "R$" + String.format("%.2f", req.getA() + aumento));
     }
 
-    @GetMapping("/gratificacao")
+    @PostMapping("/gratificacao")
     @ResponseBody
-    public ResponseEntity<?> gratificacao(@RequestParam double a) {
-        if (a <= 0) {
+    @Cacheable("gratificacao")
+    public ResponseEntity<?> gratificacao(@RequestBody RequestUmValor req) {
+        if (req.getA() <= 0) {
             return respostaErro("O salário deve ser maior que zero.");
         }
-        double desconto = a * 0.07;
+        double desconto = req.getA() * 0.07;
         double gratificacao;
-        if (a <= 350) {
+        if (req.getA() <= 350) {
             gratificacao = 100.0;
-        } else if (a <= 600) {
+        } else if (req.getA() <= 600) {
             gratificacao = 75.0;
-        } else if (a <= 900) {
+        } else if (req.getA() <= 900) {
             gratificacao = 50.0;
         } else {
             gratificacao = 35.0;
         }
-        return respostaSucesso("Gratificação", "Salário", "R$" + String.format("%.2f", a), "Desconto de 7%", "R$" + String.format("%.2f", desconto), "Gratificação", "R$" + String.format("%.2f", gratificacao), "Salário final", "R$" + String.format("%.2f", a - desconto + gratificacao));
+        return respostaSucesso("Gratificação", "Salário", "R$" + String.format("%.2f", req.getA()), "Desconto de 7%", "R$" + String.format("%.2f", desconto), "Gratificação", "R$" + String.format("%.2f", gratificacao), "Salário final", "R$" + String.format("%.2f", req.getA() - desconto + gratificacao));
     }
 
-    @GetMapping("/tipodeproduto")
+    @PostMapping("/tipodeproduto")
     @ResponseBody
-    public ResponseEntity<?> ativ(@RequestParam double a) {
+    @Cacheable("tipodeproduto")
+    public ResponseEntity<?> ativ(@RequestBody RequestUmValor req) {
         double aumento;
         String tipoProduto;
-        if (a <= 0) {
+        if (req.getA() <= 0) {
             return respostaErro("O preço do produto deve ser positivo.");
-        } else if (a <= 50) {
-            aumento = a * 0.05;
-        } else if (a <= 100) {
-            aumento = a * 0.10;
+        } else if (req.getA() <= 50) {
+            aumento = req.getA() * 0.05;
+        } else if (req.getA() <= 100) {
+            aumento = req.getA() * 0.10;
         } else {
-            aumento = a * 0.15;
+            aumento = req.getA() * 0.15;
         }
-        
-        double precoFinal = a + aumento;
-        
+
+        double precoFinal = req.getA() + aumento;
+
         if (precoFinal < 80) {
             tipoProduto = "Barato";
         } else if (precoFinal <= 120) {
@@ -461,73 +496,78 @@ public class TarefaController {
         } else {
             tipoProduto = "Muito caro";
         }
-        return respostaSucesso("Tipo de produto", "Preço do produto", "R$" + String.format("%.2f", a), "Aumento", "R$" + String.format("%.2f", aumento), "Tipo de produto", tipoProduto, "Preço final", "R$" + String.format("%.2f", precoFinal));
+        return respostaSucesso("Tipo de produto", "Preço do produto", "R$" + String.format("%.2f", req.getA()), "Aumento", "R$" + String.format("%.2f", aumento), "Tipo de produto", tipoProduto, "Preço final", "R$" + String.format("%.2f", precoFinal));
     }
 
-    @GetMapping("/aumentosalario3")
+    @PostMapping("/aumentosalario3")
     @ResponseBody
-    public ResponseEntity<?> aumentosalario3(@RequestParam double a) {
-        if (a <= 0) {
+    @Cacheable("aumentosalario3")
+    public ResponseEntity<?> aumentosalario3(@RequestBody RequestUmValor req) {
+        if (req.getA() <= 0) {
             return respostaErro("O salário deve ser maior que zero.");
         }
         double aumento;
-        if (a <= 300) {
-            aumento = a * 0.50;
-        } else if (a <= 500) {
-            aumento = a * 0.40;
-        } else if (a <= 700) {
-            aumento = a * 0.30;
-        } else if (a <= 800) {
-            aumento = a * 0.20;
-        } else if (a <= 1000) {
-            aumento = a * 0.10;
-        }else {
-            aumento = a * 0.05;
+        if (req.getA() <= 300) {
+            aumento = req.getA() * 0.50;
+        } else if (req.getA() <= 500) {
+            aumento = req.getA() * 0.40;
+        } else if (req.getA() <= 700) {
+            aumento = req.getA() * 0.30;
+        } else if (req.getA() <= 800) {
+            aumento = req.getA() * 0.20;
+        } else if (req.getA() <= 1000) {
+            aumento = req.getA() * 0.10;
+        } else {
+            aumento = req.getA() * 0.05;
         }
-        return respostaSucesso("Aumento de salário", "Salário original", "R$" + String.format("%.2f", a), "Aumento", "R$" + String.format("%.2f", aumento), "Salário com aumento", "R$" + String.format("%.2f", a + aumento));
+        return respostaSucesso("Aumento de salário", "Salário original", "R$" + String.format("%.2f", req.getA()), "Aumento", "R$" + String.format("%.2f", aumento), "Salário com aumento", "R$" + String.format("%.2f", req.getA() + aumento));
     }
 
-    @GetMapping("/investimento")
+    @PostMapping("/investimento")
     @ResponseBody
-    public ResponseEntity<?> investimento(@RequestParam int tipo, @RequestParam double valor, @RequestParam int meses) {
-        if (tipo != 1 && tipo != 2) {
+    @Cacheable("investimento")
+    public ResponseEntity<?> investimento(@RequestBody InvestimentoRequest req) {
+        if (req.getTipo() != 1 && req.getTipo() != 2) {
             return respostaErro("O tipo de investimento deve ser 1 (Poupança) ou 2 (Renda Fixa).");
         }
-        if (valor <= 0 || meses <= 0) {
+        if (req.getValor() <= 0 || req.getMeses() <= 0) {
             return respostaErro("Valor e meses devem ser positivos.");
         }
         double rendimento;
-        if (tipo == 1) {
-            rendimento = (valor * 0.03) * meses;
+        if (req.getTipo() == 1) {
+            rendimento = (req.getValor() * 0.03) * req.getMeses();
         } else {
-            rendimento = (valor * 0.04) * meses;
+            rendimento = (req.getValor() * 0.04) * req.getMeses();
         }
-        double total = valor + rendimento;
-        return respostaSucesso("Investimento","Tipo de investimento", tipo == 1 ? "Poupança" : "Fundos de Renda Fixa", "Taxa de rendimento (%)", tipo == 1 ? "3%" : "4%", "Valor investido", "R$" + String.format("%.2f", valor), "Período (meses)", meses, "Rendimento", "R$" + String.format("%.2f", rendimento), "Total após rendimento", "R$" + String.format("%.2f", total));
+        double total = req.getValor() + rendimento;
+        return respostaSucesso("Investimento","Tipo de investimento", req.getTipo() == 1 ? "Poupança" : "Fundos de Renda Fixa", "Taxa de rendimento (%)", req.getTipo() == 1 ? "3%" : "4%", "Valor investido", "R$" + String.format("%.2f", req.getValor()), "Período (meses)", req.getMeses(), "Rendimento", "R$" + String.format("%.2f", rendimento), "Total após rendimento", "R$" + String.format("%.2f", total));
     }
 
-    @GetMapping("/descontoproduto")
+    @PostMapping("/descontoproduto")
     @ResponseBody
-    public ResponseEntity<?> descontoProduto(@RequestParam double a, @RequestParam double b) {
-        if (a <= 0) {
+    @Cacheable("descontoproduto")
+    public ResponseEntity<?> descontoProduto(@RequestBody RequestDoisValores req) {
+        if (req.getA() <= 0) {
             return respostaErro("O valor do produto deve ser maior que zero.");
         }
         double desconto = 0, porcentagem = 0;
-        if ( a > 30 && a <= 100){
-            desconto = a * 0.10;
+        if (req.getA() > 30 && req.getA() <= 100) {
+            desconto = req.getA() * 0.10;
             porcentagem = 10;
-        } else if(a > 100){
-            desconto = a * 0.15;
+        } else if (req.getA() > 100) {
+            desconto = req.getA() * 0.15;
             porcentagem = 15;
         }
-        return respostaSucesso("Desconto Produto", "Valor do produto", "R$" + String.format("%.2f", a), "Código do produto", b, "Valor do desconto", "R$" + String.format("%.2f", desconto), "Desconto de", porcentagem + "%", "Total com desconto", "R$" + String.format("%.2f", a - desconto));
+        return respostaSucesso("Desconto Produto", "Valor do produto", "R$" + String.format("%.2f", req.getA()), "Código do produto", req.getB(), "Valor do desconto", "R$" + String.format("%.2f", desconto), "Desconto de", porcentagem + "%", "Total com desconto", "R$" + String.format("%.2f", req.getA() - desconto));
     }
 
-    @GetMapping("/passwd")
+    @PostMapping("/passwd")
     @ResponseBody
-    public ResponseEntity<?> validPasswd(@RequestParam String a) {
-        String passwd = "4531";
-        String acesso = a.equals(passwd) ? "Permitido!" : "Negado!";
+    @Cacheable("passwd")
+    public ResponseEntity<?> validPasswd(@RequestBody PasswdRequest req) {
+        String senhaRecebida = req.getA();
+        boolean acessoPermitido = passwordEncoder.matches(senhaRecebida, senhaHasheada);
+        String acesso = acessoPermitido ? "Permitido!" : "Negado!";
         return respostaSucesso("Restrição de acesso","Acesso", acesso);
     }
 }
