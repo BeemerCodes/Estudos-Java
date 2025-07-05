@@ -1,4 +1,4 @@
-package com.pedro.lista.dtos;
+package com.pedro.lista;
 public class PasswdRequest {
     private String a;
     public String getA() { return a; }

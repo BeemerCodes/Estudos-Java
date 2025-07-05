@@ -1,4 +1,4 @@
-package com.pedro.lista.dtos;
+package com.pedro.lista;
 public class RequestDoisValores {
     private double a;
     private double b;

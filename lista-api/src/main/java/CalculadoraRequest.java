@@ -1,4 +1,4 @@
-package com.pedro.lista.dtos;
+package com.pedro.lista;
 public class CalculadoraRequest {
     private double a;
     private double b;

@@ -1,2 +1,10 @@
+com/pedro/lista/RequestUmValor.class
+com/pedro/lista/RequestTresValores.class
+com/pedro/lista/RequestDoisValores.class
+com/pedro/lista/ViewController.class
 com/pedro/lista/TarefaController.class
 com/pedro/lista/App.class
+com/pedro/lista/InvestimentoRequest.class
+com/pedro/lista/PasswdRequest.class
+com/pedro/lista/CalculadoraRequest.class
+com/pedro/lista/SecurityConfig.class

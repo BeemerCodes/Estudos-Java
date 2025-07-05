@@ -1,4 +1,4 @@
-package com.pedro.lista.dtos;
+package com.pedro.lista;
 public class RequestUmValor {
     private double a;
     public double getA() {
