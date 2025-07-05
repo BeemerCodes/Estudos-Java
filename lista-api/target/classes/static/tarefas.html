@@ -18,7 +18,7 @@
         margin-bottom: 30px;
       }
       .container {
-        max-width: 1400px;
+        max-width: 900px;
         margin: 0 auto;
       }
       .tab-bar {
@@ -51,7 +51,6 @@
       }
       .tab-content {
         display: none;
-        gap: 20px;
         padding: 20px 15px;
         border: 1px solid #333;
         border-top: none;
@@ -60,8 +59,7 @@
         margin-top: -1px;
       }
       .tab-content.active {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+        display: block;
       }
       .endpoint {
         background-color: #2d2d2d;
@@ -69,8 +67,7 @@
         border-radius: 8px;
         padding: 20px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        display: flex;
-        flex-direction: column;
+        margin-bottom: 20px;
       }
       .endpoint h3 {
         margin-top: 0;
@@ -83,7 +80,6 @@
         line-height: 1.6;
         font-size: 0.95em;
         margin-bottom: 15px;
-        flex-grow: 1;
       }
       .endpoint form .form-group {
         margin-bottom: 15px;
@@ -130,6 +126,9 @@
         font-size: 0.9em;
         min-height: 50px;
       }
+      .result.mostrar {
+        display: block;
+      }
     </style>
   </head>
   <body>
@@ -145,10 +144,26 @@
         <button class="tab-button" onclick="openTab(event, 'lista2-content')">
           Lista 2
         </button>
+        <button class="tab-button" onclick="openTab(event, 'lista3-content')">
+          Lista 3
+        </button>
+        <button class="tab-button" onclick="openTab(event, 'lista4-content')">
+          Lista 4
+        </button>
+        <button class="tab-button" onclick="openTab(event, 'lista5-content')">
+          Lista 5
+        </button>
+        <button class="tab-button" onclick="openTab(event, 'lista6-content')">
+          Lista 6
+        </button>
       </div>
       <div id="tab-content-container">
         <div id="lista1-content" class="tab-content active"></div>
         <div id="lista2-content" class="tab-content"></div>
+        <div id="lista3-content" class="tab-content"></div>
+        <div id="lista4-content" class="tab-content"></div>
+        <div id="lista5-content" class="tab-content"></div>
+        <div id="lista6-content" class="tab-content"></div>
       </div>
     </div>
     <script>
@@ -165,18 +180,38 @@
         evt.currentTarget.classList.add("active");
       }
 
-      function addGetEndpoint(tabId, path, description) {
+      function addGetEndpoint(tabId, path, description, exemploURL) {
         const container = document.getElementById(tabId);
         if (!container) return;
-
+        const resultId = `result-get-${tabId}-${path.replace(
+          /[^a-zA-Z0-9]/g,
+          "-"
+        )}`;
         const endpointDiv = document.createElement("div");
         endpointDiv.className = "endpoint";
         endpointDiv.innerHTML = `
           <h3>GET ${path}</h3>
           <p>${description}</p>
-          <div class="result" style="background-color: #3a3a3a;">Este é um endpoint GET e não requer interação.</div>
+          <div class="result mostrar" id="${resultId}">Carregando...</div>
         `;
         container.appendChild(endpointDiv);
+
+        fetch(exemploURL)
+          .then((res) => {
+            if (!res.ok)
+              return res.json().then((err) => {
+                throw new Error(err.erro || `Status ${res.status}`);
+              });
+            return res.json();
+          })
+          .then((data) => {
+            const resultDiv = document.getElementById(resultId);
+            resultDiv.textContent = JSON.stringify(data, null, 2);
+          })
+          .catch((error) => {
+            const resultDiv = document.getElementById(resultId);
+            resultDiv.textContent = "Erro ao carregar: " + error.message;
+          });
       }
 
       function addPostEndpoint(tabId, path, description, fields) {
@@ -214,6 +249,7 @@
         form.addEventListener("submit", async (event) => {
           event.preventDefault();
           const resultDiv = endpointDiv.querySelector(".result");
+          resultDiv.classList.add("mostrar");
           resultDiv.textContent = "Carregando...";
 
           const formData = new FormData(form);
@@ -244,117 +280,140 @@
         addGetEndpoint(
           "lista1-content",
           "/tarefas/multiplicartres",
-          "Multiplica três números."
+          "Multiplica três números. Exemplo de uso: ?a=2&b=3&c=4",
+          `${API_BASE_URL}/tarefas/multiplicartres?a=2&b=3&c=4`
         );
         addGetEndpoint(
           "lista1-content",
           "/tarefas/dividir",
-          "Divide dois números."
+          "Divide dois números. Exemplo de uso: ?a=10&b=5",
+          `${API_BASE_URL}/tarefas/dividir?a=10&b=5`
         );
         addGetEndpoint(
           "lista1-content",
           "/tarefas/mediaponderada",
-          "Calcula a média ponderada com pesos 2 e 3."
+          "Calcula a média ponderada com pesos 2 e 3. Exemplo de uso: ?a=4&b=6",
+          `${API_BASE_URL}/tarefas/mediaponderada?a=4&b=6`
         );
         addGetEndpoint(
           "lista1-content",
           "/tarefas/descontodez",
-          "Aplica 10% de desconto em um valor."
+          "Aplica 10% de desconto em um valor. Exemplo de uso: ?a=2300",
+          `${API_BASE_URL}/tarefas/descontodez?a=2300`
         );
         addGetEndpoint(
           "lista1-content",
           "/tarefas/comissao",
-          "Retorna a comissão de 4% com base no salário."
+          "Retorna a comissão de 4% com base no salário. Exemplo de uso: ?a=2000&b=450",
+          `${API_BASE_URL}/tarefas/comissao?a=2000&b=450`
         );
         addGetEndpoint(
           "lista1-content",
           "/tarefas/peso",
-          "Calcula variações de peso de +15% e -20%."
+          "Calcula variações de peso de +15% e -20%. Exemplo de uso: ?a=65",
+          `${API_BASE_URL}/tarefas/peso?a=65`
         );
         addGetEndpoint(
           "lista1-content",
           "/tarefas/quilosparagramas",
-          "Converte o peso de quilos para gramas."
+          "Converte o peso de quilos para gramas. Exemplo de uso: ?a=65",
+          `${API_BASE_URL}/tarefas/quilosparagramas?a=65`
         );
         addGetEndpoint(
           "lista1-content",
           "/tarefas/areatrapezio",
-          "Calcula a área de um trapézio."
+          "Calcula a área de um trapézio. Exemplo de uso(A = Base maior, B = Base menor, C = Altura): ?a=65&b=70&c=80",
+          `${API_BASE_URL}/tarefas/areatrapezio?a=65&b=70&c=80`
         );
         addGetEndpoint(
           "lista1-content",
           "/tarefas/areaquadrado",
-          "Calcula a área de um quadrado."
+          "Calcula a área de um quadrado. Exemplo de uso: ?a=5&b=7",
+          `${API_BASE_URL}/tarefas/areaquadrado?a=5&b=7`
         );
         addGetEndpoint(
           "lista1-content",
           "/tarefas/arealosango",
-          "Calcula a área de um losango."
+          "Calcula a área de um losango. Exemplo de uso(A = diagonal maior, B = diagonal menor): ?a=24&b=17",
+          `${API_BASE_URL}/tarefas/arealosango?a=24&b=17`
         );
         addGetEndpoint(
           "lista1-content",
           "/tarefas/quantidadesalarios",
-          "Calcula a quantidade de salários mínimos."
+          "Calcula a quantidade de salários mínimos que uma pessoa ganha. Exemplo de uso: ?a=4800",
+          `${API_BASE_URL}/tarefas/quantidadesalarios?a=4800`
         );
         addGetEndpoint(
           "lista1-content",
           "/tarefas/tabuada",
-          "Exibe a tabuada de um número."
+          "Exibe a tabuada de um número. Exemplo de uso: ?a=7",
+          `${API_BASE_URL}/tarefas/tabuada?a=7`
         );
         addGetEndpoint(
           "lista1-content",
           "/tarefas/idade",
-          "Calcula a idade em anos, meses, dias, etc."
+          "Calcula a idade em anos, meses, dias, etc. Exemplo de uso: ?a=2000",
+          `${API_BASE_URL}/tarefas/idade?a=2000`
         );
         addGetEndpoint(
           "lista1-content",
           "/tarefas/contasatrasadas",
-          "Calcula o salário restante após pagar contas com juros."
+          "Calcula o salário restante após pagar contas com juros. Exemplo de uso: ?a=2500&b=500&c=300",
+          `${API_BASE_URL}/tarefas/contasatrasadas?a=2500&b=500&c=300`
         );
         addGetEndpoint(
           "lista1-content",
           "/tarefas/circunferencia",
-          "Calcula comprimento, área e volume de uma esfera."
+          "Calcula comprimento, área e volume de uma esfera. Exemplo de uso: ?a=5",
+          `${API_BASE_URL}/tarefas/circunferencia?a=5`
         );
         addGetEndpoint(
           "lista1-content",
           "/tarefas/celsiusparafahrenheit",
-          "Converte Celsius para Fahrenheit."
+          "Converte Celsius para Fahrenheit. Exemplo de uso: ?a=30",
+          `${API_BASE_URL}/tarefas/celsiusparafahrenheit?a=30`
         );
         addGetEndpoint(
           "lista1-content",
           "/tarefas/iluminacao",
-          "Calcula a potência de iluminação necessária para uma área."
+          "Calcula a potência de iluminação necessária para uma área. Exemplo de uso(A = largura, B = comprimento): ?a=50&b=34",
+          `${API_BASE_URL}/tarefas/iluminacao?a=50&b=34`
         );
         addGetEndpoint(
           "lista1-content",
           "/tarefas/medidaescada",
-          "Calcula o comprimento necessário de uma escada."
+          "Calcula o comprimento necessário de uma escada. Exemplo de uso(A = angulo, B = altura): ?a=30&b=5",
+          `${API_BASE_URL}/tarefas/medidaescada?a=30&b=5`
         );
         addGetEndpoint(
           "lista1-content",
           "/tarefas/quantovouganhar",
-          "Calcula o valor bruto a receber com base em horas normais e extras."
+          "Calcula o valor bruto a receber com base em horas normais e extras. Exemplo de uso: ?a=1518&b=12&c=5",
+          `${API_BASE_URL}/tarefas/quantovouganhar?a=1518&b=12&c=5`
         );
         addGetEndpoint(
           "lista1-content",
           "/tarefas/poligono",
-          "Calcula o número de diagonais de um polígono."
+          "Calcula o número de diagonais de um polígono. Exemplo de uso: ?a=5",
+          `${API_BASE_URL}/tarefas/poligono?a=5`
         );
         addGetEndpoint(
           "lista1-content",
           "/tarefas/angulo",
-          "Calcula o terceiro ângulo de um triângulo."
+          "Calcula o terceiro ângulo de um triângulo. Exemplo de uso: ?a=60&b=30",
+          `${API_BASE_URL}/tarefas/angulo?a=60&b=30`
         );
         addGetEndpoint(
           "lista1-content",
           "/tarefas/cambio",
-          "Converte um valor em reais para outras moedas."
+          "Converte um valor em reais para outras moedas. Exemplo de uso: ?a=8900",
+          `${API_BASE_URL}/tarefas/cambio?a=8900`
         );
         addGetEndpoint(
           "lista1-content",
           "/tarefas/horasparaminutos",
-          "Converte horas e minutos para o total em minutos e segundos."
+          "Converte horas e minutos para o total em minutos e segundos. Exemplo de uso(A = horas, B = minutos): ?a=5&b=30",
+          `${API_BASE_URL}/tarefas/horasparaminutos?a=5&b=30`
         );
 
         addPostEndpoint(
