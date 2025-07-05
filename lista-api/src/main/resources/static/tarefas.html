@@ -7,7 +7,8 @@
     <style>
       body {
         font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
-        margin: 20px;
+        margin: 0;
+        padding: 20px;
         background-color: #252526;
         color: #d4d4d4;
       }
@@ -16,11 +17,9 @@
         text-align: center;
         margin-bottom: 30px;
       }
-      a {
-        color: #8ab4f8;
-      }
-      a:hover {
-        color: #adcffc;
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
       }
       .tab-bar {
         overflow: hidden;
@@ -52,24 +51,26 @@
       }
       .tab-content {
         display: none;
+        gap: 20px;
         padding: 20px 15px;
         border: 1px solid #333;
         border-top: none;
         background-color: #252526;
         border-radius: 0 0 5px 5px;
-        margin-top: 10px;
+        margin-top: -1px;
+      }
+      .tab-content.active {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
       }
       .endpoint {
         background-color: #2d2d2d;
         border: 1px solid #3a3a3a;
         border-radius: 8px;
         padding: 20px;
-        margin-bottom: 25px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        transition: box-shadow 0.3s ease-in-out;
-      }
-      .endpoint:hover {
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        display: flex;
+        flex-direction: column;
       }
       .endpoint h3 {
         margin-top: 0;
@@ -82,9 +83,40 @@
         line-height: 1.6;
         font-size: 0.95em;
         margin-bottom: 15px;
+        flex-grow: 1;
+      }
+      .endpoint form .form-group {
+        margin-bottom: 15px;
+        display: flex;
+        flex-direction: column;
+      }
+      .endpoint form label {
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+      .endpoint input {
+        padding: 8px 12px;
+        border: 1px solid #555;
+        border-radius: 4px;
+        background-color: #3e3e3e;
+        color: #d4d4d4;
+        width: 100%;
+        box-sizing: border-box;
+      }
+      .endpoint button {
+        cursor: pointer;
+        background-color: #6a0dad;
+        color: #ffffff;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 4px;
+        width: 100%;
+        margin-top: 10px;
+      }
+      .endpoint button:hover {
+        background-color: #800080;
       }
       .result {
-        display: none;
         background-color: #202020;
         color: #c5c5c5;
         padding: 15px;
@@ -96,424 +128,318 @@
         font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
           Courier, monospace;
         font-size: 0.9em;
-      }
-      .result.mostrar {
-        display: block;
-      }
-      input,
-      button {
-        padding: 8px 12px;
-        margin-right: 10px;
-        border: 1px solid #555;
-        border-radius: 4px;
-        background-color: #3e3e3e;
-        color: #d4d4d4;
-      }
-      button {
-        cursor: pointer;
-        background-color: #6a0dad;
-        color: #ffffff;
-        border: none;
-      }
-      button:hover {
-        background-color: #800080;
+        min-height: 50px;
       }
     </style>
   </head>
   <body>
-    <h1>Lista de Tarefas - API</h1>
-    <div class="endpoint">
-      <h3>Endpoint: /tarefas</h3>
-      <p>
-        Selecione um dos endpoints abaixo para testar sua funcionalidade. Os
-        exemplos exibidos são resultados reais retornados pela API.
-      </p>
-    </div>
-    <div class="tab-bar">
-      <button class="tab-button" onclick="openTab(event, 'lista1')">
-        Lista 1
-      </button>
-      <button class="tab-button" onclick="openTab(event, 'lista2')">
-        Lista 2
-      </button>
-      <button class="tab-button" onclick="openTab(event, 'lista3')">
-        Lista 3
-      </button>
-      <button class="tab-button" onclick="openTab(event, 'lista4')">
-        Lista 4
-      </button>
-      <button class="tab-button" onclick="openTab(event, 'lista5')">
-        Lista 5
-      </button>
-      <button class="tab-button" onclick="openTab(event, 'lista6')">
-        Lista 6
-      </button>
-    </div>
-    <div id="tab-content-container">
-      <div id="lista1-content" class="tab-content"></div>
-      <div id="lista2-content" class="tab-content"></div>
-      <div id="lista3-content" class="tab-content"></div>
-      <div id="lista4-content" class="tab-content"></div>
-      <div id="lista5-content" class="tab-content"></div>
-      <div id="lista6-content" class="tab-content"></div>
+    <div class="container">
+      <h1>Lista de Tarefas - API</h1>
+      <div class="tab-bar">
+        <button
+          class="tab-button active"
+          onclick="openTab(event, 'lista1-content')"
+        >
+          Lista 1
+        </button>
+        <button class="tab-button" onclick="openTab(event, 'lista2-content')">
+          Lista 2
+        </button>
+      </div>
+      <div id="tab-content-container">
+        <div id="lista1-content" class="tab-content active"></div>
+        <div id="lista2-content" class="tab-content"></div>
+      </div>
     </div>
     <script>
-      const Base_URL = "https://estudos-java-production.up.railway.app/api";
+      const API_BASE_URL = "https://estudos-java-production.up.railway.app/api";
 
-      function openTab(evt, tabName) {
-        let i, tabcontent, tabbuttons;
-        tabcontent = document.getElementsByClassName("tab-content");
-        for (i = 0; i < tabcontent.length; i++) {
-          tabcontent[i].style.display = "none";
-        }
-        tabbuttons = document.getElementsByClassName("tab-button");
-        for (i = 0; i < tabbuttons.length; i++) {
-          tabbuttons[i].className = tabbuttons[i].className.replace(
-            " active",
-            ""
-          );
-        }
-        document.getElementById(tabName + "-content").style.display = "block";
-        evt.currentTarget.className += " active";
+      function openTab(evt, tabId) {
+        document
+          .querySelectorAll(".tab-content")
+          .forEach((tab) => tab.classList.remove("active"));
+        document
+          .querySelectorAll(".tab-button")
+          .forEach((button) => button.classList.remove("active"));
+        document.getElementById(tabId).classList.add("active");
+        evt.currentTarget.classList.add("active");
       }
 
-      function addGetEndpoint(tabId, path, description, exemploURL) {
-        const container = document.getElementById(tabId + "-content");
+      function addGetEndpoint(tabId, path, description) {
+        const container = document.getElementById(tabId);
         if (!container) return;
-        const resultId = `result-get-${tabId}-${path.replace(
-          /[^a-zA-Z0-9]/g,
-          "-"
-        )}`;
+
         const endpointDiv = document.createElement("div");
         endpointDiv.className = "endpoint";
         endpointDiv.innerHTML = `
           <h3>GET ${path}</h3>
           <p>${description}</p>
-          <div class="result" id="${resultId}">Carregando...</div>
+          <div class="result" style="background-color: #3a3a3a;">Este é um endpoint GET e não requer interação.</div>
         `;
         container.appendChild(endpointDiv);
-
-        fetch(exemploURL)
-          .then((res) => {
-            if (!res.ok)
-              return res.json().then((err) => {
-                throw new Error(err.erro || `Status ${res.status}`);
-              });
-            return res.json();
-          })
-          .then((data) => {
-            const resultDiv = document.getElementById(resultId);
-            resultDiv.classList.add("mostrar");
-            resultDiv.textContent = JSON.stringify(data, null, 2);
-          })
-          .catch((error) => {
-            const resultDiv = document.getElementById(resultId);
-            resultDiv.classList.add("mostrar");
-            resultDiv.textContent = "Erro ao carregar: " + error.message;
-          });
       }
 
       function addPostEndpoint(tabId, path, description, fields) {
-        const container = document.getElementById(tabId + "-content");
+        const container = document.getElementById(tabId);
         if (!container) return;
-        const resultId = `result-post-${tabId}-${path.replace(
-          /[^a-zA-Z0-9]/g,
-          "-"
-        )}`;
-        const formId = `form-post-${tabId}-${path.replace(
-          /[^a-zA-Z0-9]/g,
-          "-"
-        )}`;
+
         let inputHtml = "";
         fields.forEach((field) => {
           const fieldName = Object.keys(field)[0];
           const fieldType = field[fieldName];
-          inputHtml += `<label for="${fieldName}-${formId}">${
+          inputHtml += `
+            <div class="form-group">
+              <label for="${fieldName}-${path}">${
             fieldName.charAt(0).toUpperCase() + fieldName.slice(1)
-          }:</label> <input type="${fieldType}" id="${fieldName}-${formId}" placeholder="${fieldName}" /> <br/><br/>`;
+          }:</label>
+              <input type="${fieldType}" name="${fieldName}" id="${fieldName}-${path}" placeholder="${fieldName}" required />
+            </div>
+          `;
         });
+
         const endpointDiv = document.createElement("div");
         endpointDiv.className = "endpoint";
         endpointDiv.innerHTML = `
-            <h3>POST ${path}</h3>
-            <p>${description}</p>
-            <div id="${formId}">
-                ${inputHtml}
-                <button onclick="submitPost('${path}', '${formId}', ${JSON.stringify(
-          fields
-        )}, '${resultId}')">Enviar</button>
-            </div>
-            <div class="result" id="${resultId}"></div>
+          <h3>POST ${path}</h3>
+          <p>${description}</p>
+          <form>
+            ${inputHtml}
+            <button type="submit">Enviar</button>
+          </form>
+          <div class="result"></div>
         `;
         container.appendChild(endpointDiv);
-      }
 
-      async function submitPost(path, formId, fields, resultId) {
-        const resultDiv = document.getElementById(resultId);
-        resultDiv.classList.add("mostrar");
-        resultDiv.textContent = "Carregando...";
-        const bodyData = {};
-        fields.forEach((field) => {
-          const fieldName = Object.keys(field)[0];
-          const fieldType = field[fieldName];
-          const inputElement = document.getElementById(
-            `${fieldName}-${formId}`
-          );
-          let value = inputElement.value;
-          if (fieldType === "number") {
-            value = parseFloat(value) || 0;
+        const form = endpointDiv.querySelector("form");
+        form.addEventListener("submit", async (event) => {
+          event.preventDefault();
+          const resultDiv = endpointDiv.querySelector(".result");
+          resultDiv.textContent = "Carregando...";
+
+          const formData = new FormData(form);
+          const bodyData = {};
+          for (const [key, value] of formData.entries()) {
+            bodyData[key] =
+              isNaN(value) || value.trim() === "" ? value : parseFloat(value);
           }
-          bodyData[fieldName] = value;
+
+          try {
+            const response = await fetch(API_BASE_URL + path, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(bodyData),
+            });
+            const data = await response.json();
+            if (!response.ok) {
+              throw new Error(data.erro || `Status ${response.status}`);
+            }
+            resultDiv.textContent = JSON.stringify(data, null, 2);
+          } catch (error) {
+            resultDiv.textContent = "Erro ao carregar: " + error.message;
+          }
         });
-
-        try {
-          const response = await fetch(Base_URL + path, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(bodyData),
-          });
-          const data = await response.json();
-          if (!response.ok) {
-            throw new Error(data.erro || `Status ${response.status}`);
-          }
-          resultDiv.textContent = JSON.stringify(data, null, 2);
-        } catch (error) {
-          resultDiv.textContent = "Erro ao carregar: " + error.message;
-        }
       }
 
       window.onload = function () {
-        const firstTabContent = document.getElementById("lista1-content");
-        if (firstTabContent) {
-          firstTabContent.style.display = "block";
-        }
-        const firstTabButton = document.querySelector(".tab-bar button");
-        if (firstTabButton) {
-          firstTabButton.className += " active";
-        }
-
         addGetEndpoint(
-          "lista1",
+          "lista1-content",
           "/tarefas/multiplicartres",
-          "Multiplica três números. Exemplo de uso: ?a=2&b=3&c=4",
-          `${Base_URL}/tarefas/multiplicartres?a=2&b=3&c=4`
+          "Multiplica três números."
         );
         addGetEndpoint(
-          "lista1",
+          "lista1-content",
           "/tarefas/dividir",
-          "Divide dois números. Exemplo de uso: ?a=10&b=5",
-          `${Base_URL}/tarefas/dividir?a=10&b=5`
+          "Divide dois números."
         );
         addGetEndpoint(
-          "lista1",
+          "lista1-content",
           "/tarefas/mediaponderada",
-          "Calcula a média ponderada com pesos 2 e 3. Exemplo de uso: ?a=4&b=6",
-          `${Base_URL}/tarefas/mediaponderada?a=4&b=6`
+          "Calcula a média ponderada com pesos 2 e 3."
         );
         addGetEndpoint(
-          "lista1",
+          "lista1-content",
           "/tarefas/descontodez",
-          "Aplica 10% de desconto em um valor. Exemplo de uso: ?a=2300",
-          `${Base_URL}/tarefas/descontodez?a=2300`
+          "Aplica 10% de desconto em um valor."
         );
         addGetEndpoint(
-          "lista1",
+          "lista1-content",
           "/tarefas/comissao",
-          "retorna a comissão de 4% com base no salário. Exemplo de uso: ?a=2000&b=450",
-          `${Base_URL}/tarefas/comissao?a=2000&b=450`
+          "Retorna a comissão de 4% com base no salário."
         );
         addGetEndpoint(
-          "lista1",
+          "lista1-content",
           "/tarefas/peso",
-          "Calcula e exibe o peso da pessoa caso ela ganhe 15% ou perca 20%, com base no valor informado. Exemplo de uso: ?a=65",
-          `${Base_URL}/tarefas/peso?a=65`
+          "Calcula variações de peso de +15% e -20%."
         );
         addGetEndpoint(
-          "lista1",
+          "lista1-content",
           "/tarefas/quilosparagramas",
-          "Calcula e exibe o peso da pessoa em gramas. Exemplo de uso: ?a=65",
-          `${Base_URL}/tarefas/quilosparagramas?a=65`
+          "Converte o peso de quilos para gramas."
         );
         addGetEndpoint(
-          "lista1",
+          "lista1-content",
           "/tarefas/areatrapezio",
-          "Calcula e exibe a área do trapézio com base nos valores informados. Exemplo de uso( A = Base maior, B = Base menor, C = Altura): ?a=65&b=70&c=80",
-          `${Base_URL}/tarefas/areatrapezio?a=65&b=70&c=80`
+          "Calcula a área de um trapézio."
         );
         addGetEndpoint(
-          "lista1",
+          "lista1-content",
           "/tarefas/areaquadrado",
-          "Calcula e exibe a área do quadrado com base no valor do lado informado. Exemplo de uso: ?a=5&b=7",
-          `${Base_URL}/tarefas/areaquadrado?a=5&b=7`
+          "Calcula a área de um quadrado."
         );
         addGetEndpoint(
-          "lista1",
+          "lista1-content",
           "/tarefas/arealosango",
-          "Calcula e exibe a área do losango com base nos valores das diagonais informados. Exemplo de uso( A = diagonal maior, B = diagonal menor): ?a=24&b=17",
-          `${Base_URL}/tarefas/arealosango?a=24&b=17`
+          "Calcula a área de um losango."
         );
         addGetEndpoint(
-          "lista1",
+          "lista1-content",
           "/tarefas/quantidadesalarios",
-          "Calcula e exibe a quantidade de salários mínimos que uma pessoa ganha com base no valor do salário mínimo e no valor do salário da pessoa. Exemplo de uso: ?a=4800",
-          `${Base_URL}/tarefas/quantidadesalarios?a=4800`
+          "Calcula a quantidade de salários mínimos."
         );
         addGetEndpoint(
-          "lista1",
+          "lista1-content",
           "/tarefas/tabuada",
-          "Calcula e exibe a tabuada de um número informado. Exemplo de uso: ?a=7",
-          `${Base_URL}/tarefas/tabuada?a=7`
+          "Exibe a tabuada de um número."
         );
         addGetEndpoint(
-          "lista1",
+          "lista1-content",
           "/tarefas/idade",
-          "Calcula e exibe a idade em anos, meses, dias, horas, minutos e segundo com base no ano de nascimento informado. Exemplo de uso: ?a=2000",
-          `${Base_URL}/tarefas/idade?a=2000`
+          "Calcula a idade em anos, meses, dias, etc."
         );
         addGetEndpoint(
-          "lista1",
+          "lista1-content",
           "/tarefas/contasatrasadas",
-          "Calcula e exibe o restante do salário após pagar contas atrasadas com multa de 2% ao mês. Exemplo de uso: ?a=2500&b=500&c=300",
-          `${Base_URL}/tarefas/contasatrasadas?a=2500&b=500&c=300`
+          "Calcula o salário restante após pagar contas com juros."
         );
         addGetEndpoint(
-          "lista1",
+          "lista1-content",
           "/tarefas/circunferencia",
-          "Calcula e exibe a comprimento, área e volume de um círculo com base no valor do raio informado. Exemplo de uso: ?a=5",
-          `${Base_URL}/tarefas/circunferencia?a=5`
+          "Calcula comprimento, área e volume de uma esfera."
         );
         addGetEndpoint(
-          "lista1",
+          "lista1-content",
           "/tarefas/celsiusparafahrenheit",
-          "Converte e exibe a temperatura de Celsius para Fahrenheit com base no valor informado. Exemplo de uso: ?a=30",
-          `${Base_URL}/tarefas/celsiusparafahrenheit?a=30`
+          "Converte Celsius para Fahrenheit."
         );
         addGetEndpoint(
-          "lista1",
+          "lista1-content",
           "/tarefas/iluminacao",
-          "Exibe a quantidade de lâmpadas necessárias(18w) para iluminar um ambiente com base na área informada. Exemplo de uso(A = largura, B = comprimento): ?a=50&b=34",
-          `${Base_URL}/tarefas/iluminacao?a=50&b=34`
+          "Calcula a potência de iluminação necessária para uma área."
         );
         addGetEndpoint(
-          "lista1",
+          "lista1-content",
           "/tarefas/medidaescada",
-          "Calcula e exibe o comprimento da escada necessária para alcançar uma altura com base na altura e no ângulo de inclinação informados. Exemplo de uso( A = angulo, B = altura): ?a=30&b=5",
-          `${Base_URL}/tarefas/medidaescada?a=30&b=5`
+          "Calcula o comprimento necessário de uma escada."
         );
         addGetEndpoint(
-          "lista1",
+          "lista1-content",
           "/tarefas/quantovouganhar",
-          "Calcula e exibe o valor total que uma pessoa vai ganhar com base no valor mensal que ela recebe, horas trabalhadas e horas extras. Exemplo de uso: ?a=1518&b=12&c=5",
-          `${Base_URL}/tarefas/quantovouganhar?a=1518&b=12&c=5`
+          "Calcula o valor bruto a receber com base em horas normais e extras."
         );
         addGetEndpoint(
-          "lista1",
+          "lista1-content",
           "/tarefas/poligono",
-          "Calcula e exibe a quantidade de diagonais de um polígono com base no número de lados informado. Exemplo de uso: ?a=5",
-          `${Base_URL}/tarefas/poligono?a=5`
+          "Calcula o número de diagonais de um polígono."
         );
         addGetEndpoint(
-          "lista1",
+          "lista1-content",
           "/tarefas/angulo",
-          "Calcula e exibe o terceiro ângulo de um triângulo Exemplo de uso: ?a=60&b=30",
-          `${Base_URL}/tarefas/angulo?a=60&b=30`
+          "Calcula o terceiro ângulo de um triângulo."
         );
         addGetEndpoint(
-          "lista1",
+          "lista1-content",
           "/tarefas/cambio",
-          "Calcula e exibe o valor em reais convertido para dólar, marco alemão, euro e libra com base na cotação do dia (19/06/25). Exemplo de uso: ?a=8900",
-          `${Base_URL}/tarefas/cambio?a=8900`
+          "Converte um valor em reais para outras moedas."
         );
         addGetEndpoint(
-          "lista1",
+          "lista1-content",
           "/tarefas/horasparaminutos",
-          "Calcula e exibe a conversão de horas para minutos e minutos para segundo com base no valor informado. Exemplo de uso(A = horas, B = minutos): ?a=5&b=30",
-          `${Base_URL}/tarefas/horasparaminutos?a=5&b=30`
+          "Converte horas e minutos para o total em minutos e segundos."
         );
 
         addPostEndpoint(
-          "lista2",
+          "lista2-content",
           "/tarefas/menornumero",
-          "Encontra e exibe o menor número entre dois números informados.",
+          "Encontra o menor número entre dois valores.",
           [{ a: "number" }, { b: "number" }]
         );
         addPostEndpoint(
-          "lista2",
+          "lista2-content",
           "/tarefas/maiornumero",
-          "Encontra e exibe o maior número entre três números informados.",
+          "Encontra o maior número entre três valores.",
           [{ a: "number" }, { b: "number" }, { c: "number" }]
         );
         addPostEndpoint(
-          "lista2",
+          "lista2-content",
           "/tarefas/calculadorasimples",
-          "Calcula e exibe a média, diferença, produto e divisão de dois números informados.",
+          "Calculadora com 4 operações básicas.",
           [{ a: "number" }, { b: "number" }, { opcao: "number" }]
         );
         addPostEndpoint(
-          "lista2",
+          "lista2-content",
           "/tarefas/aumentode30",
-          "Calcula e exibe o aumento de 30% no salário caso a pessoa ganhe até R$500.",
+          "Aplica 30% de aumento em salários até R$500.",
           [{ a: "number" }]
         );
         addPostEndpoint(
-          "lista2",
+          "lista2-content",
           "/tarefas/aumentodesalario",
-          "Calcula e exibe o aumento de 35% no salário caso a pessoa ganhe até R$300 e 15% caso ganhe acima de R$ 300.",
+          "Aplica aumento de 35% (salários até R$300) ou 15%.",
           [{ a: "number" }]
         );
         addPostEndpoint(
-          "lista2",
+          "lista2-content",
           "/tarefas/creditoespecial",
-          "Calcula e exibe o valor do crédito especial com base no saldo médio informado.",
+          "Calcula crédito especial com base no saldo médio.",
           [{ a: "number" }]
         );
         addPostEndpoint(
-          "lista2",
+          "lista2-content",
           "/tarefas/custoaoconsumidor",
-          "Calcula o custo ao consumidor com base no preço de fábrica de um veículo, aplicando percentuais de distribuidor e impostos.",
+          "Calcula o custo ao consumidor de um veículo.",
           [{ a: "number" }]
         );
         addPostEndpoint(
-          "lista2",
+          "lista2-content",
           "/tarefas/aumentodesalario2",
-          "Calcula e exibe o reajuste salarial: 15% até R$300, 10% até R$600, 5% até R$900 e 0% acima de R$900.",
+          "Calcula reajuste salarial com base em faixas.",
           [{ a: "number" }]
         );
         addPostEndpoint(
-          "lista2",
+          "lista2-content",
           "/tarefas/gratificacao",
-          "Calcula e exibe a gratificação sobre o salário para funcionários com base em seu salário.",
+          "Calcula a gratificação sobre o salário.",
           [{ a: "number" }]
         );
         addPostEndpoint(
-          "lista2",
+          "lista2-content",
           "/tarefas/tipodeproduto",
-          "Exibe o tipo de produto com base no valor dele.",
+          "Classifica um produto com base no preço.",
           [{ a: "number" }]
         );
         addPostEndpoint(
-          "lista2",
+          "lista2-content",
           "/tarefas/aumentosalario3",
-          "Calcula e exibe o reajuste salarial: 50% até R$300, 40% até R$500, 30% até R$700, 20% até R$800, 10% até R$1000 e 5% acima de R$1000.",
+          "Calcula reajuste salarial com base em múltiplas faixas.",
           [{ a: "number" }]
         );
         addPostEndpoint(
-          "lista2",
+          "lista2-content",
           "/tarefas/investimento",
-          "Calcula o rendimento total de um investimento com base no valor inicial, tempo em meses e tipo escolhido (1 para Poupança, 2 para Fundos de Renda Fixa).",
+          "Calcula o rendimento de um investimento.",
           [{ tipo: "number" }, { valor: "number" }, { meses: "number" }]
         );
         addPostEndpoint(
-          "lista2",
+          "lista2-content",
           "/tarefas/descontoproduto",
-          "Calcula e exibe o valor do desconto de 10% em um produto com valor até R$ 100 e 15% acima de R$ 100.",
+          "Calcula o desconto em um produto.",
           [{ a: "number" }, { b: "number" }]
         );
         addPostEndpoint(
-          "lista2",
+          "lista2-content",
           "/tarefas/passwd",
-          "Permite acessar caso o usuário tenha a senha correta.",
-          [{ a: "text" }]
+          "Valida a senha de acesso.",
+          [{ a: "password" }]
         );
       };
     </script>
