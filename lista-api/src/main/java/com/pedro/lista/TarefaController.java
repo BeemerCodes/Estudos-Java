@@ -574,4 +574,277 @@ public class TarefaController {
         String acesso = acessoPermitido ? "Permitido!" : "Negado!";
         return respostaSucesso("Restrição de acesso","Acesso", acesso);
     }
+
+    @PostMapping("/maioridade")
+    @ResponseBody
+    @Cacheable("maioridade")
+    public ResponseEntity<?> maiorIdade(@RequestBody RequestUmValor req) {
+        return respostaSucesso("Maior idade","É maior", req.getA() >= 18 ? "Sim" : "Não", "idade", req.getA());
+    }
+
+    @PostMapping("/pesoideal")
+    @ResponseBody
+    @Cacheable("pesoideal")
+    public ResponseEntity<?> pesoIdeal(@RequestBody AlturaSexoRequest req) {
+        if (req.getA() <= 0) {
+            return respostaErro("A altura deve ser positiva.");
+        }
+
+        double pesoideal = 0;
+        if (req.getB().equalsIgnoreCase("M")) {
+            pesoideal = (72.7 * (req.getA() / 100)) - 58;
+        } else if (req.getB().equalsIgnoreCase("F")){
+            pesoideal = (62.2 * (req.getA() / 100)) - 44.7;
+        } else {
+            return  respostaErro("Use M ou F para o sexo.");
+        }
+
+        return respostaSucesso("Peso ideal","Seu peso ideal:", "KG" + pesoideal, "Altura", req.getA() + "cm", "Sexo", req.getB());
+    }
+
+    @PostMapping("/categoria")
+    @ResponseBody
+    @Cacheable("categoria")
+    public ResponseEntity<?> categoria(@RequestBody RequestUmValor req) {
+        if (req.getA() <= 4) {
+            return respostaErro("A idade minima é de 5 anos.");
+        }
+        String categoria;
+        if (req.getA() >= 5 && req.getA() <= 7){
+            categoria = "Infantil";
+        } else if (req.getA() >= 8 && req.getA() <= 10) {
+            categoria = "Juvenil";
+        } else if (req.getA() >= 11 && req.getA() <= 15) {
+            categoria = "Adolescente";
+        } else if (req.getA() >= 16 && req.getA() <= 30) {
+            categoria = "Adulto";
+        } else {
+            categoria = "Sênior";  
+        }
+        
+        return respostaSucesso("Categoria","categoria", categoria, "Idade", req.getA());
+    }
+
+    @PostMapping("/procedencia")
+    @ResponseBody
+    @Cacheable("procedencia")
+    public ResponseEntity<?> procedencia(@RequestBody RequestUmValor req) {
+        if (req.getA() <= 0 || req.getA() > 30) {
+            return respostaErro("Use valores de 1 a 30.");
+        }
+
+        String origem = "";
+        if (req.getA() == 1){
+            origem = "Sul";
+        } else if (req.getA() == 2){
+            origem = "Norte";
+        } else if (req.getA() == 3){
+            origem = "Leste";
+        } else if (req.getA() == 4){
+            origem = "Oeste";
+        } else if (req.getA() == 5 || req.getA() == 6) {
+            origem = "Nordeste";
+        } else if (req.getA() >= 7 && req.getA() <= 9) {
+            origem = "Sudeste";
+        } else if (req.getA() >= 20 && req.getA() <= 20) {
+            origem = "Centro-Oeste";
+        } else {
+            origem = "Noroeste";
+        }
+
+        return respostaSucesso("Procedencia", "Origem", origem, "Procedencia", req.getA());
+    }
+    
+    @PostMapping("/faixaderisco")
+    @ResponseBody
+    @Cacheable("faixaderisco")
+    public ResponseEntity<?> faixaderisco(@RequestBody RequestDoisValores req) {
+        if (req.getA() <= 0 || req.getB() <= 0) {
+            return respostaErro("Use valores positivos.");
+        }
+        int grupo = 0;
+        if (req.getA() >= 50 && req.getB() <= 60) {
+            grupo = 3;
+        } else if (req.getA() >= 50 && req.getB() <= 90) {
+            grupo = 2;
+        } else if (req.getA() >= 50 && req.getB() > 90) {
+            grupo = 1;
+        } else if (req.getA() >= 20 && req.getA() < 50 && req.getB() > 90) {
+            grupo = 4;
+        } else if (req.getA() >= 20 && req.getA() < 50 && req.getB() >= 60 && req.getB() <= 90) {
+            grupo = 5;
+        } else if (req.getA() >= 20 && req.getA() < 50 && req.getB() <= 60) {
+            grupo = 6;
+        } else if (req.getA() <= 20 && req.getB() > 90) {
+            grupo = 7;
+        } else if (req.getA() <= 20 && req.getB() >= 60 && req.getB() <= 90) {
+            grupo = 8;
+        } else if (req.getA() <= 20 && req.getB() <= 60) {
+            grupo = 9;
+        }
+        return respostaSucesso("Faixa de risco", "Faixa", grupo, "Idade", req.getA(), "Peso", "KG" + req.getB());
+    }
+
+    @PostMapping("/descontoproduto2")
+    @ResponseBody
+    @Cacheable("descontoproduto2")
+    public ResponseEntity<?> descontoproduto2(@RequestBody RequestDoisValores req) {
+        if (req.getA() <= 0 || req.getB() <= 0) {
+            return respostaErro("Use valores de 1 a 40.");
+        }
+        double valorUnitario=0, valorTotal=0, desconto=0, porcentagem=0;
+
+        if (req.getA() >= 1 && req.getA() <= 10) {
+            valorUnitario = 10;
+            valorTotal = valorUnitario * req.getB();
+
+        } else if (req.getA() >= 11 && req.getA() <= 20) {
+            valorUnitario = 15;
+            valorTotal = valorUnitario * req.getB();
+
+        } else if (req.getA() >= 21 && req.getA() <= 30) {
+            valorUnitario = 20;
+            valorTotal = valorUnitario * req.getB();
+
+        } else if (req.getA() >= 31) {
+            valorUnitario = 30;
+            valorTotal = valorUnitario * req.getB();
+        }
+
+        if (valorTotal <= 250) {
+            desconto = valorTotal * 0.05;
+            porcentagem = 5;
+        } else if (valorTotal > 250 && valorTotal <= 500) {
+            desconto = valorTotal * 0.10;
+            porcentagem = 10;
+        } else {
+            desconto = valorTotal * 0.15;
+            porcentagem = 15;
+        }
+
+        return respostaSucesso("Desconto em produtos", "Valor unitario", "R$" + valorUnitario, "Valor total", "R$" + valorTotal, "Desconto", "R$" + desconto, "Porcentagem", porcentagem + "%", "Valor final", "R$" + (valorTotal - desconto));
+    }
+
+    @PostMapping("/produtos")
+    @ResponseBody
+    @Cacheable("produtos")
+    public ResponseEntity<?> produtos(@RequestBody ProdutosRequest req) {
+        if (req.getA() <= 0 || req.getB() <= 0 || !(req.getC().equalsIgnoreCase("R")) && !(req.getC().equalsIgnoreCase("N"))) {
+            return respostaErro("Use valores positivos e R para produtos refrigerados ou N para não refrigerados.");
+        }
+        double aumento=0, imposto=0;
+        int porcentagem=0, porcentagemImposto=0;
+        String categoria="";
+
+        if (req.getA() <= 25){
+            switch (req.getB()) {
+                case 1 -> {
+                    aumento = req.getA() * 0.05;
+                    porcentagem = 5;
+                    if (req.getC().equalsIgnoreCase("R")) {
+                        imposto = req.getA() * 0.05;
+                        porcentagemImposto = 5;
+                    } else {
+                        imposto = req.getA() * 0.08;
+                        porcentagemImposto = 8;
+                    }
+                    break;}
+                    
+                case 2 -> {
+                    aumento = req.getA() * 0.08;
+                    porcentagem = 8;
+                    imposto = req.getA() * 0.05;
+                    porcentagemImposto = 5;
+                    break;
+                }
+                case 3 -> {
+                    aumento = req.getA() * 0.10;
+                    porcentagem = 10;
+                    if (req.getC().equalsIgnoreCase("R")) {
+                        imposto = req.getA() * 0.05;
+                        porcentagemImposto = 5;
+                    } else {
+                        imposto = req.getA() * 0.08;
+                        porcentagemImposto = 8;
+                    }
+                    break;
+                } 
+                default -> {
+                    break;
+                }
+            }
+        } else if (req.getA() > 25) {
+            switch (req.getB()) {
+                case 1 -> {
+                    aumento = req.getA() * 0.12;
+                    porcentagem = 12;
+                    if (req.getC().equalsIgnoreCase("R")) {
+                        imposto = req.getA() * 0.05;
+                        porcentagemImposto = 5;
+                    } else {
+                        imposto = req.getA() * 0.08;
+                        porcentagemImposto = 8;
+                    }
+                    break;}
+                    
+                case 2 -> {
+                    aumento = req.getA() * 0.15;
+                    porcentagem = 15;
+                    imposto = req.getA() * 0.05;
+                    porcentagemImposto = 5;
+                    break;
+                }
+                case 3 -> {
+                    aumento = req.getA() * 0.18;
+                    porcentagem = 18;
+                    if (req.getC().equalsIgnoreCase("R")) {
+                        imposto = req.getA() * 0.05;
+                        porcentagemImposto = 5;
+                    } else {
+                        imposto = req.getA() * 0.08;
+                        porcentagemImposto = 8;
+                    }
+                    break;
+                } 
+                default -> {
+                    break;
+                }
+            }
+        }
+
+        if (((req.getA() + aumento)- imposto) <= 50) {
+            categoria = "Barato";
+        } else if (((req.getA() + aumento)- imposto) > 50 && ((req.getA() + aumento)- imposto) <= 120) {
+            categoria = "Normal";
+        } else {
+            categoria = "Caro";
+        }
+
+        return respostaSucesso("Produtos", "Valor unitario", "R$" + req.getA(), "Categoria", req.getB(), "Refrigeração", req.getC(), "Auemento", "R$" + aumento, "Porcentagem", porcentagem + "%", "Imposto", "R$" + imposto, "Porcentagem imposto", porcentagemImposto + "%", "Classificação", categoria, "Novo preço", "R$" + ((req.getA()+aumento)- imposto));
+    }
+
+    @PostMapping("/gratificacao2")
+    @ResponseBody
+    @Cacheable("gratificacao2")
+    public ResponseEntity<?> gratificacao2(@RequestBody RequestDoisValores req) {
+        if (req.getA() == 0 || req.getB() == 0 ) {
+            return respostaErro("Use valores positivos.");
+        }
+
+        double horas = req.getA() - (2.0 / 3.0 * req.getB()), gratificacao=0;
+
+        if (horas > 2400) {
+            gratificacao = 500;
+        } else if (horas >= 1800) {
+            gratificacao = 400;
+        } else if (horas >= 1200) {
+            gratificacao = 300;
+        } else if (horas >= 600) {
+            gratificacao = 200;
+        } else {
+            gratificacao = 100;
+        }
+    return respostaSucesso("Gratificação", "Horas extras", req.getA(), "Horas faltas", req.getB(), "Gratificação", gratificacao);
+    }
+
 }
