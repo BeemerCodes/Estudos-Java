@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,7 +39,7 @@ public class TarefaController {
         }
         return ResponseEntity.ok(response);
     }
-
+// Lista 1
     @GetMapping("/multiplicartres")
     @ResponseBody
     @Cacheable("multiplicartres")
@@ -307,7 +308,7 @@ public class TarefaController {
         double totalSegundos = totalMinutos * 60;
         return respostaSucesso("Horas para minutos", "Horas", a, "Minutos", b, "Total em minutos", totalMinutos, "Total em segundos", totalSegundos);
     }
-
+ // Lista 2 
     @PostMapping("/menornumero")
     @ResponseBody
     @Cacheable("menornumero")
@@ -846,5 +847,43 @@ public class TarefaController {
         }
     return respostaSucesso("Gratificação", "Horas extras", req.getA(), "Horas faltas", req.getB(), "Gratificação", gratificacao);
     }
+// Lista 3
+@GetMapping("/calcularpassagem/{tipo}/{valor}")
+@ResponseBody
+@Cacheable("passagem")
+
+public ResponseEntity<?> CalcularPassagem(@PathVariable int tipo, @PathVariable double valor) {
+    if (valor <= 0){
+        return respostaErro("O valor da passagem deve ser positivo.");
+    }
+
+    if (tipo < 1 || tipo > 3) {
+        return respostaErro("Tipo inválido. Use 1 para comum, 2 para estudante ou 3 para idoso.");
+    }
+
+    double valorFinal = 0;
+    double percentualDesconto = 0;
+    String tipoPassagem = "";
+
+    switch (tipo) {
+        case 1:
+            valorFinal = valor;
+            percentualDesconto = 0;
+            tipoPassagem = "Comum";
+            break;
+        case 2:
+            valorFinal = valor * 0.75;
+            percentualDesconto = 25;
+            tipoPassagem = "Estudante";
+            break;
+        case 3:
+            valorFinal = valor * 0.65;
+            percentualDesconto = 35;
+            tipoPassagem = "Idoso";
+            break;
+        }
+
+    return respostaSucesso("Cálculo de passagem", "Valor original", "R$"+String.format("%.2f", valor), "Tipo de passagem", tipoPassagem, "Desconto aplicado", percentualDesconto + "%", "Valor a pagar", "R$" + String.format("%.2f", valorFinal));
+}
 
 }

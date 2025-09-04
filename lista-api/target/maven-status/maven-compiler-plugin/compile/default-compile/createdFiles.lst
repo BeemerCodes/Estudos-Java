@@ -9,4 +9,5 @@ com\pedro\lista\SecurityConfig.class
 com\pedro\lista\CalculadoraRequest.class
 com\pedro\lista\AlturaSexoRequest.class
 com\pedro\lista\ProdutosRequest.class
+com\pedro\lista\PassagemRequest.class
 com\pedro\lista\RequestUmValor.class

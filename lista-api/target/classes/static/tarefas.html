@@ -277,6 +277,64 @@
         });
       }
 
+      function addGetWithFormEndpoint(tabId, path, description, fields) {
+        const container = document.getElementById(tabId);
+        if (!container) return;
+
+        let inputHtml = "";
+        fields.forEach((field) => {
+          const fieldName = Object.keys(field)[0];
+          const fieldType = field[fieldName];
+          inputHtml += `
+            <div class="form-group">
+              <label for="${fieldName}-${path}">${
+            fieldName.charAt(0).toUpperCase() + fieldName.slice(1)
+          }:</label>
+              <input type="${fieldType}" name="${fieldName}" id="${fieldName}-${path}" placeholder="${fieldName}" required />
+            </div>
+          `;
+        });
+
+        const endpointDiv = document.createElement("div");
+        endpointDiv.className = "endpoint";
+        endpointDiv.innerHTML = `
+          <h3>GET ${path}/{tipo}/{valor}</h3>
+          <p>${description}</p>
+          <form>
+            ${inputHtml}
+            <button type="submit">Enviar</button>
+          </form>
+          <div class="result"></div>
+        `;
+        container.appendChild(endpointDiv);
+
+        const form = endpointDiv.querySelector("form");
+        form.addEventListener("submit", async (event) => {
+          event.preventDefault();
+          const resultDiv = endpointDiv.querySelector(".result");
+          resultDiv.classList.add("mostrar");
+          resultDiv.textContent = "Carregando...";
+
+          const formData = new FormData(form);
+          const tipo = formData.get("tipo");
+          const valor = formData.get("valor");
+
+          // Constrói a URL final com os valores
+          const finalURL = `${API_BASE_URL}${path}/${tipo}/${valor}`;
+
+          try {
+            const response = await fetch(finalURL);
+            const data = await response.json();
+            if (!response.ok) {
+              throw new Error(data.erro || `Status ${response.status}`);
+            }
+            resultDiv.textContent = JSON.stringify(data, null, 2);
+          } catch (error) {
+            resultDiv.textContent = "Erro ao carregar: " + error.message;
+          }
+        });
+      }
+
       window.onload = function () {
         addGetEndpoint(
           "lista1-content",
@@ -556,6 +614,13 @@
           "/api/tarefas/gratificacao2",
           "Calcula a gratificação de um funcionário com base nas horas trabalhadas e horas faltantes. (A = horas trabalhadas, B = horas faltantes)",
           [{ a: "number" }, { b: "number" }]
+        );
+
+        addGetWithFormEndpoint(
+          "lista3-content",
+          "/api/tarefas/calcularpassagem",
+          "Calcula o valor da passagem com desconto. A URL será montada como /api/tarefas/calcularpassagem/{tipo}/{valor}. (Exemplo: /2/25)",
+          [{ tipo: "number" }, { valor: "number" }]
         );
       };
     </script>
