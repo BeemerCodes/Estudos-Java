@@ -5,9 +5,9 @@ import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MAJOR;
 import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MINOR;
 import static org.lwjgl.glfw.GLFW.GLFW_CURSOR;
 import static org.lwjgl.glfw.GLFW.GLFW_CURSOR_DISABLED;
-import static org.lwjgl.glfw.GLFW.GLFW_FALSE; // Importações para VBOs
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE; // Importações para Shaders
-import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT; // Importações para VAOs
+import static org.lwjgl.glfw.GLFW.GLFW_FALSE;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT; 
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_RIGHT;
 import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_CORE_PROFILE;
 import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_PROFILE;
@@ -70,8 +70,8 @@ import com.game.world.World;
 public class Game {
 
     private long window;
-    private Shader blockShader;      // Shader para os blocos
-    private Shader crosshairShader;  // Shader para a mira
+    private Shader blockShader;      
+    private Shader crosshairShader;  
     private Matrix4f projection;
     private Texture texture;
     private World world;
@@ -99,20 +99,20 @@ public class Game {
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // Forçar OpenGL 3.3
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); 
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // Usar Core Profile
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); 
 
         window = glfwCreateWindow(1280, 720, "Quebre e Construa!", NULL, NULL);
         if (window == NULL) throw new RuntimeException("Falha ao criar a janela GLFW");
 
         glfwMakeContextCurrent(window);
-        glfwSwapInterval(1); // Habilita V-Sync
+        glfwSwapInterval(1); 
         glfwShowWindow(window);
 
         createCapabilities();
         glEnable(GL_DEPTH_TEST);
-        glEnable(GL_CULL_FACE); // Habilita o culling para melhor desempenho e correção de faces invisíveis
+        glEnable(GL_CULL_FACE); 
 
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         glfwSetCursorPosCallback(window, (win, xpos, ypos) -> {
@@ -124,32 +124,30 @@ public class Game {
         texture = new Texture("src/main/resources/textures/container.jpg");
         world = new World();
         
-        player = new Player(8.0f, 80.0f, 8.0f); // Posição inicial do jogador
+        player = new Player(8.0f, 80.0f, 8.0f); 
         
-        // FOV de 70 graus é um bom equilíbrio, mas pode ser ajustado se a sensação de "longe" persistir
         projection = new Matrix4f().perspective((float) Math.toRadians(70.0f), 1280.0f / 720.0f, 0.05f, 1000.0f);
 
         initCrosshair();
     }
 
     private void initCrosshair() {
-        // Agora a mira é um "X" branco
-        float size = 0.015f; // Tamanho do X (metade do comprimento da linha)
-        float gap = 0.005f;  // Espaço no centro do X (para criar as "aberturas")
+        float size = 0.015f; 
+        float gap = 0.005f;  
         float[] vertices = { 
             // Linha Horizontal
-            -(size + gap), 0.0f, 0.0f, // Esquerda
-            -gap,          0.0f, 0.0f, // Esquerda interna
+            -(size + gap), 0.0f, 0.0f, 
+            -gap,          0.0f, 0.0f, 
             
-             gap,          0.0f, 0.0f, // Direita interna
-             (size + gap), 0.0f, 0.0f, // Direita
+             gap,          0.0f, 0.0f, 
+             (size + gap), 0.0f, 0.0f, 
             
             // Linha Vertical
-            0.0f, -(size + gap), 0.0f, // Inferior
-            0.0f, -gap,          0.0f, // Inferior interna
+            0.0f, -(size + gap), 0.0f, 
+            0.0f, -gap,          0.0f, 
             
-            0.0f,  gap,          0.0f, // Superior interna
-            0.0f,  (size + gap), 0.0f  // Superior
+            0.0f,  gap,          0.0f, 
+            0.0f,  (size + gap), 0.0f  
         };
         
         crosshairVao = glGenVertexArrays();
@@ -157,8 +155,8 @@ public class Game {
         glBindVertexArray(crosshairVao);
         glBindBuffer(GL_ARRAY_BUFFER, crosshairVbo);
         glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
-        glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0); // O shader da mira só precisa de posição (3 floats)
-        glEnableVertexAttribArray(0); // Habilita o atributo 0
+        glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0); 
+        glEnableVertexAttribArray(0); 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
     }
@@ -197,18 +195,16 @@ public class Game {
             
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            // --- RENDERIZAÇÃO DA CENA 3D ---
             texture.bind();
-            blockShader.use(); // Usa o shader dos blocos
+            blockShader.use(); 
             
             Matrix4f view = player.getViewMatrix();
             blockShader.setMatrix4f("projection", projection);
             blockShader.setMatrix4f("view", view);
-            blockShader.setMatrix4f("model", new Matrix4f().identity()); // Model matrix para blocos (identidade)
+            blockShader.setMatrix4f("model", new Matrix4f().identity()); 
             
             world.draw(blockShader);
 
-            // --- RENDERIZAÇÃO DA MIRA 2D ---
             drawCrosshair();
 
             glfwSwapBuffers(window);
@@ -217,33 +213,30 @@ public class Game {
     }
 
     private void drawCrosshair() {
-        glDisable(GL_DEPTH_TEST); // Garante que a mira desenhe por cima de tudo
-        glDisable(GL_CULL_FACE);  // Desabilita o culling para a mira 2D
+        glDisable(GL_DEPTH_TEST); 
+        glDisable(GL_CULL_FACE);  
 
-        crosshairShader.use(); // Usa o shader da mira
+        crosshairShader.use(); 
 
         glBindVertexArray(crosshairVao);
-        // O atributo 0 já está habilitado na initCrosshair
-        glLineWidth(2.0f); // Espessura da linha da mira (ajustado para melhor visibilidade)
-        glDrawArrays(GL_LINES, 0, 8); // Desenha 4 segmentos de linha (8 vértices) para formar o X
+        glLineWidth(2.0f); 
+        glDrawArrays(GL_LINES, 0, 8); 
 
-        // Não precisa desabilitar o atributo 0, pois ele é gerenciado pelo VAO
         glBindVertexArray(0);
 
-        glEnable(GL_CULL_FACE); // Reabilita o culling para a cena 3D
-        glEnable(GL_DEPTH_TEST); // Reabilita o teste de profundidade
+        glEnable(GL_CULL_FACE); 
+        glEnable(GL_DEPTH_TEST); 
     }
 
     private void cleanup() {
-        // --- LIMPEZA DA MIRA ---
         glDeleteBuffers(crosshairVbo);
         glDeleteVertexArrays(crosshairVao);
 
         glfwSetCursorPosCallback(window, null);
         world.cleanup();
         texture.cleanup();
-        blockShader.cleanup();     // Limpa o shader dos blocos
-        crosshairShader.cleanup(); // Limpa o shader da mira
+        blockShader.cleanup();     
+        crosshairShader.cleanup(); 
         glfwDestroyWindow(window);
         glfwTerminate();
         glfwSetErrorCallback(null).free();

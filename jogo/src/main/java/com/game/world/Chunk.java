@@ -72,7 +72,6 @@ public class Chunk {
     }
 
     private boolean isBlockActive(int x, int y, int z) {
-        // Assume que blocos fora dos limites do chunk são AR para não renderizar faces internas
         if (x < 0 || x >= CHUNK_WIDTH || y < 0 || y >= CHUNK_HEIGHT || z < 0 || z >= CHUNK_WIDTH) {
             return false;
         }
@@ -92,7 +91,6 @@ public class Chunk {
                     if (!isBlockActive(x, y, z)) {
                         continue;
                     }
-                    // Adiciona faces apenas se o bloco adjacente for AR (ou fora dos limites)
                     if (!isBlockActive(x, y + 1, z)) { addFaceVertices(x, y, z, "top", vertices); }
                     if (!isBlockActive(x, y - 1, z)) { addFaceVertices(x, y, z, "bottom", vertices); }
                     if (!isBlockActive(x, y, z + 1)) { addFaceVertices(x, y, z, "front", vertices); }
@@ -108,7 +106,7 @@ public class Chunk {
             return;
         }
 
-        vertexCount = vertices.size() / 5; // 3 posições + 2 UVs
+        vertexCount = vertices.size() / 5; 
         float[] vertexArray = new float[vertices.size()];
         for(int i = 0; i < vertices.size(); i++) vertexArray[i] = vertices.get(i);
 
@@ -123,10 +121,8 @@ public class Chunk {
         glBufferData(GL_ARRAY_BUFFER, vertexBuffer, GL_STATIC_DRAW);
         MemoryUtil.memFree(vertexBuffer);
 
-        // Atributo 0: Posição (3 floats)
         glVertexAttribPointer(0, 3, GL_FLOAT, false, 5 * Float.BYTES, 0);
         glEnableVertexAttribArray(0);
-        // Atributo 1: Coordenadas de Textura (2 floats)
         glVertexAttribPointer(1, 2, GL_FLOAT, false, 5 * Float.BYTES, 3 * Float.BYTES);
         glEnableVertexAttribArray(1);
 
@@ -135,59 +131,57 @@ public class Chunk {
     }
     
     private void addFaceVertices(float x, float y, float z, String face, List<Float> vertices) {
-        // Posições dos vértices do bloco (-0.5 a +0.5 para centralizar)
         float x0 = x - 0.5f; float x1 = x + 0.5f;
         float y0 = y - 0.5f; float y1 = y + 0.5f;
         float z0 = z - 0.5f; float z1 = z + 0.5f;
 
-        // Todas as faces agora têm a ordem dos vértices consistentemente no sentido anti-horário (CCW)
-        // para que o back-face culling funcione corretamente.
+
         float[] faceVertices = switch (face) {
-            case "top" -> new float[]{ // +Y face
-                x0, y1, z1, 0.0f, 0.0f, // Triângulo 1
+            case "top" -> new float[]{ 
+                x0, y1, z1, 0.0f, 0.0f, 
                 x1, y1, z1, 1.0f, 0.0f,
                 x1, y1, z0, 1.0f, 1.0f,
-                x1, y1, z0, 1.0f, 1.0f, // Triângulo 2
+                x1, y1, z0, 1.0f, 1.0f, 
                 x0, y1, z0, 0.0f, 1.0f,
                 x0, y1, z1, 0.0f, 0.0f
             };
-            case "bottom" -> new float[]{ // -Y face
-                x0, y0, z0, 0.0f, 1.0f, // Triângulo 1
+            case "bottom" -> new float[]{ 
+                x0, y0, z0, 0.0f, 1.0f, 
                 x1, y0, z0, 1.0f, 1.0f,
                 x1, y0, z1, 1.0f, 0.0f,
-                x1, y0, z1, 1.0f, 0.0f, // Triângulo 2
+                x1, y0, z1, 1.0f, 0.0f, 
                 x0, y0, z1, 0.0f, 0.0f,
                 x0, y0, z0, 0.0f, 1.0f
             };
-            case "front" -> new float[]{ // +Z face
-                x0, y0, z1, 0.0f, 0.0f, // Triângulo 1
+            case "front" -> new float[]{ 
+                x0, y0, z1, 0.0f, 0.0f, 
                 x1, y0, z1, 1.0f, 0.0f,
                 x1, y1, z1, 1.0f, 1.0f,
-                x1, y1, z1, 1.0f, 1.0f, // Triângulo 2
+                x1, y1, z1, 1.0f, 1.0f, 
                 x0, y1, z1, 0.0f, 1.0f,
                 x0, y0, z1, 0.0f, 0.0f
             };
-            case "back" -> new float[]{ // -Z face
-                x1, y0, z0, 1.0f, 0.0f, // Triângulo 1
+            case "back" -> new float[]{ 
+                x1, y0, z0, 1.0f, 0.0f, 
                 x0, y0, z0, 0.0f, 0.0f,
                 x0, y1, z0, 0.0f, 1.0f,
-                x0, y1, z0, 0.0f, 1.0f, // Triângulo 2
+                x0, y1, z0, 0.0f, 1.0f, 
                 x1, y1, z0, 1.0f, 1.0f,
                 x1, y0, z0, 1.0f, 0.0f
             };
-            case "right" -> new float[]{ // +X face
-                x1, y0, z1, 1.0f, 0.0f, // Triângulo 1
+            case "right" -> new float[]{ 
+                x1, y0, z1, 1.0f, 0.0f, 
                 x1, y0, z0, 0.0f, 0.0f,
                 x1, y1, z0, 0.0f, 1.0f,
-                x1, y1, z0, 0.0f, 1.0f, // Triângulo 2
+                x1, y1, z0, 0.0f, 1.0f, 
                 x1, y1, z1, 1.0f, 1.0f,
                 x1, y0, z1, 1.0f, 0.0f
             };
-            case "left" -> new float[]{ // -X face
-                x0, y0, z0, 0.0f, 0.0f, // Triângulo 1
+            case "left" -> new float[]{ 
+                x0, y0, z0, 0.0f, 0.0f, 
                 x0, y0, z1, 1.0f, 0.0f,
                 x0, y1, z1, 1.0f, 1.0f,
-                x0, y1, z1, 1.0f, 1.0f, // Triângulo 2
+                x0, y1, z1, 1.0f, 1.0f, 
                 x0, y1, z0, 0.0f, 1.0f,
                 x0, y0, z0, 0.0f, 0.0f
             };

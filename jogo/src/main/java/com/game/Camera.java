@@ -25,7 +25,6 @@ public class Camera {
 
     private final float sensitivity = 0.1f;
     
-    // --- CORREÇÃO: Inicializa no centro da janela correta ---
     private double lastX = 1280.0 / 2.0;
     private double lastY = 720.0 / 2.0;
     private boolean firstMouse = true;
@@ -56,7 +55,6 @@ public class Camera {
         moveDir.set(0,0,0);
         long window = glfwGetCurrentContext();
 
-        // Cria uma cópia do vetor 'front' e zera o componente Y para movimento no plano XZ
         Vector3f forward = new Vector3f(front).normalize();
         forward.y = 0;
 
@@ -85,7 +83,6 @@ public class Camera {
         yaw += xoffset;
         pitch += yoffset;
 
-        // Limita o pitch para evitar que a câmera vire de cabeça para baixo
         if (pitch > 89.0f) pitch = 89.0f;
         if (pitch < -89.0f) pitch = -89.0f;
         

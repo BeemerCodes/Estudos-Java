@@ -48,7 +48,6 @@ public class Shader {
             throw new RuntimeException("Falha ao linkar o programa de shader: " + glGetProgramInfoLog(programId));
         }
 
-        // Após o link, os shaders individuais podem ser deletados para liberar memória
         glDeleteShader(vertexShader);
         glDeleteShader(fragmentShader);
     }
@@ -85,13 +84,11 @@ public class Shader {
         return shader;
     }
 
-    // Este é o método correto para carregar recursos em um projeto Maven/Java
     private String loadResource(String path) {
         try (InputStream in = Shader.class.getResourceAsStream(path)) {
             if (in == null) {
                 throw new IOException("Recurso não encontrado no classpath: " + path);
             }
-            // Lê todos os bytes do InputStream e os converte para uma String
             return new String(in.readAllBytes(), StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new RuntimeException("Falha ao carregar recurso: " + path, e);

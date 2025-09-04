@@ -26,10 +26,8 @@ public class Crosshair {
 
     public Crosshair(float size) {
         float[] vertices = {
-            // Linha Horizontal
             -size, 0.0f,
              size, 0.0f,
-            // Linha Vertical
             0.0f, -size,
             0.0f,  size
         };
@@ -47,24 +45,19 @@ public class Crosshair {
     }
 
     public void draw() {
-        // Usa um shader simples (não fornecido, usa o shader padrão ou um específico para GUI)
-        // Para simplicidade, vamos assumir que um shader que desenha em branco está ativo.
-        // O ideal é ter um shader específico para a GUI.
         
-        glDisable(GL_DEPTH_TEST); // Desenha por cima de tudo
+        glDisable(GL_DEPTH_TEST); 
         
         glBindVertexArray(vaoId);
         glEnableVertexAttribArray(0);
         
-        // Define a cor da mira aqui, se o shader permitir (ex: via uniform)
-        // Por simplicidade, vamos desenhar como linhas
-        glLineWidth(2.0f); // Define a espessura da linha
+        glLineWidth(2.0f); 
         glDrawArrays(GL_LINES, 0, 4);
 
         glDisableVertexAttribArray(0);
         glBindVertexArray(0);
         
-        glEnable(GL_DEPTH_TEST); // Reabilita o teste de profundidade para a cena 3D
+        glEnable(GL_DEPTH_TEST); 
     }
 
     public void cleanup() {

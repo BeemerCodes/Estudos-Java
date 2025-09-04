@@ -10,22 +10,20 @@ import com.game.world.BlockType;
 import com.game.world.World;
 
 public class Player {
-    // --- Constantes de Física e Jogo (AJUSTADAS PARA COMPORTAMENTO DO MINECRAFT) ---
-    private static final float GRAVITY = -25.0f; // Gravidade ajustada para uma queda mais realista
-    private static final float JUMP_POWER = 9.0f;   // Força do pulo ajustada
+    private static final float GRAVITY = -25.0f; 
+    private static final float JUMP_POWER = 9.0f;   
     private static final float MOVE_SPEED = 5.0f;
     private static final float DEATH_PLANE_Y = -10.0f;
     
-    // Altura e largura do jogador como no Minecraft
-    private static final float PLAYER_WIDTH = 0.6f;   // Ligeiramente menor que 1 bloco para passar por frestas
-    private static final float PLAYER_HEIGHT = 1.8f;  // Permite passar por vãos de 2 blocos, mas não 1
-    private static final float CAMERA_HEIGHT = 1.62f; // Altura dos olhos, aproximadamente no topo do jogador (ligeiramente ajustado)
+    private static final float PLAYER_WIDTH = 0.6f;  
+    private static final float PLAYER_HEIGHT = 1.8f; 
+    private static final float CAMERA_HEIGHT = 1.62f; 
 
     private final Camera camera;
     private final Vector3f position;
     private final Vector3f velocity;
     private final Vector3f spawnPoint;
-    private final Vector3f halfExtents; // Meia largura para facilitar cálculos de AABB
+    private final Vector3f halfExtents; 
     private boolean onGround = false;
 
     public Player(float x, float y, float z) {
@@ -33,7 +31,6 @@ public class Player {
         this.spawnPoint = new Vector3f(x, y, z);
         this.velocity = new Vector3f(0, 0, 0);
         this.camera = new Camera();
-        // halfExtents é metade da largura para XZ, e a altura total para Y
         this.halfExtents = new Vector3f(PLAYER_WIDTH / 2.0f, PLAYER_HEIGHT / 2.0f, PLAYER_WIDTH / 2.0f);
         updateCamera();
     }
@@ -59,30 +56,23 @@ public class Player {
 
         if (onGround && glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
             velocity.y = JUMP_POWER;
-            onGround = false; // Desliga onGround imediatamente para evitar múltiplos saltos
+            onGround = false; 
         }
     }
 
     public void update(float deltaTime, World world) {
-        // Aplica a gravidade
         velocity.y += GRAVITY * deltaTime;
 
-        // Limita a velocidade de queda máxima para evitar bugs de colisão em alta velocidade
-        if (velocity.y < -50.0f) { // Valor arbitrário, pode ser ajustado
+        if (velocity.y < -50.0f) { 
             velocity.y = -50.0f;
         }
 
-        // Calcula o deslocamento desejado para este frame
         float dx = velocity.x * deltaTime;
         float dy = velocity.y * deltaTime;
         float dz = velocity.z * deltaTime;
 
-        // Resetar onGround no início de cada frame antes de resolver a colisão Y
         onGround = false;
         
-        // Move e resolve colisões em cada eixo separadamente
-        // Ordem Y -> X -> Z é importante para colisões de chão/teto
-        // O jogador tem que ter o "bottom" em position.y
         moveAndCollide(world, 0, dy, 0); 
         moveAndCollide(world, dx, 0, 0); 
         moveAndCollide(world, 0, 0, dz); 
@@ -96,7 +86,7 @@ public class Player {
     private void respawn() {
         this.position.set(spawnPoint);
         this.velocity.set(0, 0, 0);
-        this.onGround = true; // Garante que não cai após o respawn
+        this.onGround = true; 
     }
 
     private void updateCamera() {
@@ -106,16 +96,14 @@ public class Player {
     private void moveAndCollide(World world, float dx, float dy, float dz) {
         Vector3f desiredPosition = new Vector3f(position).add(dx, dy, dz);
 
-        // AABB do jogador na desiredPosition (note que position.y é a base do jogador)
         float playerMinX = desiredPosition.x - halfExtents.x;
         float playerMaxX = desiredPosition.x + halfExtents.x;
         float playerMinY = desiredPosition.y; 
-        float playerMaxY = desiredPosition.y + halfExtents.y * 2.0f; // Multiplica por 2 pois halfExtents.y é metade da altura
+        float playerMaxY = desiredPosition.y + halfExtents.y * 2.0f; 
 
         float playerMinZ = desiredPosition.z - halfExtents.z;
         float playerMaxZ = desiredPosition.z + halfExtents.z;
 
-        // Blocos que o jogador pode estar sobrepondo (range expandido para cobertura total)
         int startX = (int) Math.floor(playerMinX);
         int endX = (int) Math.floor(playerMaxX);
         int startY = (int) Math.floor(playerMinY);
@@ -123,7 +111,7 @@ public class Player {
         int startZ = (int) Math.floor(playerMinZ);
         int endZ = (int) Math.floor(playerMaxZ);
 
-        Vector3f collisionResolution = new Vector3f(dx, dy, dz); // Armazena o quanto vamos mover para resolver
+        Vector3f collisionResolution = new Vector3f(dx, dy, dz); 
         
         for (int x = startX; x <= endX; x++) {
             for (int y = startY; y <= endY; y++) {
@@ -132,52 +120,48 @@ public class Player {
                         continue;
                     }
 
-                    // Bounding box do bloco (sempre 1x1x1 unidade)
                     float blockMinX = x; float blockMaxX = x + 1;
                     float blockMinY = y; float blockMaxY = y + 1;
                     float blockMinZ = z; float blockMaxZ = z + 1;
 
-                    // Verifica se há colisão entre o jogador (na desiredPosition) e o bloco
                     if (playerMaxX > blockMinX && playerMinX < blockMaxX &&
                         playerMaxY > blockMinY && playerMinY < blockMaxY &&
                         playerMaxZ > blockMinZ && playerMinZ < blockMaxZ) 
                     {
-                        // Colisão detectada, resolve no eixo correspondente
-                        if (dy != 0) { // Tentativa de mover no eixo Y
-                            if (dy < 0) { // Caindo (colisão com o chão)
-                                desiredPosition.y = blockMaxY; // Ajusta a base do jogador para o topo do bloco
+                        if (dy != 0) { 
+                            if (dy < 0) { 
+                                desiredPosition.y = blockMaxY; 
                                 onGround = true;
-                            } else { // Subindo (colisão com o teto)
-                                desiredPosition.y = blockMinY - (halfExtents.y * 2.0f); // Ajusta o topo do jogador para a base do bloco
+                            } else {
+                                desiredPosition.y = blockMinY - (halfExtents.y * 2.0f); 
                             }
-                            velocity.y = 0; // Zera a velocidade Y
-                            collisionResolution.y = desiredPosition.y - position.y; // Ajusta o movimento efetivo de Y
+                            velocity.y = 0; 
+                            collisionResolution.y = desiredPosition.y - position.y; 
                         }
                         
-                        if (dx != 0) { // Tentativa de mover no eixo X
-                            if (dx < 0) { // Movendo para esquerda
-                                desiredPosition.x = blockMaxX + halfExtents.x; // Ajusta o lado esquerdo do jogador para o lado direito do bloco
-                            } else { // Movendo para direita
-                                desiredPosition.x = blockMinX - halfExtents.x; // Ajusta o lado direito do jogador para o lado esquerdo do bloco
+                        if (dx != 0) { 
+                            if (dx < 0) { 
+                                desiredPosition.x = blockMaxX + halfExtents.x; 
+                            } else { 
+                                desiredPosition.x = blockMinX - halfExtents.x; 
                             }
-                            velocity.x = 0; // Zera a velocidade X
-                            collisionResolution.x = desiredPosition.x - position.x; // Ajusta o movimento efetivo de X
+                            velocity.x = 0; 
+                            collisionResolution.x = desiredPosition.x - position.x;
                         }
                         
-                        if (dz != 0) { // Tentativa de mover no eixo Z
-                            if (dz < 0) { // Movendo para trás
-                                desiredPosition.z = blockMaxZ + halfExtents.z; // Ajusta a frente do jogador para trás do bloco
-                            } else { // Movendo para frente
-                                desiredPosition.z = blockMinZ - halfExtents.z; // Ajusta a parte de trás do jogador para a frente do bloco
+                        if (dz != 0) { 
+                            if (dz < 0) { 
+                                desiredPosition.z = blockMaxZ + halfExtents.z; 
+                            } else { 
+                                desiredPosition.z = blockMinZ - halfExtents.z; 
                             }
-                            velocity.z = 0; // Zera a velocidade Z
-                            collisionResolution.z = desiredPosition.z - position.z; // Ajusta o movimento efetivo de Z
+                            velocity.z = 0;
+                            collisionResolution.z = desiredPosition.z - position.z; 
                         }
                     }
                 }
             }
         }
-        // Aplica o movimento final corrigido à posição do jogador
         position.add(collisionResolution);
     }
 }
