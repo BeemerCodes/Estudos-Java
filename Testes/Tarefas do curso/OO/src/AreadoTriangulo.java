@@ -1,37 +1,42 @@
 import java.util.Scanner;
 
+import entities.Triangulo;
+
 public class AreadoTriangulo {
   public static void main(String[] args) {
     Scanner entrada = new Scanner(System.in);
 
-    double xarea, xa, xb, xc, xp;
-    double yarea, ya, yb, yc, yp;
+    double xp, yp, xarea, yarea;
+    Triangulo x, y;
+
+    x = new Triangulo();
+    y = new Triangulo();
 
     System.out.print("Digite o primeiro valor: ");
-    xa = entrada.nextDouble();
+    x.a = entrada.nextDouble();
 
     System.out.print("Digite o segundo valor: ");
-    xb = entrada.nextDouble();
+    x.b = entrada.nextDouble();
 
     System.out.print("Digite o terceiro valor: ");
-    xc = entrada.nextDouble();
+    x.c = entrada.nextDouble();
 
-    xp = (xa + xb + xc)/2.0;
-    xarea = Math.sqrt(xp*(xp-xa)*(xp-xb)*(xp-xc)); 
+    xp = (x.a + x.b + x.c)/2.0;
+    xarea = Math.sqrt(xp*(xp-x.a)*(xp-x.b)*(xp-x.c)); 
 
     System.out.printf("Area do triangulo X: %.2f%n", xarea);
 
     System.out.print("Digite o primeiro valor: ");
-    ya = entrada.nextDouble();
+    y.a = entrada.nextDouble();
 
     System.out.print("Digite o segundo valor: ");
-    yb = entrada.nextDouble();
+    y.b = entrada.nextDouble();
 
     System.out.print("Digite o terceiro valor: ");
-    yc = entrada.nextDouble();
+    y.c = entrada.nextDouble();
 
-    yp = (ya + yb + yc)/2.0;
-    yarea = Math.sqrt(yp*(yp-ya)*(yp-yb)*(yp-yc)); 
+    yp = (y.a + y.b + y.c)/2.0;
+    yarea = Math.sqrt(yp*(yp-y.a)*(yp-y.b)*(yp-y.c)); 
 
     System.out.printf("Area do triangulo Y: %.2f%n", yarea);
 
