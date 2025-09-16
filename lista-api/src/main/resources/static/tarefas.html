@@ -286,26 +286,28 @@
           const fieldName = Object.keys(field)[0];
           const fieldType = field[fieldName];
           inputHtml += `
-            <div class="form-group">
-              <label for="${fieldName}-${path}">${
+      <div class="form-group">
+        <label for="${fieldName}-${path}">${
             fieldName.charAt(0).toUpperCase() + fieldName.slice(1)
           }:</label>
-              <input type="${fieldType}" name="${fieldName}" id="${fieldName}-${path}" placeholder="${fieldName}" required />
-            </div>
-          `;
+        <input type="${fieldType}" name="${fieldName}" id="${fieldName}-${path}" placeholder="${fieldName}" required />
+      </div>
+    `;
         });
 
         const endpointDiv = document.createElement("div");
         endpointDiv.className = "endpoint";
         endpointDiv.innerHTML = `
-          <h3>GET ${path}/{tipo}/{valor}</h3>
-          <p>${description}</p>
-          <form>
-            ${inputHtml}
-            <button type="submit">Enviar</button>
-          </form>
-          <div class="result"></div>
-        `;
+    <h3>GET ${path}${fields
+          .map((field) => `/{${Object.keys(field)[0]}}`)
+          .join("")}</h3>
+    <p>${description}</p>
+    <form>
+      ${inputHtml}
+      <button type="submit">Enviar</button>
+    </form>
+    <div class="result"></div>
+  `;
         container.appendChild(endpointDiv);
 
         const form = endpointDiv.querySelector("form");
@@ -316,11 +318,13 @@
           resultDiv.textContent = "Carregando...";
 
           const formData = new FormData(form);
-          const tipo = formData.get("tipo");
-          const valor = formData.get("valor");
 
-          // Constrói a URL final com os valores
-          const finalURL = `${API_BASE_URL}${path}/${tipo}/${valor}`;
+          const paramValues = fields.map((field) => {
+            const key = Object.keys(field)[0];
+            return formData.get(key);
+          });
+
+          const finalURL = `${API_BASE_URL}${path}/${paramValues.join("/")}`;
 
           try {
             const response = await fetch(finalURL);
@@ -621,6 +625,18 @@
           "/api/tarefas/calcularpassagem",
           "Calcula o valor da passagem com desconto. A URL será montada como /api/tarefas/calcularpassagem/{tipo}/{valor}. (Exemplo: /2/25)",
           [{ tipo: "number" }, { valor: "number" }]
+        );
+
+        addGetWithFormEndpoint(
+          "lista3-content",
+          "/api/tarefas/calcularir",
+          "Calcula o valor do imposto de renda. A URL será montada como /api/tarefas/calcularir/{cpf}/{salarioMinimo}/{dependentes}/{renda}. (Exemplo: /12345678900/5000/2/2000)",
+          [
+            { cpf: "number" },
+            { salarioMinimo: "number" },
+            { dependentes: "number" },
+            { renda: "number" },
+          ]
         );
       };
     </script>
