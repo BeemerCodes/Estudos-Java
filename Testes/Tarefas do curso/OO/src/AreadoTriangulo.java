@@ -21,8 +21,7 @@ public class AreadoTriangulo {
     System.out.print("Digite o terceiro valor: ");
     x.c = entrada.nextDouble();
 
-    xp = (x.a + x.b + x.c)/2.0;
-    xarea = Math.sqrt(xp*(xp-x.a)*(xp-x.b)*(xp-x.c)); 
+    xarea = x.area();
 
     System.out.printf("Area do triangulo X: %.2f%n", xarea);
 
@@ -35,8 +34,7 @@ public class AreadoTriangulo {
     System.out.print("Digite o terceiro valor: ");
     y.c = entrada.nextDouble();
 
-    yp = (y.a + y.b + y.c)/2.0;
-    yarea = Math.sqrt(yp*(yp-y.a)*(yp-y.b)*(yp-y.c)); 
+    yarea = y.area();
 
     System.out.printf("Area do triangulo Y: %.2f%n", yarea);
 
