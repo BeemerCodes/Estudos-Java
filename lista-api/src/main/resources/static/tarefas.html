@@ -642,7 +642,7 @@
         addGetWithFormEndpoint(
           "lista3-content",
           "/api/tarefas/gratificacao",
-          "Calcula a gratificação com base no: setor, tempo de serviço e salário. A URL será montada como /api/tarefas/gratificacao/{area}/{tempodeservico}/{salario}. (Exemplo: /2/5/2000).",
+          "Calcula a gratificação com base no: setor(1 para Administrativo, 2 para Operacional ou 3 para Produção), tempo de serviço e salário. A URL será montada como /api/tarefas/gratificacao/{area}/{tempodeservico}/{salario}. (Exemplo: /2/5/2000).",
           [
             { area: "number" },
             { tempodeservico: "number" },
