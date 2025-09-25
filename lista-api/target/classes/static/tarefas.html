@@ -623,7 +623,7 @@
         addGetWithFormEndpoint(
           "lista3-content",
           "/api/tarefas/calcularpassagem",
-          "Calcula o valor da passagem com desconto. A URL será montada como /api/tarefas/calcularpassagem/{tipo}/{valor}. (Exemplo: /2/25)",
+          "Calcula o valor da passagem com desconto(Use 1 para comum, 2 para estudante ou 3 para idoso). A URL será montada como /api/tarefas/calcularpassagem/{tipo}/{valor}. (Exemplo: /2/25)",
           [{ tipo: "number" }, { valor: "number" }]
         );
 
