@@ -1,6 +1,7 @@
 package com.pedro.lista;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1342,4 +1343,80 @@ public ResponseEntity<?> CalcularIR(@PathVariable String cpf, @PathVariable doub
         "Percentual de imposto", percentualImposto,
         "Valor cobrado", "R$:" + imposto);
     }
+
+    @GetMapping("/gratificacao/{area}/{tempodeservico}/{salario}")
+    @ResponseBody
+    @Cacheable("gratificacao")
+    public ResponseEntity<?> Gratificacao(@PathVariable int area, @PathVariable double tempodeservico, @PathVariable double salario) {
+
+        if (!List.of(1, 2, 3).contains(area) || tempodeservico <= 0) {
+            return respostaErro("Por favor use 1 para Administrativo, 2 para Operacional ou 3 para Produção. O tempo de serviço deve ser superior a 0!");
+        }
+
+        double gratificacao = 0;
+        String areaatuacao = "";
+
+        switch (area) {
+            case 1 -> {
+                if (tempodeservico <= 5){
+                    gratificacao = salario*0.025;
+                }else {
+                    gratificacao = salario*0.045;
+                }
+                areaatuacao = "Administrativo";
+            }
+
+            case 2 -> {
+                if (tempodeservico <= 5){
+                    gratificacao = salario*0.035;
+                }else {
+                    gratificacao = salario*0.055;
+                }
+                areaatuacao = "Operacional";
+            }
+
+            case 3 -> {
+                if (tempodeservico <= 5){
+                    gratificacao = salario*0.040;
+                }else {
+                    gratificacao = salario*0.065;
+                }
+                areaatuacao = "Produção";
+            }
+            
+        }
+
+        return respostaSucesso(
+            "Gratificação", 
+            "Área", areaatuacao,
+            "Tempo de serviço", tempodeservico + " anos",
+            "Salário", "R$" + String.format("%.2f", salario),
+            "Valor a receber", "R$" + String.format("%.2f", gratificacao));
+    }
+
+    @GetMapping("/valoremestoque/{id}/{quantidade}/{valor}")
+    @ResponseBody
+    @Cacheable("valoremestoque")
+    public ResponseEntity <?> ValorEmEstoque(@PathVariable int id, @PathVariable int quantidade, @PathVariable double valor){
+        if (id <= 0 || quantidade <= 0 || valor <= 0){
+            return respostaErro("Use valores acima de 0 para prosseguir.");
+        }
+        
+        double valorTotal = quantidade * valor;
+        return respostaSucesso(
+            "Valor em estoque", 
+            "id", id, 
+            "Quantidade", quantidade, 
+            "Valor unitário", "R$" + String.format("%.2f", valor),
+            "Valor em estoque", "R$" + String.format("%.2f", valorTotal));
+    }
+
+    
+    
+    
 }
+
+
+    
+
+
