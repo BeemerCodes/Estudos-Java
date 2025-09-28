@@ -18,10 +18,7 @@ public class ProductsUse {
         product.quantity = entrada.nextInt();
 
         System.out.println("Estoque atual: ");
-        System.out.println("Nome: "+ product.name);
-        System.out.println("Preço: "+ product.price);
-        System.out.println("Quantidade: "+ product.quantity);
-        System.out.println("Valor total em estoque: "+ product.totalValueInStock());
+        System.out.println(product.toString());
         entrada.close();
     }
 }

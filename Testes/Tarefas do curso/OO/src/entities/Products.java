@@ -16,4 +16,13 @@ public class Products {
   public void removeProducts(int quantity){
     this.quantity -= quantity;
   }
+
+  @Override
+  public String toString() {
+    return "Nome: " + name 
+        + "\nValor: " + price
+        + "\nQuantidade: " + quantity
+        + "\nTotal em estoque: R$" + String.format("%.2f", totalValueInStock());
+}
+
 }
