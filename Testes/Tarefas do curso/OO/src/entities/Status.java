@@ -18,9 +18,9 @@ public class Status {
 
   public String statusAluno(){
     if(nota >= 60){
-      status = "Passou";
+      status = "Aprovado";
     }else {
-      status = "Reprovou";
+      status = "Reprovado";
     }
     return status;
   }

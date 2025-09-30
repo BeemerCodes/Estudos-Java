@@ -23,7 +23,7 @@ public class Estudante {
         System.out.println("\nNota final de " + dados.nome + ": " + dados.notaFinal());
 
       if (dados.notaFinal() < 60) {
-        System.out.println("Para ser aprovado eram necessario mais " + dados.missing() + " Pontos.");
+        System.out.println("Para ser aprovado eram necessarios mais " + dados.missing() + " Pontos.");
       }
 
       System.out.println("Status do aluno: " + dados.statusAluno());
